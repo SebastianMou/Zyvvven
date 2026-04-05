@@ -1,49 +1,71 @@
-# Zyvvven
+# Django CRM Documentation
 
 ## Overview
-Zyvvven is a comprehensive project designed to enhance user experience through its unique features and functionalities.
+This is a comprehensive documentation for the Django CRM application that helps manage leads, clients, projects, and tasks effectively.
 
 ## Features
-- Feature 1: Detailed description of feature 1.
-- Feature 2: Detailed description of feature 2.
-- Feature 3: Detailed description of feature 3.
+- **Lead Tracking**: Manage sales pipelines with various statuses.
+- **Client Management**: Track converted leads along with their company information.
+- **Project Management**: Handle client work with financial tracking.
+- **Task Management**: Prioritize and track tasks associated with projects.
+- **Notes**: Keep communications linked to leads, clients, and projects.
 
-## Installation
-To install Zyvvven, follow these steps:
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/SebastianMou/Zyvvven.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd Zyvvven
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
+## Models
+### Lead
+- **Statuses**: New, Contacted, Blueprint Session, Proposal, Won, Lost
+- **Sources**: Website, Referral, LinkedIn, Cold Outreach, Other
 
-## Usage
-To start using Zyvvven, run:
-```bash
-npm start
-```
-Access the application at `http://localhost:3000`.
+### Client
+- Stores information of converted leads and their active status.
 
-## Project Structure
-```
-Zyvvven/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── utils/
-├── public/
-├── README.md
-└── package.json
-```
+### Project
+- **Statuses**: Scoping, Active, Beta, Full Launch, Managed, Completed, Paused
+- Tracks financial information.
+
+### Task
+- **Priorities**: Low, Medium, High, Urgent
+- **Statuses**: To Do, In Progress, Done
+
+### Note
+- Stores communication details linked to leads, clients, and projects.
 
 ## API Endpoints
-- **GET /api/example**: Fetches an example resource.
-- **POST /api/example**: Creates a new example resource.
-- **PUT /api/example/:id**: Updates an existing example resource.
-- **DELETE /api/example/:id**: Deletes an example resource.
+- **Leads**: `/api/leads/`
+- **Projects**: `/api/projects/`
+- **Tasks**: `/api/tasks/`
+- **Authentication**: `/crm/login/`
+- **Dashboard**: `/crm/`
+
+## Installation Instructions
+1. Clone the repository.
+2. Install required packages.
+3. Apply database migrations.
+4. Create superuser for admin access.
+5. Start the development server.
+
+## Project Structure
+```plaintext
+├── crm/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── serializers.py
+│   └── ...
+├── templates/
+│   └── ...
+└── manage.py
+```
+
+## Usage Examples
+### Creating a Lead
+```python
+# Example code for creating a lead
+lead = Lead(name='John Doe', source='Website', status='New')
+lead.save()
+```
+
+### Fetching Projects
+```python
+# Example code for fetching projects
+projects = Project.objects.all()
+```
