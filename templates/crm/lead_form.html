@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}{% if lead %}Edit Lead{% else %}New Lead{% endif %} — Zyven CRM{% endblock %}
+{% block topbar_title %}{% if lead %}Edit Lead{% else %}New Lead{% endif %}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{% url 'zyven:lead_list' %}">Leads</a>
+    {% if lead %} 
+        / <a href="{% url 'zyven:lead_detail' lead.pk %}">{{ lead.company_name }}</a> 
+        / Editar
+    {% else %} 
+        / Nuevo Lead
+    {% endif %}
+</div>
+
+<div class="page-header">
+    <h1>{% if lead %}Editar Lead{% else %}Nuevo Lead{% endif %}</h1>
+</div>
+
+<div style="max-width:760px;">
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- INFORMACIÓN DE CONTACTO -->
+        <div class="card" style="margin-bottom:18px;">
+            <div class="card-title">
+                <i class="fas fa-building" style="color:var(--green);margin-right:8px;"></i>
+                Información de Contacto
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nombre de la Empresa *</label>
+                    <input type="text" name="company_name" value="{{ lead.company_name|default:'' }}" required placeholder="Acme Corp">
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre del Contacto *</label>
+                    <input type="text" name="contact_name" value="{{ lead.contact_name|default:'' }}" required placeholder="Jane Smith">
+                </div>
+
+                <div class="form-group">
+                    <label>Correo Electrónico *</label>
+                    <input type="email" name="email" value="{{ lead.email|default:'' }}" required placeholder="jane@acme.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="text" name="phone" value="{{ lead.phone|default:'' }}" placeholder="+52 55 1234 5678">
+                </div>
+
+                <div class="form-group full">
+                    <label>Sitio Web</label>
+                    <input type="url" name="website" value="{{ lead.website|default:'' }}" placeholder="https://acme.com">
+                </div>
+            </div>
+        </div>
+
+        <!-- DETALLES DEL NEGOCIO -->
+        <div class="card" style="margin-bottom:18px;">
+            <div class="card-title">
+                <i class="fas fa-funnel-dollar" style="color:var(--green);margin-right:8px;"></i>
+                Detalles del Negocio
+            </div>
+
+            <div class="form-grid cols-3">
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select name="status">
+                        {% for val, label in status_choices %}
+                        <option value="{{ val }}" {% if lead.status == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Origen</label>
+                    <select name="source">
+                        {% for val, label in source_choices %}
+                        <option value="{{ val }}" {% if lead.source == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Interés en el Servicio</label>
+                    <select name="service_interest">
+                        {% for val, label in service_choices %}
+                        <option value="{{ val }}" {% if lead.service_interest == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Valor Estimado ($)</label>
+                    <input type="number" name="estimated_value" value="{{ lead.estimated_value|default:'' }}" placeholder="50000" step="0.01">
+                </div>
+
+                <div class="form-group">
+                    <label>Sesión de Blueprint</label>
+                    <input type="datetime-local" name="blueprint_date"
+                        value="{% if lead.blueprint_date %}{{ lead.blueprint_date|date:'Y-m-d\\TH:i' }}{% endif %}">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top:14px;">
+                <label>Puntos de Dolor</label>
+                <textarea name="pain_points" placeholder="Herramientas desconectadas, procesos manuales, cotizaciones lentas...">{{ lead.pain_points|default:'' }}</textarea>
+            </div>
+        </div>
+
+        <!-- NOTAS -->
+        <div class="card" style="margin-bottom:22px;">
+            <div class="card-title">
+                <i class="fas fa-sticky-note" style="color:var(--green);margin-right:8px;"></i>
+                Notas Internas
+            </div>
+
+            <div class="form-group">
+                <label>Notas</label>
+                <textarea name="notes" placeholder="Cualquier nota interna sobre este lead...">{{ lead.notes|default:'' }}</textarea>
+            </div>
+        </div>
+
+        <!-- ACCIONES -->
+        <div style="display:flex;gap:10px;align-items:center;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                {% if lead %}Guardar Cambios{% else %}Crear Lead{% endif %}
+            </button>
+
+            <a href="{% if lead %}{% url 'zyven:lead_detail' lead.pk %}{% else %}{% url 'zyven:lead_list' %}{% endif %}" 
+               class="btn btn-ghost">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

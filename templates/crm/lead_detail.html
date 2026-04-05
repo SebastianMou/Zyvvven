@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% block title %}{{ lead.company_name }} — Zyven CRM{% endblock %}
+{% block topbar_title %}Lead Detail{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{% url 'zyven:lead_list' %}">Leads</a> / {{ lead.company_name }}
+</div>
+
+<div class="page-header">
+    <div>
+        <h1>{{ lead.company_name }}</h1>
+        <div style="color:var(--muted);font-size:12px;margin-top:4px;">
+            {{ lead.contact_name }} · {{ lead.email }}
+        </div>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        {% if not lead.client %}
+        <a href="{% url 'zyven:lead_convert' lead.pk %}" class="btn btn-primary">
+            <i class="fas fa-user-check"></i> Convertir a Cliente
+        </a>
+        {% else %}
+        <a href="{% url 'zyven:client_detail' lead.client.pk %}" class="btn btn-ghost">
+            <i class="fas fa-building"></i> Ver Cliente
+        </a>
+        {% endif %}
+
+        <a href="{% url 'zyven:lead_edit' lead.pk %}" class="btn btn-ghost">
+            <i class="fas fa-pen"></i> Editar
+        </a>
+    </div>
+</div>
+
+<div class="detail-grid">
+    <!-- LEFT -->
+    <div>
+
+        <!-- STATUS -->
+        <div class="card" style="margin-bottom:16px;">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <div>
+                    {% if lead.status == 'won' %}<span class="badge badge-green" style="font-size:13px;padding:6px 14px;">✓ Ganado</span>
+                    {% elif lead.status == 'lost' %}<span class="badge badge-red" style="font-size:13px;padding:6px 14px;">✗ Perdido</span>
+                    {% elif lead.status == 'blueprint' %}<span class="badge badge-yellow" style="font-size:13px;padding:6px 14px;">📅 Blueprint Agendado</span>
+                    {% elif lead.status == 'proposal' %}<span class="badge badge-blue" style="font-size:13px;padding:6px 14px;">📄 Propuesta Enviada</span>
+                    {% elif lead.status == 'contacted' %}<span class="badge badge-blue" style="font-size:13px;padding:6px 14px;">📞 Contactado</span>
+                    {% else %}<span class="badge badge-muted" style="font-size:13px;padding:6px 14px;">🆕 Nuevo</span>{% endif %}
+                </div>
+
+                <div style="color:var(--muted);font-size:12px;">
+                    {{ lead.get_service_interest_display }}
+                </div>
+
+                {% if lead.estimated_value %}
+                <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--green);margin-left:auto;">
+                    ${{ lead.estimated_value|floatformat:0 }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- CONTACT -->
+        <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">
+                <i class="fas fa-address-card" style="color:var(--green);margin-right:8px;"></i>Información de Contacto
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                <div class="detail-field">
+                    <div class="detail-field-label">Empresa</div>
+                    <div class="detail-field-value">{{ lead.company_name }}</div>
+                </div>
+
+                <div class="detail-field">
+                    <div class="detail-field-label">Contacto</div>
+                    <div class="detail-field-value">{{ lead.contact_name }}</div>
+                </div>
+
+                <div class="detail-field">
+                    <div class="detail-field-label">Correo Electrónico</div>
+                    <div class="detail-field-value">
+                        <a href="mailto:{{ lead.email }}" style="color:var(--blue);">{{ lead.email }}</a>
+                    </div>
+                </div>
+
+                <div class="detail-field">
+                    <div class="detail-field-label">Teléfono</div>
+                    <div class="detail-field-value">{{ lead.phone|default:"—" }}</div>
+                </div>
+
+                <div class="detail-field">
+                    <div class="detail-field-label">Sitio Web</div>
+                    <div class="detail-field-value">
+                        {% if lead.website %}
+                        <a href="{{ lead.website }}" target="_blank" style="color:var(--blue);">{{ lead.website }}</a>
+                        {% else %}—{% endif %}
+                    </div>
+                </div>
+
+                <div class="detail-field">
+                    <div class="detail-field-label">Fuente</div>
+                    <div class="detail-field-value">{{ lead.get_source_display }}</div>
+                </div>
+
+                {% if lead.blueprint_date %}
+                <div class="detail-field">
+                    <div class="detail-field-label">Sesión Blueprint</div>
+                    <div class="detail-field-value" style="color:var(--yellow);">
+                        {{ lead.blueprint_date|date:"M d, Y · g:i A" }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="detail-field">
+                    <div class="detail-field-label">Asignado a</div>
+                    <div class="detail-field-value">{{ lead.assigned_to|default:"Sin asignar" }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAIN POINTS -->
+        {% if lead.pain_points %}
+        <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">
+                <i class="fas fa-exclamation-triangle" style="color:var(--red);margin-right:8px;"></i>Puntos de Dolor
+            </div>
+            <p style="color:var(--muted);font-size:13px;line-height:1.7;">{{ lead.pain_points }}</p>
+        </div>
+        {% endif %}
+
+        <!-- TASKS -->
+        <div class="card" style="margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div class="card-title" style="margin:0;">
+                    <i class="fas fa-check-square" style="color:var(--green);margin-right:8px;"></i>Tareas
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="openModal('addTaskModal')">
+                    <i class="fas fa-plus"></i> Agregar Tarea
+                </button>
+            </div>
+
+            {% for task in tasks %}
+            <div class="task-item">
+                <div class="task-check {% if task.status == 'done' %}done{% endif %}" data-task-toggle="{{ task.pk }}"></div>
+                <div>
+                    <div class="task-title {% if task.status == 'done' %}done{% endif %}">{{ task.title }}</div>
+                    <div class="task-meta">
+                        {% if task.due_date %}Vence {{ task.due_date }}{% endif %}
+                        {% if task.priority == 'urgent' %} · <span style="color:var(--red);">Urgente</span>
+                        {% elif task.priority == 'high' %} · <span style="color:var(--yellow);">Alta</span>{% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div style="color:var(--muted);font-size:12px;">Aún no hay tareas.</div>
+            {% endfor %}
+        </div>
+
+        <!-- NOTES -->
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-sticky-note" style="color:var(--green);margin-right:8px;"></i>Notas
+            </div>
+
+            <form method="post" action="{% url 'zyven:note_create' %}" style="margin-bottom:16px;">
+                {% csrf_token %}
+                <input type="hidden" name="lead" value="{{ lead.pk }}">
+                <textarea name="body" placeholder="Agregar una nota..." style="margin-bottom:8px;"></textarea>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Agregar Nota
+                </button>
+            </form>
+
+            {% for note in notes %}
+            <div class="note-item">
+                <div class="note-meta">
+                    {{ note.author.get_full_name|default:note.author.username }} · {{ note.created_at|date:"M d, Y g:i A" }}
+                </div>
+                <div class="note-body">{{ note.body }}</div>
+            </div>
+            {% empty %}
+            <div style="color:var(--muted);font-size:12px;">Aún no hay notas.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+        <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">
+                <i class="fas fa-info-circle" style="color:var(--green);margin-right:8px;"></i>Información del Negocio
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Estado</div>
+                <div class="detail-field-value">{{ lead.get_status_display }}</div>
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Interés de Servicio</div>
+                <div class="detail-field-value">{{ lead.get_service_interest_display }}</div>
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Valor Estimado</div>
+                <div class="detail-field-value" style="color:var(--green);font-family:'Syne',sans-serif;font-weight:700;">
+                    {% if lead.estimated_value %}${{ lead.estimated_value|floatformat:0 }}{% else %}No definido{% endif %}
+                </div>
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Creado</div>
+                <div class="detail-field-value">{{ lead.created_at|date:"M d, Y" }}</div>
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Última Actualización</div>
+                <div class="detail-field-value">{{ lead.updated_at|date:"M d, Y" }}</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-bolt" style="color:var(--green);margin-right:8px;"></i>Acciones Rápidas
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <a href="{% url 'zyven:lead_edit' lead.pk %}" class="btn btn-ghost" style="justify-content:center;">
+                    <i class="fas fa-pen"></i> Editar Lead
+                </a>
+
+                {% if not lead.client %}
+                <a href="{% url 'zyven:lead_convert' lead.pk %}" class="btn btn-primary" style="justify-content:center;">
+                    <i class="fas fa-user-check"></i> Convertir a Cliente
+                </a>
+                {% endif %}
+
+                <a href="mailto:{{ lead.email }}" class="btn btn-ghost" style="justify-content:center;">
+                    <i class="fas fa-envelope"></i> Enviar Correo
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="addTaskModal">
+    <div class="modal">
+        <div class="modal-title">
+            <i class="fas fa-check-square" style="color:var(--green);margin-right:8px;"></i>Agregar Tarea
+        </div>
+
+        <form method="post" action="{% url 'zyven:task_create' %}">
+            {% csrf_token %}
+            <input type="hidden" name="lead" value="{{ lead.pk }}">
+
+            <div class="form-group" style="margin-bottom:12px;">
+                <label>Título de la Tarea</label>
+                <input type="text" name="title" required placeholder="ej. Dar seguimiento después de la sesión blueprint">
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                <div class="form-group">
+                    <label>Prioridad</label>
+                    <select name="priority">
+                        <option value="low">Baja</option>
+                        <option value="medium" selected>Media</option>
+                        <option value="high">Alta</option>
+                        <option value="urgent">Urgente</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha Límite</label>
+                    <input type="date" name="due_date">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:16px;">
+                <label>Descripción</label>
+                <textarea name="description" placeholder="Detalles opcionales..."></textarea>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Agregar Tarea
+                </button>
+                <button type="button" class="btn btn-ghost" onclick="closeModal('addTaskModal')">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

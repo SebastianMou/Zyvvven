@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %}Clients — Zyven CRM{% endblock %}
+{% block topbar_title %}Clients{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Clientes</h1>
+    <a href="{% url 'zyven:client_create' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Nuevo Cliente
+    </a>
+</div>
+
+<form method="get" class="filters">
+    <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" value="{{ search }}" placeholder="Buscar clientes...">
+    </div>
+
+    <select name="active" onchange="this.form.submit()">
+        <option value="">Todos los Clientes</option>
+        <option value="1" {% if active == '1' %}selected{% endif %}>Solo Activos</option>
+        <option value="0" {% if active == '0' %}selected{% endif %}>Inactivos</option>
+    </select>
+
+    <button type="submit" class="btn btn-ghost btn-sm">
+        <i class="fas fa-search"></i>
+    </button>
+
+    {% if search or active %}
+        <a href="{% url 'zyven:client_list' %}" class="btn btn-ghost btn-sm">Limpiar</a>
+    {% endif %}
+</form>
+
+<div class="card">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Empresa</th>
+                    <th>Contacto</th>
+                    <th>Industria</th>
+                    <th>Proyectos</th>
+                    <th>Estado</th>
+                    <th>Desde</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td>
+                        <a href="{% url 'zyven:client_detail' client.pk %}" style="color:var(--heading);text-decoration:none;font-family:'Syne',sans-serif;font-weight:700;">
+                            {{ client.company_name }}
+                        </a>
+                    </td>
+
+                    <td>
+                        <div>{{ client.contact_name }}</div>
+                        <div style="font-size:11px;color:var(--muted);">{{ client.email }}</div>
+                    </td>
+
+                    <td style="color:var(--muted);">{{ client.industry|default:"—" }}</td>
+
+                    <td>
+                        <span style="font-family:'Syne',sans-serif;font-weight:700;color:var(--green);">
+                            {{ client.projects.count }}
+                        </span>
+                    </td>
+
+                    <td>
+                        {% if client.is_active %}
+                            <span class="badge badge-green">Activo</span>
+                        {% else %}
+                            <span class="badge badge-muted">Inactivo</span>
+                        {% endif %}
+                    </td>
+
+                    <td style="font-size:11px;color:var(--muted);">
+                        {{ client.created_at|date:"M d, Y" }}
+                    </td>
+
+                    <td>
+                        <div style="display:flex;gap:6px;">
+                            <a href="{% url 'zyven:client_detail' client.pk %}" class="btn btn-ghost btn-sm">
+                                Ver
+                            </a>
+                            <a href="{% url 'zyven:client_edit' client.pk %}" class="btn btn-ghost btn-sm">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align:center;padding:40px;color:var(--muted);">
+                        Aún no hay clientes.
+                        <a href="{% url 'zyven:client_create' %}" style="color:var(--green);">
+                            Agrega tu primer cliente →
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Tareas — Zyven CRM{% endblock %}
+{% block topbar_title %}Tareas{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Tareas</h1>
+    <button class="btn btn-primary" onclick="openModal('addTaskModal')"><i class="fas fa-plus"></i> Nueva Tarea</button>
+</div>
+
+<form method="get" class="filters">
+    <select name="status" onchange="this.form.submit()">
+        <option value="">Todos los Estados</option>
+        {% for val, label in status_choices %}
+        <option value="{{ val }}" {% if current_status == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+    <select name="priority" onchange="this.form.submit()">
+        <option value="">Todas las Prioridades</option>
+        {% for val, label in priority_choices %}
+        <option value="{{ val }}" {% if current_priority == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+    {% if current_status or current_priority %}<a href="{% url 'zyven:task_list' %}" class="btn btn-ghost btn-sm">Limpiar</a>{% endif %}
+</form>
+
+<div class="card">
+    {% for task in tasks %}
+    <div class="task-item">
+        <div class="task-check {% if task.status == 'done' %}done{% endif %}" data-task-toggle="{{ task.pk }}"></div>
+        <div style="flex:1;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <div class="task-title {% if task.status == 'done' %}done{% endif %}">{{ task.title }}</div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                    {% if task.priority == 'urgent' %}<span class="badge badge-red">Urgente</span>
+                    {% elif task.priority == 'high' %}<span class="badge badge-yellow">Alta</span>
+                    {% elif task.priority == 'medium' %}<span class="badge badge-blue">Media</span>
+                    {% else %}<span class="badge badge-muted">Baja</span>{% endif %}
+                    {% if task.status == 'in_progress' %}<span class="badge badge-green">En Progreso</span>
+                    {% elif task.status == 'done' %}<span class="badge badge-muted">Hecho</span>
+                    {% else %}<span class="badge badge-muted">Por Hacer</span>{% endif %}
+                </div>
+            </div>
+            <div class="task-meta">
+                {% if task.project %}<a href="{% url 'zyven:project_detail' task.project.pk %}" style="color:var(--muted);">{{ task.project.name }}</a>
+                {% elif task.lead %}<a href="{% url 'zyven:lead_detail' task.lead.pk %}" style="color:var(--muted);">{{ task.lead.company_name }}</a>{% endif %}
+                {% if task.due_date %} · Vencimiento {{ task.due_date }}{% endif %}
+                {% if task.assigned_to %} · {{ task.assigned_to.get_full_name|default:task.assigned_to.username }}{% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div style="text-align:center;padding:48px;color:var(--muted);">
+        No se encontraron tareas. <button class="btn btn-ghost btn-sm" onclick="openModal('addTaskModal')">Agregar una →</button>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="addTaskModal">
+    <div class="modal">
+        <div class="modal-title"><i class="fas fa-check-square" style="color:var(--green);margin-right:8px;"></i>Nueva Tarea</div>
+        <form method="post" action="{% url 'zyven:task_create' %}">
+            {% csrf_token %}
+            <div class="form-group" style="margin-bottom:12px;">
+                <label>Título de la Tarea *</label>
+                <input type="text" name="title" required placeholder="¿Qué necesita hacerse?">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                <div class="form-group">
+                    <label>Prioridad</label>
+                    <select name="priority">
+                        <option value="low">Baja</option>
+                        <option value="medium" selected>Media</option>
+                        <option value="high">Alta</option>
+                        <option value="urgent">Urgente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Vencimiento</label>
+                    <input type="date" name="due_date">
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom:16px;">
+                <label>Descripción</label>
+                <textarea name="description" placeholder="Detalles opcionales..."></textarea>
+            </div>
+            <div style="display:flex;gap:10px;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Crear Tarea</button>
+                <button type="button" class="btn btn-ghost" onclick="closeModal('addTaskModal')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% block title %}{{ client.company_name }} — Zyven CRM{% endblock %}
+{% block topbar_title %}Client Detail{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{% url 'zyven:client_list' %}">Clientes</a> / {{ client.company_name }}
+</div>
+
+<div class="page-header">
+    <div>
+        <h1>{{ client.company_name }}</h1>
+        <div style="color:var(--muted);font-size:12px;margin-top:4px;">
+            {{ client.contact_name }} · {{ client.email }}
+        </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+        <a href="{% url 'zyven:project_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nuevo Proyecto
+        </a>
+        <a href="{% url 'zyven:client_edit' client.pk %}" class="btn btn-ghost">
+            <i class="fas fa-pen"></i> Editar
+        </a>
+    </div>
+</div>
+
+<div class="detail-grid">
+    <div>
+        <!-- PROYECTOS -->
+        <div class="card" style="margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div class="card-title" style="margin:0;">
+                    <i class="fas fa-rocket" style="color:var(--green);margin-right:8px;"></i>Proyectos
+                </div>
+                <a href="{% url 'zyven:project_create' %}" class="btn btn-ghost btn-sm">
+                    <i class="fas fa-plus"></i> Agregar
+                </a>
+            </div>
+
+            {% for project in projects %}
+            <div style="padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                    <a href="{% url 'zyven:project_detail' project.pk %}" style="color:var(--heading);font-family:'Syne',sans-serif;font-weight:700;font-size:14px;text-decoration:none;">
+                        {{ project.name }}
+                    </a>
+
+                    {% if project.status == 'completed' %}
+                        <span class="badge badge-green">Completado</span>
+                    {% elif project.status == 'beta' %}
+                        <span class="badge badge-yellow">Beta</span>
+                    {% elif project.status == 'launch' %}
+                        <span class="badge badge-blue">Lanzamiento</span>
+                    {% elif project.status == 'active' %}
+                        <span class="badge badge-green">Activo</span>
+                    {% elif project.status == 'managed' %}
+                        <span class="badge badge-blue">Gestionado</span>
+                    {% else %}
+                        <span class="badge badge-muted">{{ project.get_status_display }}</span>
+                    {% endif %}
+                </div>
+
+                <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">
+                    {{ project.get_service_type_display }}
+                </div>
+
+                {% if project.fixed_price %}
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;">
+                    <span>Progreso de pago</span>
+                    <span style="color:var(--green);">
+                        ${{ project.amount_paid|floatformat:0 }} / ${{ project.fixed_price|floatformat:0 }}
+                    </span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:{% widthratio project.amount_paid project.fixed_price 100 %}%;"></div>
+                </div>
+                {% endif %}
+            </div>
+
+            {% empty %}
+            <div style="color:var(--muted);font-size:12px;text-align:center;padding:20px;">
+                Aún no hay proyectos.
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- NOTAS -->
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-sticky-note" style="color:var(--green);margin-right:8px;"></i>Notas
+            </div>
+
+            <form method="post" action="{% url 'zyven:note_create' %}" style="margin-bottom:16px;">
+                {% csrf_token %}
+                <input type="hidden" name="client" value="{{ client.pk }}">
+                <textarea name="body" placeholder="Agregar una nota..."></textarea>
+                <button type="submit" class="btn btn-primary btn-sm" style="margin-top:8px;">
+                    <i class="fas fa-plus"></i> Agregar Nota
+                </button>
+            </form>
+
+            {% for note in notes %}
+            <div class="note-item">
+                <div class="note-meta">
+                    {{ note.author.get_full_name|default:note.author.username }} · {{ note.created_at|date:"M d, Y g:i A" }}
+                </div>
+                <div class="note-body">{{ note.body }}</div>
+            </div>
+            {% empty %}
+            <div style="color:var(--muted);font-size:12px;">
+                Aún no hay notas.
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div>
+        <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">
+                <i class="fas fa-address-card" style="color:var(--green);margin-right:8px;"></i>Contacto
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Correo electrónico</div>
+                <div class="detail-field-value">
+                    <a href="mailto:{{ client.email }}" style="color:var(--blue);">{{ client.email }}</a>
+                </div>
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Teléfono</div>
+                <div class="detail-field-value">{{ client.phone|default:"—" }}</div>
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Sitio web</div>
+                <div class="detail-field-value">
+                    {% if client.website %}
+                        <a href="{{ client.website }}" target="_blank" style="color:var(--blue);">{{ client.website }}</a>
+                    {% else %}—{% endif %}
+                </div>
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Industria</div>
+                <div class="detail-field-value">{{ client.industry|default:"—" }}</div>
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Cliente desde</div>
+                <div class="detail-field-value">{{ client.created_at|date:"M d, Y" }}</div>
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Estado</div>
+                <div class="detail-field-value">
+                    {% if client.is_active %}
+                        <span class="badge badge-green">Activo</span>
+                    {% else %}
+                        <span class="badge badge-muted">Inactivo</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-chart-pie" style="color:var(--green);margin-right:8px;"></i>Resumen
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Total de Proyectos</div>
+                <div class="detail-field-value" style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--heading);">
+                    {{ projects.count }}
+                </div>
+            </div>
+
+            <div class="detail-field">
+                <div class="detail-field-label">Ingresos Totales</div>
+                <div class="detail-field-value" style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--green);">
+                    ${% with total=0 %}{% for p in projects %}{% if p.amount_paid %}{{ p.amount_paid|add:total }}{% endif %}{% endfor %}{% endwith %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

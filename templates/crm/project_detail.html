@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% block title %}{{ project.name }} - Zyven CRM{% endblock %}
+{% block topbar_title %}Detalle del Proyecto{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{% url 'zyven:project_list' %}">Proyectos</a> / {{ project.name }}
+</div>
+
+<div class="page-header">
+    <div>
+        <h1>{{ project.name }}</h1>
+        <div style="color:var(--muted);font-size:12px;margin-top:4px;">
+            <a href="{% url 'zyven:client_detail' project.client.pk %}" style="color:var(--blue);text-decoration:none;">{{ project.client.company_name }}</a>
+            · {{ project.get_service_type_display }}
+        </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+        <a href="{% url 'zyven:project_edit' project.pk %}" class="btn btn-ghost"><i class="fas fa-pen"></i> Editar</a>
+    </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="card" style="margin-bottom:16px;">
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <div>
+            {% if project.status == 'completed' %}<span class="badge badge-green" style="font-size:13px;padding:6px 14px;">✓ Completado</span>
+            {% elif project.status == 'beta' %}<span class="badge badge-yellow" style="font-size:13px;padding:6px 14px;">🔬 Beta — Día {{ project.days_since_start }}</span>
+            {% elif project.status == 'launch' %}<span class="badge badge-blue" style="font-size:13px;padding:6px 14px;">🚀 Fase de Lanzamiento — Día {{ project.days_since_start }}</span>
+            {% elif project.status == 'active' %}<span class="badge badge-green" style="font-size:13px;padding:6px 14px;">⚡ Construcción Activa</span>
+            {% elif project.status == 'managed' %}<span class="badge badge-blue" style="font-size:13px;padding:6px 14px;">🛡 Gestionado</span>
+            {% elif project.status == 'scoping' %}<span class="badge badge-muted" style="font-size:13px;padding:6px 14px;">📋 Alcance</span>
+            {% else %}<span class="badge badge-muted" style="font-size:13px;padding:6px 14px;">{{ project.get_status_display }}</span>{% endif %}
+        </div>
+
+        {% if project.fixed_price %}
+        <div style="flex:1;max-width:300px;">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px;">
+                <span>Progreso de Pago</span>
+                <span style="color:var(--green);">${{ project.amount_paid|floatformat:0 }} / ${{ project.fixed_price|floatformat:0 }}</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:{% widthratio project.amount_paid project.fixed_price 100 %}%;"></div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if project.days_since_start is not None %}
+        <div style="text-align:center;">
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:24px;color:var(--green);">D{{ project.days_since_start }}</div>
+            <div style="font-size:10px;color:var(--muted);">Días transcurridos</div>
+        </div>
+        {% endif %}
+
+        {% if project.balance_due %}
+        <div style="text-align:right;margin-left:auto;">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:2px;">Saldo Pendiente</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:{% if project.balance_due > 0 %}var(--yellow){% else %}var(--green){% endif %};">
+                ${{ project.balance_due|floatformat:0 }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="detail-grid">
+    <div>
+        <!-- TIMELINE -->
+        <div class="card" style="margin-bottom:16px;">
+            <div class="card-title"><i class="fas fa-calendar-alt" style="color:var(--green);margin-right:8px;"></i>Cronograma de 14 Días</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+                {% with phases="Phase 1,Phase 2,Phase 3,Phase 4" %}
+                <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;">
+                    <div style="font-size:10px;color:var(--green);font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Fase 1</div>
+                    <div style="font-size:11px;color:var(--muted);">Días 1–2</div>
+                    <div style="font-size:11px;color:var(--text);margin-top:6px;">Descubrimiento y Arquitectura</div>
+                </div>
+                <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;">
+                    <div style="font-size:10px;color:var(--green);font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Fase 2</div>
+                    <div style="font-size:11px;color:var(--muted);">Días 3–5</div>
+                    <div style="font-size:11px;color:var(--text);margin-top:6px;">Construcción Principal</div>
+                </div>
+                <div style="background:{% if project.status == 'beta' %}rgba(37,211,102,.08){% else %}var(--surface){% endif %};border:1px solid {% if project.status == 'beta' %}rgba(37,211,102,.25){% else %}var(--border){% endif %};border-radius:8px;padding:14px;">
+                    <div style="font-size:10px;color:var(--green);font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Fase 3</div>
+                    <div style="font-size:11px;color:var(--muted);">Días 6–7</div>
+                    <div style="font-size:11px;color:var(--text);margin-top:6px;">Beta y Retroalimentación</div>
+                </div>
+                <div style="background:{% if project.status == 'launch' %}rgba(0,184,255,.08){% else %}var(--surface){% endif %};border:1px solid {% if project.status == 'launch' %}rgba(0,184,255,.25){% else %}var(--border){% endif %};border-radius:8px;padding:14px;">
+                    <div style="font-size:10px;color:var(--blue);font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Fase 4</div>
+                    <div style="font-size:11px;color:var(--muted);">Días 8–14</div>
+                    <div style="font-size:11px;color:var(--text);margin-top:6px;">Lanzamiento Completo</div>
+                </div>
+                {% endwith %}
+            </div>
+        </div>
+
+        <!-- TASKS -->
+        <div class="card" style="margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div class="card-title" style="margin:0;"><i class="fas fa-check-square" style="color:var(--green);margin-right:8px;"></i>Tareas</div>
+                <button class="btn btn-ghost btn-sm" onclick="openModal('addTaskModal')"><i class="fas fa-plus"></i> Agregar Tarea</button>
+            </div>
+
+            {% for task in tasks %}
+            <div class="task-item">
+                <div class="task-check {% if task.status == 'done' %}done{% endif %}" data-task-toggle="{{ task.pk }}"></div>
+                <div style="flex:1;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                        <div class="task-title {% if task.status == 'done' %}done{% endif %}">{{ task.title }}</div>
+                        {% if task.priority == 'urgent' %}<span class="badge badge-red" style="font-size:9px;">Urgente</span>
+                        {% elif task.priority == 'high' %}<span class="badge badge-yellow" style="font-size:9px;">Alta</span>{% endif %}
+                    </div>
+                    <div class="task-meta">
+                        {% if task.due_date %}Vencimiento {{ task.due_date }}{% endif %}
+                        {% if task.assigned_to %} · {{ task.assigned_to.get_full_name|default:task.assigned_to.username }}{% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div style="color:var(--muted);font-size:12px;">Aún no hay tareas.</div>
+            {% endfor %}
+        </div>
+
+        <!-- NOTES -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-sticky-note" style="color:var(--green);margin-right:8px;"></i>Notas</div>
+            <form method="post" action="{% url 'zyven:note_create' %}" style="margin-bottom:16px;">
+                {% csrf_token %}
+                <input type="hidden" name="project" value="{{ project.pk }}">
+                <textarea name="body" placeholder="Registrar una actualización, bloqueo o nota..."></textarea>
+                <button type="submit" class="btn btn-primary btn-sm" style="margin-top:8px;"><i class="fas fa-plus"></i> Agregar Nota</button>
+            </form>
+            {% for note in notes %}
+            <div class="note-item">
+                <div class="note-meta">{{ note.author.get_full_name|default:note.author.username }} · {{ note.created_at|date:"M d, Y g:i A" }}</div>
+                <div class="note-body">{{ note.body }}</div>
+            </div>
+            {% empty %}
+            <div style="color:var(--muted);font-size:12px;">Aún no hay notas.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div>
+        <div class="card" style="margin-bottom:16px;">
+            <div class="card-title"><i class="fas fa-info-circle" style="color:var(--green);margin-right:8px;"></i>Información del Proyecto</div>
+            <div class="detail-field"><div class="detail-field-label">Cliente</div>
+                <div class="detail-field-value"><a href="{% url 'zyven:client_detail' project.client.pk %}" style="color:var(--blue);">{{ project.client.company_name }}</a></div></div>
+            <div class="detail-field"><div class="detail-field-label">Tipo de Servicio</div>
+                <div class="detail-field-value">{{ project.get_service_type_display }}</div></div>
+            <div class="detail-field"><div class="detail-field-label">Precio Fijo</div>
+                <div class="detail-field-value" style="color:var(--green);font-family:'Syne',sans-serif;font-weight:700;">
+                    {% if project.fixed_price %}${{ project.fixed_price|floatformat:0 }}{% else %}No establecido{% endif %}</div></div>
+            <div class="detail-field"><div class="detail-field-label">Monto Pagado</div>
+                <div class="detail-field-value">${{ project.amount_paid|floatformat:0 }}</div></div>
+            <div class="detail-field"><div class="detail-field-label">Fecha de Inicio</div>
+                <div class="detail-field-value">{{ project.start_date|date:"M d, Y"|default:"No establecido" }}</div></div>
+            <div class="detail-field"><div class="detail-field-label">Fecha de Beta (Día 7)</div>
+                <div class="detail-field-value">{{ project.beta_date|date:"M d, Y"|default:"No establecido" }}</div></div>
+            <div class="detail-field"><div class="detail-field-label">Fecha de Lanzamiento (Día 14)</div>
+                <div class="detail-field-value">{{ project.launch_date|date:"M d, Y"|default:"No establecido" }}</div></div>
+            <div class="detail-field"><div class="detail-field-label">Asignado A</div>
+                <div class="detail-field-value">{{ project.assigned_to|default:"Sin asignar" }}</div></div>
+        </div>
+
+        {% if project.description %}
+        <div class="card">
+            <div class="card-title"><i class="fas fa-align-left" style="color:var(--green);margin-right:8px;"></i>Descripción</div>
+            <p style="color:var(--muted);font-size:12.5px;line-height:1.7;">{{ project.description }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="addTaskModal">
+    <div class="modal">
+        <div class="modal-title"><i class="fas fa-check-square" style="color:var(--green);margin-right:8px;"></i>Agregar Tarea</div>
+        <form method="post" action="{% url 'zyven:task_create' %}">
+            {% csrf_token %}
+            <input type="hidden" name="project" value="{{ project.pk }}">
+            <div class="form-group" style="margin-bottom:12px;">
+                <label>Título de la Tarea *</label>
+                <input type="text" name="title" required placeholder="ej. Desplegar a staging">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                <div class="form-group">
+                    <label>Prioridad</label>
+                    <select name="priority">
+                        <option value="low">Baja</option>
+                        <option value="medium" selected>Media</option>
+                        <option value="high">Alta</option>
+                        <option value="urgent">Urgente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Vencimiento</label>
+                    <input type="date" name="due_date">
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom:16px;">
+                <label>Descripción</label>
+                <textarea name="description" placeholder="Detalles opcionales..."></textarea>
+            </div>
+            <div style="display:flex;gap:10px;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar Tarea</button>
+                <button type="button" class="btn btn-ghost" onclick="closeModal('addTaskModal')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,303 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Zyven CRM</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:       #f4f6f9;
+            --surface:  #ffffff;
+            --card:     #ffffff;
+            --border:   rgba(0,0,0,0.08);
+            --border-md:rgba(0,0,0,0.13);
+            --green:    #0A6E3F;
+            --green-dk: #085c34;
+            --green-dim:rgba(10,110,63,0.07);
+            --blue:     #1a5fd4;
+            --text:     #374151;
+            --muted:    #6b7280;
+            --heading:  #111827;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        body::before { content:''; display:none; }
+        body::after  { content:''; display:none; }
+        .login-wrap {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 420px;
+            padding: 20px;
+        }
+
+        /* logo */
+        .logo {
+            display: flex; align-items: center; gap: 10px;
+            justify-content: center;
+            margin-bottom: 36px;
+            animation: fadeUp .5s ease both;
+        }
+        .logo-mark {
+            width: 38px; height: 38px;
+            background: var(--green);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800; font-size: 17px; color: #000;
+        }
+        .logo-text {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 22px; color: var(--heading);
+        }
+        .logo-text em { color: var(--green); font-style: normal; }
+
+        /* card */
+        .login-card {
+            background: var(--card);
+            border: 1px solid var(--border-md);
+            border-radius: 16px;
+            padding: 36px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            animation: fadeUp .5s .1s ease both;
+        }
+
+        .login-card h1 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800; font-size: 22px;
+            color: var(--heading);
+            letter-spacing: -.03em;
+            margin-bottom: 6px;
+        }
+        .login-card p {
+            font-size: 12px; color: var(--muted);
+            margin-bottom: 28px;
+        }
+
+        /* form */
+        .form-group {
+            display: flex; flex-direction: column; gap: 6px;
+            margin-bottom: 16px;
+        }
+        label {
+            font-size: 10px; color: var(--muted);
+            letter-spacing: .1em; text-transform: uppercase;
+        }
+        .input-wrap {
+            position: relative;
+        }
+        .input-wrap i {
+            position: absolute; left: 12px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted); font-size: 12px;
+            pointer-events: none;
+        }
+        input {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border-md);
+            border-radius: 9px;
+            padding: 11px 12px 11px 36px;
+            color: var(--text);
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: rgba(10,110,63,.5);
+            box-shadow: 0 0 0 3px rgba(10,110,63,.08);
+        }
+        input::placeholder { color: var(--muted); }
+
+        /* toggle password */
+        .toggle-pw {
+            position: absolute; right: 12px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted); font-size: 12px;
+            cursor: pointer; background: none; border: none;
+            transition: color .2s;
+        }
+        .toggle-pw:hover { color: var(--text); }
+
+        /* submit btn */
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(135deg, var(--green), var(--green-dk));
+            border: none; border-radius: 9px;
+            padding: 13px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 14px;
+            color: #fff; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all .25s;
+            box-shadow: 0 4px 18px rgba(37,211,102,.2);
+            margin-top: 8px;
+        }
+        .btn-login:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(37,211,102,.35);
+        }
+        .btn-login:active { transform: translateY(0); }
+
+        /* error alert */
+        .alert {
+            background: rgba(255,80,80,.1);
+            border: 1px solid rgba(255,80,80,.2);
+            border-radius: 8px;
+            padding: 11px 14px;
+            font-size: 12px; color: #ff5050;
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 20px;
+            animation: shake .4s ease;
+        }
+
+        /* footer link */
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px; color: var(--muted);
+            animation: fadeUp .5s .2s ease both;
+        }
+        .login-footer a {
+            color: var(--green); text-decoration: none;
+        }
+        .login-footer a:hover { text-decoration: underline; }
+
+        /* animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%       { transform: translateX(-6px); }
+            40%       { transform: translateX(6px); }
+            60%       { transform: translateX(-4px); }
+            80%       { transform: translateX(4px); }
+        }
+
+        /* subtle badge */
+        .crm-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--green-dim);
+            border: 1px solid rgba(37,211,102,.2);
+            border-radius: 100px;
+            padding: 4px 12px;
+            font-size: 10px; color: var(--green);
+            letter-spacing: .1em; text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .badge-dot {
+            width: 5px; height: 5px;
+            background: var(--green); border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: .4; transform: scale(.7); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-wrap">
+
+    <!-- LOGO -->
+    <div class="logo">
+        <div class="logo-mark">Z</div>
+        <div class="logo-text">Zyven <em>CRM</em></div>
+    </div>
+
+    <!-- CARD -->
+    <div class="login-card">
+        <div class="crm-badge">
+            <div class="badge-dot"></div>
+            Panel Interno
+        </div>
+
+        <h1>Bienvenido de nuevo.</h1>
+        <p>Inicia sesión para gestionar leads, clientes y proyectos.</p>
+
+        <!-- ERROR -->
+        {% if messages %}
+            {% for msg in messages %}
+            <div class="alert">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ msg }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- FORM -->
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="username">Usuario</label>
+                <div class="input-wrap">
+                    <i class="fas fa-user"></i>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="tu usuario"
+                        autocomplete="username"
+                        autofocus
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <div class="input-wrap">
+                    <i class="fas fa-lock"></i>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                        required
+                    >
+                    <button type="button" class="toggle-pw" onclick="togglePassword()" id="toggleBtn">
+                        <i class="fas fa-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login">
+                <i class="fas fa-arrow-right-to-bracket"></i>
+                Iniciar Sesión
+            </button>
+        </form>
+    </div>
+
+    <div class="login-footer">
+        <a href="{% url 'zyven:home' %}">← Volver al sitio de Zyven</a>
+    </div>
+
+</div>
+<script>
+    function togglePassword() {
+        const input   = document.getElementById('password');
+        const icon    = document.getElementById('eyeIcon');
+        const showing = input.type === 'text';
+        input.type    = showing ? 'password' : 'text';
+        icon.className = showing ? 'fas fa-eye' : 'fas fa-eye-slash';
+    }
+</script>
+
+</body>
+</html>

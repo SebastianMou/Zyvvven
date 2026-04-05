@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}{% if client %}Edit Client{% else %}New Client{% endif %} — Zyven CRM{% endblock %}
+{% block topbar_title %}{% if client %}Edit Client{% else %}New Client{% endif %}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{% url 'zyven:client_list' %}">Clientes</a>
+    {% if client %} / <a href="{% url 'zyven:client_detail' client.pk %}">{{ client.company_name }}</a> / Editar{% else %} / Nuevo Cliente{% endif %}
+</div>
+
+<div class="page-header">
+    <h1>{% if client %}Editar Cliente{% else %}Nuevo Cliente{% endif %}</h1>
+</div>
+
+<div style="max-width:680px;">
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">
+                <i class="fas fa-building" style="color:var(--green);margin-right:8px;"></i>Información del Cliente
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nombre de la Empresa *</label>
+                    <input type="text" name="company_name" value="{{ client.company_name|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre de Contacto *</label>
+                    <input type="text" name="contact_name" value="{{ client.contact_name|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Correo Electrónico *</label>
+                    <input type="email" name="email" value="{{ client.email|default:'' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="text" name="phone" value="{{ client.phone|default:'' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Sitio Web</label>
+                    <input type="url" name="website" value="{{ client.website|default:'' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Industria</label>
+                    <input type="text" name="industry" value="{{ client.industry|default:'' }}" placeholder="ej. Logística, SaaS, Retail">
+                </div>
+
+                {% if client %}
+                <div class="form-group">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                        <input type="checkbox" name="is_active" {% if client.is_active %}checked{% endif %} style="width:auto;">
+                        Cliente Activo
+                    </label>
+                </div>
+                {% endif %}
+
+                <div class="form-group full">
+                    <label>Notas</label>
+                    <textarea name="notes">{{ client.notes|default:'' }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:10px;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                {% if client %}Guardar Cambios{% else %}Crear Cliente{% endif %}
+            </button>
+
+            <a href="{% if client %}{% url 'zyven:client_detail' client.pk %}{% else %}{% url 'zyven:client_list' %}{% endif %}" class="btn btn-ghost">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

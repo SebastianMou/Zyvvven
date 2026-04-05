@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% block title %}Leads — Zyven CRM{% endblock %}
+{% block topbar_title %}Leads{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Leads</h1>
+    <a href="{% url 'zyven:lead_create' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Nuevo Lead
+    </a>
+</div>
+
+<!-- PIPELINE -->
+<div class="pipeline" style="margin-bottom:20px;">
+    {% for val, label in status_choices %}
+    <div class="pipeline-col">
+        <div class="pipeline-col-label">{{ label }}</div>
+        <div class="pipeline-count {% if val == 'won' %}green{% elif val == 'lost' %}red{% endif %}">
+            {{ leads|length }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- FILTROS -->
+<form method="get" class="filters">
+    <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" value="{{ search }}" placeholder="Buscar empresa, contacto, correo...">
+    </div>
+
+    <select name="status" onchange="this.form.submit()">
+        <option value="">Todos los estados</option>
+        {% for val, label in status_choices %}
+        <option value="{{ val }}" {% if current_status == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="source" onchange="this.form.submit()">
+        <option value="">Todos los orígenes</option>
+        {% for val, label in source_choices %}
+        <option value="{{ val }}" {% if current_source == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="service" onchange="this.form.submit()">
+        <option value="">Todos los servicios</option>
+        {% for val, label in service_choices %}
+        <option value="{{ val }}" {% if current_service == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-ghost btn-sm">
+        <i class="fas fa-search"></i> Buscar
+    </button>
+
+    {% if search or current_status or current_source or current_service %}
+    <a href="{% url 'zyven:lead_list' %}" class="btn btn-ghost btn-sm">Limpiar</a>
+    {% endif %}
+</form>
+
+<div class="card">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Empresa</th>
+                    <th>Contacto</th>
+                    <th>Estado</th>
+                    <th>Origen</th>
+                    <th>Servicio</th>
+                    <th>Valor</th>
+                    <th>Blueprint</th>
+                    <th>Creado</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for lead in leads %}
+                <tr>
+                    <td>
+                        <a href="{% url 'zyven:lead_detail' lead.pk %}" 
+                           style="color:var(--heading);text-decoration:none;font-family:'Syne',sans-serif;font-weight:700;">
+                            {{ lead.company_name }}
+                        </a>
+                    </td>
+
+                    <td>
+                        <div>{{ lead.contact_name }}</div>
+                        <div style="font-size:11px;color:var(--muted);">{{ lead.email }}</div>
+                    </td>
+
+                    <td>
+                        {% if lead.status == 'won' %}<span class="badge badge-green">Ganado</span>
+                        {% elif lead.status == 'lost' %}<span class="badge badge-red">Perdido</span>
+                        {% elif lead.status == 'proposal' %}<span class="badge badge-blue">Propuesta Enviada</span>
+                        {% elif lead.status == 'blueprint' %}<span class="badge badge-yellow">Blueprint</span>
+                        {% elif lead.status == 'contacted' %}<span class="badge badge-blue">Contactado</span>
+                        {% else %}<span class="badge badge-muted">Nuevo</span>{% endif %}
+                    </td>
+
+                    <td style="color:var(--muted);">
+                        {{ lead.get_source_display }}
+                    </td>
+
+                    <td style="color:var(--muted);font-size:11px;">
+                        {{ lead.get_service_interest_display }}
+                    </td>
+
+                    <td style="color:var(--green);font-family:'Syne',sans-serif;font-weight:700;">
+                        {% if lead.estimated_value %}
+                            ${{ lead.estimated_value|floatformat:0 }}
+                        {% else %}
+                            <span style="color:var(--muted);">—</span>
+                        {% endif %}
+                    </td>
+
+                    <td style="font-size:11px;color:var(--muted);">
+                        {% if lead.blueprint_date %}
+                            {{ lead.blueprint_date|date:"M d, Y" }}
+                        {% else %}—{% endif %}
+                    </td>
+
+                    <td style="font-size:11px;color:var(--muted);">
+                        {{ lead.created_at|date:"M d" }}
+                    </td>
+
+                    <td>
+                        <div style="display:flex;gap:6px;">
+                            <a href="{% url 'zyven:lead_detail' lead.pk %}" class="btn btn-ghost btn-sm">
+                                Ver
+                            </a>
+                            <a href="{% url 'zyven:lead_edit' lead.pk %}" class="btn btn-ghost btn-sm">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="9" style="text-align:center;padding:40px;color:var(--muted);">
+                        No se encontraron leads.
+                        <a href="{% url 'zyven:lead_create' %}" style="color:var(--green);">
+                            Agrega tu primer lead →
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
