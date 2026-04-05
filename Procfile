@@ -1,0 +1,1 @@
+web: python create_admin.py && python manage.py migrate && gunicorn core.wsgi:application
