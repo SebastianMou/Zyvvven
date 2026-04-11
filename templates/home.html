@@ -4,212 +4,862 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zyven — B2B Tech Consulting</title>
+    <title>Zyven - B2B Tech Consulting</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        /* ── DARK MODE (default) ── */
         :root {
-            --wbp-bg:#f8f9fb; --wbp-surface:#ffffff; --wbp-card:#ffffff;
-            --wbp-border:rgba(0,0,0,0.08); --wbp-border-md:rgba(0,0,0,0.14);
-            --wbp-green:#0A6E3F; --wbp-green-dark:#085c34;
-            --wbp-green-dim:rgba(10,110,63,0.07); --wbp-green-glow:rgba(10,110,63,0.15);
-            --wbp-blue:#1a5fd4; --wbp-text:#374151; --wbp-muted:#6b7280; --wbp-heading:#111827;
+            --z-bg: #020202;
+            --z-surface: #0a0a0a;
+            --z-card: #111111;
+            --z-card2: #181818;
+            --z-border: rgba(255,255,255,0.07);
+            --z-border-md: rgba(255,255,255,0.13);
+            --z-blue: #1f7bf8;
+            --z-purple: #720af5;
+            --z-blue-dim: rgba(31,123,248,0.10);
+            --z-purple-dim: rgba(114,10,245,0.10);
+            --z-glow-blue: rgba(31,123,248,0.22);
+            --z-glow-purple: rgba(114,10,245,0.18);
+            --z-white: #ffffff;
+            --z-off-white: #e8eaf0;
+            --z-muted: #7a7a8a;
+            --z-heading: #f2f2f5;
+            --z-text: #b0b0bf;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: dark;
         }
-        *,*::before,*::after{box-sizing:border-box}
-        body{background-color:var(--wbp-bg);color:var(--wbp-text);font-family:'DM Mono','Segoe UI',monospace;font-size:15px;line-height:1.7;overflow-x:hidden}
-        body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:none;}
-        body::after{content:'';position:fixed;top:0;left:0;right:0;z-index:0;pointer-events:none;height:320px;background:linear-gradient(180deg,rgba(10,110,63,0.04),transparent);}
-        nav,section,footer{position:relative;z-index:1}
-        .section-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--wbp-green);font-weight:500;margin-bottom:12px;display:block}
-        .section-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(28px,3.5vw,46px);color:var(--wbp-heading);letter-spacing:-.03em;line-height:1.08}
+
+        /* ── LIGHT MODE ── */
+        [data-theme="light"] {
+            --z-bg: #ffffff;
+            --z-surface: #f5f5f7;
+            --z-card: #f0f0f4;
+            --z-card2: #e8e8ee;
+            --z-border: rgba(0,0,0,0.08);
+            --z-border-md: rgba(0,0,0,0.15);
+            --z-blue: #1f7bf8;
+            --z-purple: #720af5;
+            --z-blue-dim: rgba(31,123,248,0.08);
+            --z-purple-dim: rgba(114,10,245,0.08);
+            --z-glow-blue: rgba(31,123,248,0.18);
+            --z-glow-purple: rgba(114,10,245,0.14);
+            --z-white: #020202;
+            --z-off-white: #1a1a1a;
+            --z-muted: #6b6b7a;
+            --z-heading: #0a0a0a;
+            --z-text: #444452;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: light;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            background-color: var(--z-bg);
+            color: var(--z-text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background-color .3s ease, color .3s ease;
+        }
+
+        .logo-light { display: none; }
+        .logo-dark  { display: block; }
+        [data-theme="light"] .logo-light { display: block; }
+        [data-theme="light"] .logo-dark  { display: none; }
+
+        /* THEME TOGGLE BUTTON */
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--z-border-md);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all .2s;
+            color: var(--z-muted);
+            flex-shrink: 0;
+        }
+        .theme-toggle:hover { border-color: var(--z-blue); color: var(--z-blue); transform: rotate(20deg); }
+
+        /* GLOBAL GLOW ORBS */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            left: -200px;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(31,123,248,0.06) 0%, transparent 65%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(114,10,245,0.07) 0%, transparent 65%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        nav, section, footer { position: relative; z-index: 1; }
+
+        /* TYPOGRAPHY */
+        .section-label {
+            font-size: 11px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(28px, 3.5vw, 46px);
+            color: var(--z-heading);
+            letter-spacing: -.03em;
+            line-height: 1.08;
+        }
 
         /* NAVBAR */
-        .navbar{background:rgba(255,255,255,0.96)!important;backdrop-filter:blur(18px);border-bottom:1px solid var(--wbp-border);padding:0;height:66px}
-        .navbar .container{height:100%}
-        .navbar-brand{display:flex;align-items:center;text-decoration:none;gap:4px;padding:0}
-        .brand-mark{width:34px;height:34px;border-radius:9px;background:var(--wbp-green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff;flex-shrink:0}
-        .brand-name{font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--wbp-heading);letter-spacing:-.02em}
-        .brand-name span{color:var(--wbp-green)}
-        .nav-link{color:var(--wbp-muted)!important;font-size:13px;letter-spacing:.02em;transition:color .2s;padding:.4rem .9rem!important}
-        .nav-link:hover{color:var(--wbp-heading)!important}
-        .btn-nav-cta{background:var(--wbp-green);color:#fff!important;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;padding:8px 18px!important;border-radius:7px;transition:all .2s!important}
-        .btn-nav-cta:hover{opacity:.85;transform:translateY(-1px)}
-        .navbar-toggler{border-color:var(--wbp-border-md)}.navbar-toggler-icon{filter:none}
+        .navbar {
+            background: rgba(2,2,2,0.88) !important;
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--z-border);
+            padding: 0;
+            height: 68px;
+            transition: background .3s;
+        }
+        [data-theme="light"] .navbar {
+            background: rgba(255,255,255,0.92) !important;
+        }
+        .navbar .container { height: 100%; }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            gap: 6px;
+            padding: 0;
+        }
+        .brand-mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--grad);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 16px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .brand-name {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--z-white);
+            letter-spacing: -.02em;
+        }
+        .brand-name span { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .nav-link { color: var(--z-muted) !important; font-size: 13px; letter-spacing: .02em; transition: color .2s; padding: .4rem .9rem !important; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .nav-link:hover { color: var(--z-white) !important; }
+
+        .btn-nav-cta {
+            background: var(--grad);
+            color: #fff !important;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 8px 20px !important;
+            border-radius: 8px;
+            transition: all .2s !important;
+            box-shadow: 0 0 20px var(--z-glow-blue);
+        }
+        .btn-nav-cta:hover { opacity: .88; transform: translateY(-1px); box-shadow: 0 0 30px var(--z-glow-purple); }
+        .navbar-toggler { border-color: var(--z-border-md); }
+        .navbar-toggler-icon { filter: invert(1); }
+        [data-theme="light"] .navbar-toggler-icon { filter: invert(0); }
 
         /* HERO */
-        .hero-section{padding:130px 0 90px;min-height:100vh;display:flex;align-items:center}
-        .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--wbp-green-dim);border:1px solid rgba(10,110,63,.18);border-radius:100px;padding:6px 16px;font-size:11px;color:var(--wbp-green);letter-spacing:.08em;text-transform:uppercase;margin-bottom:28px;animation:fadeUp .6s ease both}
-        .badge-dot{width:6px;height:6px;background:var(--wbp-green);border-radius:50%;animation:pulseDot 2s ease-in-out infinite}
-        @keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
-        .hero-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(40px,5.5vw,72px);line-height:1.0;letter-spacing:-.03em;color:var(--wbp-heading);margin-bottom:24px;animation:fadeUp .6s .1s ease both}
-        .hero-title .ital{color:var(--wbp-green);font-style:italic;font-family:Georgia,serif}
-        .hero-sub{font-size:16px;color:var(--wbp-muted);max-width:500px;line-height:1.7;margin-bottom:40px;animation:fadeUp .6s .2s ease both}
-        .hero-actions{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .6s .3s ease both}
-        .btn-primary-wbp{background:linear-gradient(135deg,var(--wbp-green),var(--wbp-green-dark));border:none;border-radius:9px;padding:13px 26px;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .25s;box-shadow:0 4px 18px rgba(10,110,63,.15)}
-        .btn-primary-wbp:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(10,110,63,.28);color:#fff}
-        .btn-ghost-wbp{background:transparent;border:1px solid var(--wbp-border-md);border-radius:9px;padding:13px 26px;font-family:'Syne',sans-serif;font-weight:600;font-size:14px;color:var(--wbp-text);text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
-        .btn-ghost-wbp:hover{border-color:rgba(0,0,0,.22);background:rgba(0,0,0,.03);color:var(--wbp-heading)}
-        .hero-stats{margin-top:60px;padding-top:40px;border-top:1px solid var(--wbp-border);display:flex;gap:48px;flex-wrap:wrap;animation:fadeUp .6s .45s ease both}
-        .stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:30px;color:var(--wbp-heading);letter-spacing:-.03em}
-        .stat-num span{color:var(--wbp-green)}
-        .stat-label{font-size:11px;color:var(--wbp-muted);letter-spacing:.06em;margin-top:2px}
+        .hero-section { padding: 130px 0 90px; min-height: 100vh; display: flex; align-items: center; }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(31,123,248,0.08);
+            border: 1px solid rgba(31,123,248,0.22);
+            border-radius: 100px;
+            padding: 6px 16px;
+            font-size: 11px;
+            color: var(--z-blue);
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+            animation: fadeUp .6s ease both;
+        }
+        .badge-dot { width: 6px; height: 6px; background: var(--z-blue); border-radius: 50%; animation: pulseDot 2s ease-in-out infinite; }
+
+        @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.75)} }
+
+        .hero-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(40px, 5.5vw, 72px);
+            line-height: 1.0;
+            letter-spacing: -.03em;
+            color: var(--z-heading);
+            margin-bottom: 24px;
+            animation: fadeUp .6s .1s ease both;
+        }
+        .hero-title .ital {
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-style: italic;
+            font-family: Georgia, serif;
+        }
+        .hero-sub { font-size: 16px; color: var(--z-muted); max-width: 500px; line-height: 1.7; margin-bottom: 40px; animation: fadeUp .6s .2s ease both; }
+        .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; animation: fadeUp .6s .3s ease both; }
+
+        .btn-primary-z {
+            background: var(--grad);
+            border: none;
+            border-radius: 9px;
+            padding: 13px 26px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all .25s;
+            box-shadow: 0 4px 24px var(--z-glow-blue);
+        }
+        .btn-primary-z:hover { transform: translateY(-2px); box-shadow: 0 10px 36px var(--z-glow-purple); color: #fff; }
+
+        .btn-ghost-z {
+            background: transparent;
+            border: 1px solid var(--z-border-md);
+            border-radius: 9px;
+            padding: 13px 26px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--z-text);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all .2s;
+        }
+        .btn-ghost-z:hover { border-color: rgba(31,123,248,.4); color: var(--z-white); background: rgba(31,123,248,.06); }
+
+        .hero-stats {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid var(--z-border);
+            display: flex;
+            gap: 48px;
+            flex-wrap: wrap;
+            animation: fadeUp .6s .45s ease both;
+        }
+        .stat-num {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 30px;
+            color: var(--z-white);
+            letter-spacing: -.03em;
+        }
+        .stat-num span { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 16px; margin-left: 2px; }
+        .stat-label { font-size: 11px; color: var(--z-muted); letter-spacing: .06em; margin-top: 2px; }
 
         /* TERMINALS */
-        .terminals-col{display:flex;flex-direction:column;gap:16px}
-        .hero-terminal{background:#1e2433;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.15),0 0 0 1px rgba(10,110,63,.08)}
-        .hero-terminal:nth-child(1){animation:fadeLeft .7s .3s ease both,floatA 6s 2s ease-in-out infinite}
-        .hero-terminal:nth-child(2){animation:fadeLeft .7s .5s ease both,floatB 7s 1s ease-in-out infinite}
-        .hero-terminal:nth-child(3){animation:fadeLeft .7s .7s ease both,floatA 5.5s 3s ease-in-out infinite}
-        @keyframes floatA{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-        @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
-        .terminal-bar{background:#151a24;padding:11px 16px;display:flex;align-items:center;gap:6px;border-bottom:1px solid rgba(255,255,255,.07)}
-        .t-dot{width:10px;height:10px;border-radius:50%}
-        .terminal-bar .t-filename{margin-left:auto;font-size:11px;color:#6b7280;letter-spacing:.05em}
-        .terminal-body{padding:18px 20px;font-size:12px;line-height:1.85;color:#dde4ec}
-        .t-comment{color:#4b5a6e}.t-key{color:#60a5fa}.t-val{color:#34d399}.t-str{color:#fbbf24}.t-pink{color:#f472b6}
-        .t-cursor{display:inline-block;width:2px;height:13px;background:#34d399;vertical-align:middle;margin-left:2px;animation:blink 1s step-end infinite}
-        @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+        .terminals-col { display: flex; flex-direction: column; gap: 16px; }
+        .hero-terminal {
+            background: #0d0f18;
+            border: 1px solid var(--z-border);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(31,123,248,0.06);
+        }
+        .hero-terminal:nth-child(1) { animation: fadeLeft .7s .3s ease both, floatA 6s 2s ease-in-out infinite; }
+        .hero-terminal:nth-child(2) { animation: fadeLeft .7s .5s ease both, floatB 7s 1s ease-in-out infinite; }
+        .hero-terminal:nth-child(3) { animation: fadeLeft .7s .7s ease both, floatA 5.5s 3s ease-in-out infinite; }
+        @keyframes floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(10px)} }
+        .terminal-bar {
+            background: #080a10;
+            padding: 11px 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid var(--z-border);
+        }
+        .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .terminal-bar .t-filename { margin-left: auto; font-size: 11px; color: #4a4f6a; letter-spacing: .05em; }
+        .terminal-body { padding: 18px 20px; font-size: 12px; line-height: 1.85; color: #b0b8d0; }
+        .t-comment { color: #3d4460; }
+        .t-key { color: var(--z-blue); }
+        .t-val { color: #56cfbe; }
+        .t-str { color: #f4b860; }
+        .t-pink { color: var(--z-purple); filter: brightness(1.4); }
+        .t-cursor { display: inline-block; width: 2px; height: 13px; background: var(--z-blue); vertical-align: middle; margin-left: 2px; animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
         /* SECTIONS */
-        .wbp-section{padding:110px 0}.wbp-section-border{border-top:1px solid var(--wbp-border)}
+        .z-section { padding: 110px 0; }
+        .z-section-border { border-top: 1px solid var(--z-border); }
 
         /* SERVICES */
-        .services-grid-wrap{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--wbp-border);border:1px solid var(--wbp-border);border-radius:16px;overflow:hidden;margin-top:52px}
-        .service-card{background:var(--wbp-card);padding:44px;position:relative;overflow:hidden;transition:background .3s;box-shadow:inset 0 0 0 0 transparent}
-        .service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--wbp-green),var(--wbp-blue));opacity:0;transition:opacity .3s}
-        .service-card:hover{background:#f0f4f8}.service-card:hover::before{opacity:1}
-        .service-card.featured{background:linear-gradient(140deg,#e8f5ee,#eef3fb)}
-        .service-icon{width:50px;height:50px;border-radius:13px;background:var(--wbp-green-dim);border:1px solid rgba(10,110,63,.18);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:22px;color:var(--wbp-green)}
-        .service-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:19px;color:var(--wbp-heading);letter-spacing:-.02em;margin-bottom:12px}
-        .service-card p{font-size:13.5px;color:var(--wbp-muted);line-height:1.7;margin-bottom:20px}
-        .wbp-tag{display:inline-block;font-size:11px;padding:4px 10px;border-radius:5px;background:rgba(0,0,0,.04);border:1px solid var(--wbp-border);color:var(--wbp-text);margin:3px 3px 3px 0}
+        .services-grid-wrap {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 1px;
+            background: var(--z-border);
+            border: 1px solid var(--z-border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 52px;
+        }
+        .service-card {
+            background: var(--z-card);
+            padding: 44px;
+            position: relative;
+            overflow: hidden;
+            transition: background .3s;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--grad);
+            opacity: 0;
+            transition: opacity .3s;
+        }
+        .service-card:hover { background: var(--z-card2); }
+        .service-card:hover::before { opacity: 1; }
+        .service-card.featured { background: linear-gradient(140deg, rgba(31,123,248,0.07), rgba(114,10,245,0.07)); }
+        .service-card.featured::before { opacity: 1; }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 13px;
+            background: var(--z-blue-dim);
+            border: 1px solid rgba(31,123,248,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 22px;
+            color: var(--z-blue);
+        }
+        .service-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 19px; color: var(--z-heading); letter-spacing: -.02em; margin-bottom: 12px; }
+        .service-card p { font-size: 13.5px; color: var(--z-muted); line-height: 1.7; margin-bottom: 20px; }
+
+        .z-tag {
+            display: inline-block;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 5px;
+            background: var(--z-border);
+            border: 1px solid var(--z-border);
+            color: var(--z-muted);
+            margin: 3px 3px 3px 0;
+        }
 
         /* PAIN POINTS */
-        .pain-card{background:var(--wbp-card);border:1px solid var(--wbp-border);border-radius:14px;padding:32px;height:100%;transition:border-color .3s,background .3s}
-        .pain-card:hover{border-color:rgba(220,38,38,.2);background:#fff5f5}
-        .pain-num{font-family:'Syne',sans-serif;font-weight:800;font-size:11px;letter-spacing:.12em;color:#dc2626;text-transform:uppercase;margin-bottom:14px;display:block}
-        .pain-card h4{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--wbp-heading);letter-spacing:-.02em;margin-bottom:12px}
-        .pain-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#dc2626;margin-bottom:5px;display:block;font-weight:500}
-        .implication-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--wbp-green);margin-bottom:5px;display:block;font-weight:500;margin-top:14px}
-        .pain-text{font-size:12.5px;color:var(--wbp-muted);line-height:1.7;margin:0}
+        .pain-card { background: var(--z-card); border: 1px solid var(--z-border); border-radius: 14px; padding: 32px; height: 100%; transition: border-color .3s; }
+        .pain-card:hover { border-color: rgba(114,10,245,.3); }
+        .pain-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: .12em; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-transform: uppercase; margin-bottom: 14px; display: block; }
+        .pain-card h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: var(--z-heading); letter-spacing: -.02em; margin-bottom: 12px; }
+        .pain-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #e05050; margin-bottom: 5px; display: block; font-weight: 500; }
+        .implication-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--z-blue); margin-bottom: 5px; display: block; font-weight: 500; margin-top: 14px; }
+        .pain-text { font-size: 12.5px; color: var(--z-muted); line-height: 1.7; margin: 0; }
 
         /* OUTCOMES */
-        .outcome-card{background:var(--wbp-card);border:1px solid var(--wbp-border);border-left:3px solid var(--wbp-green);border-radius:0 14px 14px 0;padding:28px;margin-bottom:12px;transition:background .3s}
-        .outcome-card:hover{background:#f0f7f4}
-        .outcome-num{font-size:10px;letter-spacing:.12em;color:var(--wbp-green);text-transform:uppercase;font-weight:500;margin-bottom:6px;display:block}
-        .outcome-card h4{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--wbp-heading);letter-spacing:-.02em;margin-bottom:8px}
-        .outcome-card p{font-size:12.5px;color:var(--wbp-muted);line-height:1.7;margin:0}
+        .outcome-card {
+            background: var(--z-card);
+            border: 1px solid var(--z-border);
+            border-left: 2px solid var(--z-blue);
+            border-radius: 0 14px 14px 0;
+            padding: 28px;
+            margin-bottom: 12px;
+            transition: background .3s;
+        }
+        .outcome-card:hover { background: var(--z-card2); }
+        .outcome-num { font-size: 10px; letter-spacing: .12em; color: var(--z-blue); text-transform: uppercase; font-weight: 500; margin-bottom: 6px; display: block; }
+        .outcome-card h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--z-heading); letter-spacing: -.02em; margin-bottom: 8px; }
+        .outcome-card p { font-size: 12.5px; color: var(--z-muted); line-height: 1.7; margin: 0; }
 
         /* GUARANTEES */
-        .guarantee-card{background:var(--wbp-card);border:1px solid rgba(10,110,63,.18);border-radius:14px;padding:36px;height:100%;position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(10,110,63,.06)}
-        .guarantee-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--wbp-green),var(--wbp-blue))}
-        .guarantee-card h4{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;color:var(--wbp-heading);letter-spacing:-.02em;margin-bottom:14px}
-        .guarantee-card p{font-size:13px;color:var(--wbp-muted);line-height:1.75;margin:0}
-        .guarantee-tagline{margin-top:16px;padding-top:16px;border-top:1px solid var(--wbp-border);font-size:12px;color:var(--wbp-green);font-style:italic}
+        .guarantee-card {
+            background: var(--z-card);
+            border: 1px solid rgba(31,123,248,0.15);
+            border-radius: 14px;
+            padding: 36px;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 20px rgba(31,123,248,0.06);
+        }
+        .guarantee-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--grad); }
+        .guarantee-card h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; color: var(--z-heading); letter-spacing: -.02em; margin-bottom: 14px; }
+        .guarantee-card p { font-size: 13px; color: var(--z-muted); line-height: 1.75; margin: 0; }
+        .guarantee-tagline { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--z-border); font-size: 12px; color: var(--z-blue); font-style: italic; }
 
         /* DELIVERABLES */
-        .deliverables-group{margin-bottom:32px}
-        .deliverables-group-title{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--wbp-green);font-weight:500;margin-bottom:12px;display:block;padding-bottom:8px;border-bottom:1px solid var(--wbp-border)}
-        .deliverable-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.04)}
-        .deliverable-row:last-child{border-bottom:none}
-        .deliverable-letter{font-family:'Syne',sans-serif;font-weight:800;font-size:11px;color:var(--wbp-green);min-width:18px;padding-top:2px}
-        .deliverable-title{font-size:13px;font-weight:500;color:var(--wbp-text);margin-bottom:2px}
-        .deliverable-desc{font-size:11.5px;color:var(--wbp-muted);line-height:1.6}
+        .deliverables-group { margin-bottom: 32px; }
+        .deliverables-group-title { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--z-blue); font-weight: 500; margin-bottom: 12px; display: block; padding-bottom: 8px; border-bottom: 1px solid var(--z-border); }
+        .deliverable-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--z-border); }
+        .deliverable-row:last-child { border-bottom: none; }
+        .deliverable-letter { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 11px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; min-width: 18px; padding-top: 2px; }
+        .deliverable-title { font-size: 13px; font-weight: 500; color: var(--z-text); margin-bottom: 2px; }
+        .deliverable-desc { font-size: 11.5px; color: var(--z-muted); line-height: 1.6; }
 
         /* PROCESS */
-        .step{display:flex;gap:22px;padding:30px 0;border-bottom:1px solid var(--wbp-border)}
-        .step:last-child{border-bottom:none}
-        .step-num{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:var(--wbp-green);letter-spacing:.08em;min-width:32px;padding-top:2px}
-        .step h5{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--wbp-heading);letter-spacing:-.02em;margin-bottom:6px}
-        .step p{font-size:13.5px;color:var(--wbp-muted);line-height:1.65;margin:0}
-        .process-visual{background:var(--wbp-card);border:1px solid var(--wbp-border);border-radius:14px;padding:32px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+        .step { display: flex; gap: 22px; padding: 30px 0; border-bottom: 1px solid var(--z-border); }
+        .step:last-child { border-bottom: none; }
+        .step-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: .08em; min-width: 32px; padding-top: 2px; }
+        .step h5 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: var(--z-heading); letter-spacing: -.02em; margin-bottom: 6px; }
+        .step p { font-size: 13.5px; color: var(--z-muted); line-height: 1.65; margin: 0; }
+        .process-visual { background: var(--z-card); border: 1px solid var(--z-border); border-radius: 14px; padding: 32px; }
 
         /* TIMELINE */
-        .tl-row{display:flex;border:1px solid var(--wbp-border);border-radius:10px;overflow:hidden;margin-bottom:8px}
-        .tl-phase{min-width:100px;padding:14px;background:#f0f4f8;border-right:1px solid var(--wbp-border);display:flex;flex-direction:column;justify-content:center}
-        .tl-phase-label{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--wbp-green);margin-bottom:2px}
-        .tl-phase-days{font-size:11px;color:var(--wbp-muted)}
-        .tl-items{padding:14px;background:var(--wbp-card);flex:1}
-        .tl-item{font-size:12px;color:var(--wbp-muted);display:flex;align-items:flex-start;gap:8px;margin-bottom:4px}
-        .tl-item:last-child{margin-bottom:0}
-        .tl-dot{width:5px;height:5px;border-radius:50%;background:var(--wbp-green);flex-shrink:0;margin-top:5px}
+        .tl-row { display: flex; border: 1px solid var(--z-border); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+        .tl-phase { min-width: 100px; padding: 14px; background: rgba(31,123,248,0.06); border-right: 1px solid var(--z-border); display: flex; flex-direction: column; justify-content: center; }
+        .tl-phase-label { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; color: var(--z-blue); margin-bottom: 2px; }
+        .tl-phase-days { font-size: 11px; color: var(--z-muted); }
+        .tl-items { padding: 14px; background: var(--z-card); flex: 1; }
+        .tl-item { font-size: 12px; color: var(--z-muted); display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+        .tl-item:last-child { margin-bottom: 0; }
+        .tl-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--z-blue); flex-shrink: 0; margin-top: 5px; }
 
         /* STACK */
-        .stack-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:14px}
-        .stack-category{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--wbp-muted);min-width:80px}
-        .stack-pill{display:inline-block;padding:7px 14px;border-radius:6px;border:1px solid var(--wbp-border);background:var(--wbp-surface);font-size:12px;color:var(--wbp-text);letter-spacing:.03em;transition:all .2s}
-        .stack-pill:hover{border-color:rgba(10,110,63,.35);color:var(--wbp-green)}
+        .stack-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; }
+        .stack-category { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--z-muted); min-width: 80px; }
+        .stack-pill { display: inline-block; padding: 7px 14px; border-radius: 6px; border: 1px solid var(--z-border); background: var(--z-card); font-size: 12px; color: var(--z-text); letter-spacing: .03em; transition: all .2s; }
+        .stack-pill:hover { border-color: rgba(31,123,248,.35); color: var(--z-blue); }
 
         /* PRICING */
-        .pricing-card{background:var(--wbp-card);border:1px solid var(--wbp-border);border-radius:14px;padding:32px;height:100%;transition:border-color .3s;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-        .pricing-card:hover{border-color:rgba(10,110,63,.3)}
-        .pricing-tier-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--wbp-muted);font-weight:500;margin-bottom:8px;display:block}
-        .pricing-card h4{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--wbp-heading);letter-spacing:-.02em;margin-bottom:14px}
-        .pricing-price{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:var(--wbp-green);letter-spacing:-.03em;margin-bottom:4px}
-        .pricing-price span{font-size:13px;color:var(--wbp-muted);font-weight:400}
-        .pricing-meta{font-size:11px;color:var(--wbp-muted);margin-bottom:16px}
-        .pricing-desc{font-size:12.5px;color:var(--wbp-muted);line-height:1.7;margin-bottom:14px}
-        .pricing-detail{font-size:11.5px;color:rgba(0,0,0,.3)}
+        .pricing-card { background: var(--z-card); border: 1px solid var(--z-border); border-radius: 14px; padding: 32px; height: 100%; transition: border-color .3s; }
+        .pricing-card:hover { border-color: rgba(31,123,248,.3); }
+        .pricing-tier-label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--z-muted); font-weight: 500; margin-bottom: 8px; display: block; }
+        .pricing-card h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: var(--z-heading); letter-spacing: -.02em; margin-bottom: 14px; }
+        .pricing-price { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 26px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -.03em; margin-bottom: 4px; }
+        .pricing-price span { font-size: 13px; color: var(--z-muted); font-weight: 400; -webkit-text-fill-color: var(--z-muted); }
+        .pricing-meta { font-size: 11px; color: var(--z-muted); margin-bottom: 16px; }
+        .pricing-desc { font-size: 12.5px; color: var(--z-muted); line-height: 1.7; margin-bottom: 14px; }
+        .pricing-detail { font-size: 11.5px; color: var(--z-border-md); }
 
         /* TOOL TABLE */
-        .tool-row{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--wbp-border);flex-wrap:wrap;gap:8px}
-        .tool-row:last-child{border-bottom:none}
-        .tool-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--wbp-heading);min-width:110px}
-        .tool-desc{font-size:12px;color:var(--wbp-muted);flex:1;padding:0 16px}
-        .tool-price{font-size:12px;color:var(--wbp-green);font-weight:500;white-space:nowrap}
-        .cost-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px}
-        .cost-card{background:var(--wbp-card);border:1px solid var(--wbp-border);border-radius:12px;padding:20px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-        .cost-label{font-size:11px;color:var(--wbp-muted);margin-bottom:8px}
-        .cost-value{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--wbp-green);letter-spacing:-.02em}
-        .cost-sub{font-size:10px;color:var(--wbp-muted);margin-top:4px}
+        .tool-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--z-border); flex-wrap: wrap; gap: 8px; }
+        .tool-row:last-child { border-bottom: none; }
+        .tool-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--z-heading); min-width: 110px; }
+        .tool-desc { font-size: 12px; color: var(--z-muted); flex: 1; padding: 0 16px; }
+        .tool-price { font-size: 12px; color: var(--z-blue); font-weight: 500; white-space: nowrap; }
+        .cost-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 24px; }
+        .cost-card { background: var(--z-card); border: 1px solid var(--z-border); border-radius: 12px; padding: 20px; text-align: center; }
+        .cost-label { font-size: 11px; color: var(--z-muted); margin-bottom: 8px; }
+        .cost-value { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -.02em; }
+        .cost-sub { font-size: 10px; color: var(--z-muted); margin-top: 4px; }
 
         /* CTA */
-        .cta-box{background:var(--wbp-card);border:1px solid var(--wbp-border);border-radius:20px;padding:72px 64px;position:relative;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.06)}
-        .cta-box::before{content:'';position:absolute;top:-120px;right:-80px;width:420px;height:420px;background:radial-gradient(circle,rgba(10,110,63,.05),transparent 65%);pointer-events:none}
-        .cta-box::after{content:'';position:absolute;bottom:-80px;left:-80px;width:320px;height:320px;background:radial-gradient(circle,rgba(26,95,212,.04),transparent 65%);pointer-events:none}
-        .cta-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(26px,3vw,40px);color:var(--wbp-heading);letter-spacing:-.03em;line-height:1.1;margin-bottom:14px}
-        .cta-title .ital{color:var(--wbp-green);font-style:italic;font-family:Georgia,serif}
+        .cta-box {
+            background: var(--z-card);
+            border: 1px solid var(--z-border);
+            border-radius: 20px;
+            padding: 72px 64px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: -120px; right: -80px;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(31,123,248,0.07), transparent 65%);
+            pointer-events: none;
+        }
+        .cta-box::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; left: -80px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(114,10,245,0.07), transparent 65%);
+            pointer-events: none;
+        }
+        .cta-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(26px,3vw,40px); color: var(--z-heading); letter-spacing: -.03em; line-height: 1.1; margin-bottom: 14px; }
+        .cta-title .ital { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-style: italic; font-family: Georgia, serif; }
 
         /* TESTIMONIALS */
-        .testi-card{background:var(--wbp-card);border:1px solid var(--wbp-border);border-radius:14px;padding:32px;height:100%;position:relative;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-        .testi-stars{color:var(--wbp-green);font-size:14px;letter-spacing:2px;margin-bottom:16px}
-        .testi-quote{font-size:14px;color:var(--wbp-text);line-height:1.75;margin-bottom:20px;font-style:italic}
-        .testi-author{display:flex;align-items:center;gap:12px;border-top:1px solid var(--wbp-border);padding-top:16px}
-        .testi-avatar{width:40px;height:40px;border-radius:50%;background:var(--wbp-green-dim);border:1px solid rgba(10,110,63,.2);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:var(--wbp-green);flex-shrink:0}
-        .testi-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--wbp-heading)}
-        .testi-role{font-size:11px;color:var(--wbp-muted)}
+        .testi-card { background: var(--z-card); border: 1px solid var(--z-border); border-radius: 14px; padding: 32px; height: 100%; position: relative; }
+        .testi-stars { font-size: 14px; letter-spacing: 2px; margin-bottom: 16px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .testi-quote { font-size: 14px; color: var(--z-text); line-height: 1.75; margin-bottom: 20px; font-style: italic; }
+        .testi-author { display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--z-border); padding-top: 16px; }
+        .testi-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--grad); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14px; color: #fff; flex-shrink: 0; }
+        .testi-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--z-heading); }
+        .testi-role { font-size: 11px; color: var(--z-muted); }
 
         /* URGENCY BANNER */
-        .urgency-banner{background:rgba(10,110,63,.05);border:1px solid rgba(10,110,63,.15);border-radius:10px;padding:14px 24px;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:60px;text-align:center;flex-wrap:wrap}
-        .urgency-dot{width:8px;height:8px;background:var(--wbp-green);border-radius:50%;animation:pulseDot 2s ease-in-out infinite;flex-shrink:0}
+        .urgency-banner {
+            background: linear-gradient(90deg, rgba(31,123,248,0.07), rgba(114,10,245,0.07));
+            border: 1px solid rgba(31,123,248,0.18);
+            border-radius: 10px;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 60px;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+        .urgency-dot { width: 8px; height: 8px; background: var(--z-blue); border-radius: 50%; animation: pulseDot 2s ease-in-out infinite; flex-shrink: 0; }
 
         /* PROBLEM STRIP */
-        .problem-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--wbp-border);border:1px solid var(--wbp-border);border-radius:14px;overflow:hidden;margin-top:52px}
-        .problem-item{background:var(--wbp-card);padding:32px;transition:background .3s}
-        .problem-item:hover{background:#fff5f5}
-        .problem-icon{font-size:24px;margin-bottom:14px}
-        .problem-title{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--wbp-heading);letter-spacing:-.02em;margin-bottom:8px}
-        .problem-text{font-size:12.5px;color:var(--wbp-muted);line-height:1.65;margin:0}
-        .problem-cost{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#dc2626;margin-top:12px}
+        .problem-strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--z-border); border: 1px solid var(--z-border); border-radius: 14px; overflow: hidden; margin-top: 52px; }
+        .problem-item { background: var(--z-card); padding: 32px; transition: background .3s; }
+        .problem-item:hover { background: var(--z-card2); }
+        .problem-icon { font-size: 24px; margin-bottom: 14px; }
+        .problem-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--z-heading); letter-spacing: -.02em; margin-bottom: 8px; }
+        .problem-text { font-size: 12.5px; color: var(--z-muted); line-height: 1.65; margin: 0; }
+        .problem-cost { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px; color: #e05050; margin-top: 12px; }
 
         /* FOOTER */
-        .wbp-footer{border-top:1px solid var(--wbp-border);padding:36px 0;color:var(--wbp-muted);font-size:12px;background:var(--wbp-surface)}
-        .footer-divider{color:var(--wbp-border-md);margin:0 8px}
-        .wbp-footer a{color:var(--wbp-muted);text-decoration:none;transition:color .2s}
-        .wbp-footer a:hover{color:var(--wbp-heading)}
+        .z-footer { border-top: 1px solid var(--z-border); padding: 36px 0; color: var(--z-muted); font-size: 12px; background: var(--z-surface); }
+        .footer-divider { color: var(--z-border-md); margin: 0 8px; }
+        .z-footer a { color: var(--z-muted); text-decoration: none; transition: color .2s; }
+        .z-footer a:hover { color: var(--z-white); }
 
         /* ANIMATIONS */
-        @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes fadeLeft{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-        .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
-        .reveal.visible{opacity:1;transform:translateY(0)}
+        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeLeft { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
 
-        @media(max-width:991px){.hero-terminal{display:none}.services-grid-wrap{grid-template-columns:1fr}.cta-box{padding:40px 28px}}
-        @media(max-width:767px){.hero-stats{gap:24px}.wbp-section{padding:72px 0}.cta-box{padding:32px 20px}.cost-grid{grid-template-columns:1fr}.tool-desc{display:none}}
-    </style>
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── CLIENTS CAROUSEL ── */
+        .clients-section {
+            padding: 36px 0 48px;
+            border-top: 1px solid var(--z-border);
+            overflow: hidden;
+        }
+        .clients-label {
+            text-align: center;
+            font-size: 11px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--z-muted);
+            margin-bottom: 28px;
+        }
+        .clients-track-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .clients-fade-left,
+        .clients-fade-right {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 100px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .clients-fade-left  { left: 0;  background: linear-gradient(to right,  var(--z-bg), transparent); }
+        .clients-fade-right { right: 0; background: linear-gradient(to left, var(--z-bg), transparent); }
+        .clients-track {
+            display: flex;
+            gap: 56px;
+            align-items: center;
+            width: max-content;
+            animation: scrollLogos 28s linear infinite;
+        }
+        .clients-track:hover { animation-play-state: paused; }
+        @keyframes scrollLogos {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .client-logo {
+            flex-shrink: 0;
+            height: 44px;
+            display: flex;
+            align-items: center;
+        }
+        .client-logo img {
+            height: 44px;
+            width: auto;
+            max-width: 140px;
+            object-fit: contain;
+            filter: brightness(0) invert(1) opacity(0.3);
+            transition: filter .35s ease, transform .35s ease;
+        }
+        [data-theme="light"] .client-logo img {
+            filter: brightness(0) opacity(0.25);
+        }
+        .client-logo img:hover {
+            filter: none;
+            transform: scale(1.1);
+        }
+
+        /* ── AI CHAT WIDGET ── */
+        .chat-widget {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            width: 360px;
+            max-height: 560px;
+            background: var(--z-card);
+            border: 1px solid var(--z-border-md);
+            border-radius: 20px;
+            box-shadow: 0 24px 60px rgba(0,0,0,.35), 0 0 0 1px rgba(31,123,248,.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 9999;
+            transform: scale(0.9) translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .25s ease;
+        }
+        .chat-widget.open {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 18px;
+            background: var(--grad);
+            flex-shrink: 0;
+        }
+        .chat-header-info { display: flex; align-items: center; gap: 10px; }
+        .chat-avatar-pulse {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            border: 2px solid rgba(255,255,255,0.5);
+            position: relative;
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+        }
+        .chat-avatar-pulse::before {
+            content: '🤖';
+            font-size: 17px;
+        }
+        .chat-avatar-pulse::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,.3);
+            animation: avatarPing 2s ease-in-out infinite;
+        }
+        @keyframes avatarPing { 0%,100%{transform:scale(1);opacity:.6} 50%{transform:scale(1.25);opacity:0} }
+        .chat-header-name { font-family:'Syne',sans-serif; font-weight:700; font-size:14px; color:#fff; }
+        .chat-header-status { font-size:11px; color:rgba(255,255,255,.75); }
+        .chat-close {
+            background: rgba(255,255,255,.15);
+            border: none;
+            border-radius: 8px;
+            width: 30px; height: 30px;
+            color: #fff;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .2s;
+            font-size: 12px;
+        }
+        .chat-close:hover { background: rgba(255,255,255,.28); }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--z-border) transparent;
+        }
+        .chat-msg { display: flex; }
+        .chat-msg.bot  { justify-content: flex-start; }
+        .chat-msg.user { justify-content: flex-end; }
+        .chat-bubble {
+            max-width: 82%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+        .chat-msg.bot  .chat-bubble { background: var(--z-card2); color: var(--z-text); border-bottom-left-radius: 4px; }
+        .chat-msg.user .chat-bubble { background: var(--grad); color: #fff; border-bottom-right-radius: 4px; }
+
+        .chat-quick-actions {
+            padding: 10px 12px 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            border-top: 1px solid var(--z-border);
+            flex-shrink: 0;
+        }
+        .quick-btn {
+            background: var(--z-card2);
+            border: 1px solid var(--z-border-md);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 11.5px;
+            color: var(--z-text);
+            cursor: pointer;
+            transition: all .2s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            white-space: nowrap;
+        }
+        .quick-btn:hover { border-color: var(--z-blue); color: var(--z-blue); background: var(--z-blue-dim); }
+
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            padding: 12px 14px;
+            border-top: 1px solid var(--z-border);
+            flex-shrink: 0;
+        }
+        .chat-input {
+            flex: 1;
+            background: var(--z-card2);
+            border: 1px solid var(--z-border-md);
+            border-radius: 10px;
+            padding: 9px 14px;
+            font-size: 13px;
+            color: var(--z-heading);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            outline: none;
+            transition: border-color .2s;
+        }
+        .chat-input:focus { border-color: var(--z-blue); }
+        .chat-input::placeholder { color: var(--z-muted); }
+        .chat-send {
+            background: var(--grad);
+            border: none;
+            border-radius: 10px;
+            width: 38px; height: 38px;
+            color: #fff;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+            transition: opacity .2s, transform .2s;
+            flex-shrink: 0;
+        }
+        .chat-send:hover { opacity: .85; transform: scale(1.05); }
+
+        /* FAB BUTTON */
+        .chat-fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: var(--grad);
+            border: none;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 28px rgba(31,123,248,.45);
+            z-index: 10000;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .chat-fab:hover { transform: scale(1.08); box-shadow: 0 12px 36px rgba(114,10,245,.45); }
+        .chat-fab-badge {
+            position: absolute;
+            top: -2px; right: -2px;
+            width: 18px; height: 18px;
+            background: #ff4f4f;
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Syne', sans-serif;
+            transition: opacity .2s;
+        }
+        .chat-fab-badge.hide { opacity: 0; }
+
+        /* ── MOBILE IMPROVEMENTS ── */
+        @media(max-width: 991px) {
+            .hero-terminal { display:none; }
+            .services-grid-wrap { grid-template-columns: 1fr; }
+            .cta-box { padding: 40px 28px; }
+            .chat-widget { width: calc(100vw - 32px); right: 16px; bottom: 82px; }
+            .chat-fab { right: 16px; bottom: 16px; }
+        }
+        @media(max-width: 767px) {
+            .hero-section { padding: 100px 0 70px; }
+            .hero-title { font-size: clamp(32px, 8vw, 52px); }
+            .hero-stats { gap: 20px; flex-wrap: wrap; justify-content: center; }
+            .hero-actions { flex-direction: column; align-items: center; }
+            .hero-actions .btn-primary-z,
+            .hero-actions .btn-ghost-z { width: 100%; justify-content: center; }
+            .z-section { padding: 64px 0; }
+            .cta-box { padding: 32px 20px; }
+            .cost-grid { grid-template-columns: 1fr; }
+            .tool-desc { display: none; }
+            .problem-strip { grid-template-columns: 1fr; }
+            .services-grid-wrap { grid-template-columns: 1fr; }
+            .section-title { font-size: clamp(24px, 6vw, 36px); }
+            .tl-row { flex-direction: column; }
+            .tl-phase { border-right: none; border-bottom: 1px solid var(--z-border); }
+            .chat-widget { max-height: 70vh; }
+            .clients-fade-left, .clients-fade-right { width: 60px; }
+            .hero-badge { font-size: 10px; padding: 5px 12px; }
+        }
+        @media(max-width: 480px) {
+            .hero-stats { gap: 16px; }
+            .stat-num { font-size: 24px; }
+            .quick-btn { font-size: 11px; padding: 4px 10px; }
+        }
+
+        .inline-chat-box {
+            background: var(--z-card);
+            border: 1px solid var(--z-border-md);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0,0,0,.2), 0 0 0 1px rgba(31,123,248,.07);
+        }
+        .inline-chat-header {
+            padding: 16px 18px;
+            background: var(--grad);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        </style>
+
 </head>
 <body>
 
@@ -217,8 +867,8 @@
 <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <img src="{% static 'whatsbizproLogoSquare.png' %}" alt="Logo" style="height: 64px; width: auto;">
-            <img src="{% static 'Zyven-text.png' %}" alt="Zyven" style="height: 52px; width: auto;">
+            <img src="{% static 'zyven-logo-text.png' %}" alt="Zyven" class="logo-dark" style="height: 102px; width: auto; margin-top: 12px;">
+            <img src="{% static 'zyven_black_letters.png' %}" alt="Zyven" class="logo-light" style="height: 102px; width: auto; margin-top: 12px;">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
             <span class="navbar-toggler-icon"></span>
@@ -229,7 +879,10 @@
                 <li class="nav-item"><a class="nav-link" href="#guarantees" id="t-nav-guarantees">Guarantees</a></li>
                 <li class="nav-item"><a class="nav-link" href="#process" id="t-nav-process">Process</a></li>
                 <li class="nav-item ms-lg-2">
-                    <button onclick="toggleLang()" id="lang-btn" style="background:transparent;border:1px solid var(--wbp-border-md);border-radius:7px;padding:7px 14px;color:var(--wbp-muted);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s;letter-spacing:.04em;">🌐 ES</button>
+                    <button onclick="toggleLang()" id="lang-btn" style="background:transparent;border:1px solid var(--z-border-md);border-radius:7px;padding:7px 14px;color:var(--z-muted);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;letter-spacing:.04em;">🌐 ES</button>
+                </li>
+                <li class="nav-item ms-lg-1">
+                    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark mode">🌙</button>
                 </li>
                 <li class="nav-item ms-lg-1">
                     <a class="nav-link btn-nav-cta" href="#contact" id="t-nav-cta">Book a Free Call</a>
@@ -239,38 +892,13 @@
     </div>
 </nav>
 
-
-<!-- STYLE ADDITIONS FOR NEW SECTIONS -->
-<style>
-/* TESTIMONIALS */
-.testi-card{background:var(--wbp-card);border:1px solid var(--wbp-border);border-radius:14px;padding:32px;height:100%;position:relative}
-.testi-stars{color:var(--wbp-green);font-size:14px;letter-spacing:2px;margin-bottom:16px}
-.testi-quote{font-size:14px;color:var(--wbp-text);line-height:1.75;margin-bottom:20px;font-style:italic}
-.testi-author{display:flex;align-items:center;gap:12px;border-top:1px solid var(--wbp-border);padding-top:16px}
-.testi-avatar{width:40px;height:40px;border-radius:50%;background:var(--wbp-green-dim);border:1px solid rgba(37,211,102,.25);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:var(--wbp-green);flex-shrink:0}
-.testi-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--wbp-heading)}
-.testi-role{font-size:11px;color:var(--wbp-muted)}
-/* URGENCY BANNER */
-.urgency-banner{background:linear-gradient(90deg,rgba(37,211,102,.08),rgba(37,211,102,.04));border:1px solid rgba(37,211,102,.2);border-radius:10px;padding:14px 24px;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:60px;text-align:center;flex-wrap:wrap}
-.urgency-dot{width:8px;height:8px;background:var(--wbp-green);border-radius:50%;animation:pulseDot 2s ease-in-out infinite;flex-shrink:0}
-/* PROBLEM STRIP */
-.problem-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--wbp-border);border:1px solid var(--wbp-border);border-radius:14px;overflow:hidden;margin-top:52px}
-.problem-item{background:var(--wbp-card);padding:32px;transition:background .3s}
-.problem-item:hover{background:#e7e7e7}
-.problem-icon{font-size:24px;margin-bottom:14px}
-.problem-title{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--wbp-heading);letter-spacing:-.02em;margin-bottom:8px}
-.problem-text{font-size:12.5px;color:var(--wbp-muted);line-height:1.65;margin:0}
-.problem-cost{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#ff5050;margin-top:12px}
-@media(max-width:767px){.problem-strip{grid-template-columns:1fr}}
-</style>
-
 <!-- HERO -->
 <section class="hero-section" style="position:relative;overflow:hidden;">
     <div id="particles-js" style="position:absolute;inset:0;z-index:0;"></div>
     <div class="container" style="position:relative;z-index:1;">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-7">
-                <div class="hero-badge">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7 text-center">
+                <div class="hero-badge" style="display:inline-flex;">
                     <div class="badge-dot"></div>
                     <span id="t-hero-badge">B2B Tech Consulting · Systems · Automation · AI</span>
                 </div>
@@ -279,17 +907,17 @@
                     <span class="ital">OS your business</span><br>
                     runs on.
                 </h1>
-                <p class="hero-sub" id="t-hero-sub">
-                    Custom systems, automation, and AI — built for B2B companies in 14 days. Fixed price. Zero guesswork. If we don't find problems, the audit is free.
+                <p class="hero-sub" id="t-hero-sub" style="margin-left:auto;margin-right:auto;">
+                    Custom systems, automation, and AI - built for B2B companies in 14 days. Fixed price. Zero guesswork. If we don't find problems, the audit is free.
                 </p>
-                <div class="hero-actions">
-                    <a href="#contact" class="btn-primary-wbp">
+                <div class="hero-actions" style="justify-content:center;">
+                    <a href="#contact" class="btn-primary-z">
                         <span id="t-hero-btn-primary">Get My Free Blueprint Session</span>
                         <i class="fas fa-arrow-right" style="font-size:12px"></i>
                     </a>
-                    <a href="#services" class="btn-ghost-wbp" id="t-hero-btn-ghost">See What We Build</a>
+                    <a href="#services" class="btn-ghost-z" id="t-hero-btn-ghost">See What We Build</a>
                 </div>
-                <div class="hero-stats">
+                <div class="hero-stats" style="justify-content:center;">
                     <div>
                         <div class="stat-num">7<span>days</span></div>
                         <div class="stat-label" id="t-stat-label-1">Beta live</div>
@@ -308,62 +936,74 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
 
-            <div class="col-lg-5 d-none d-lg-block">
-                <div class="terminals-col">
-                    <div class="hero-terminal">
-                        <div class="terminal-bar">
-                            <div class="t-dot" style="background:#ff5f56"></div>
-                            <div class="t-dot" style="background:#ffbd2e"></div>
-                            <div class="t-dot" style="background:#27c93f"></div>
-                            <span class="t-filename">audit.config.js</span>
-                        </div>
-                        <div class="terminal-body">
-<span class="t-comment">// Profit Stack Audit™</span>
-<span class="t-key">const</span> <span class="t-val">audit</span> = {
-  <span class="t-key">client</span>: <span class="t-str">"Your Business"</span>,
-  <span class="t-key">systems_mapped</span>: <span class="t-val">true</span>,
-  <span class="t-key">leaks_found</span>: <span class="t-val">3</span>,
-  <span class="t-key">monthly_loss</span>: <span class="t-str">"$45,000 MXN"</span>,
-  <span class="t-key">status</span>: <span class="t-val">READY_TO_FIX</span>
-};
-<span class="t-comment">// your call is free...<span class="t-cursor"></span></span>
+
+<!-- CLIENTS CAROUSEL -->
+<section class="clients-section">
+    <div class="container">
+        <p class="clients-label">Trusted by forward-thinking companies</p>
+        <div class="clients-track-wrapper">
+            <div class="clients-fade-left"></div>
+            <div class="clients-fade-right"></div>
+            <div class="clients-track" id="clientsTrack">
+                <!-- logos injected by JS -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CHAT SECTION (inline) -->
+<section class="z-section z-section-border" id="chat-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5 reveal">
+                <span class="section-label">AI Assistant</span>
+                <h2 class="section-title">Got questions?<br>Ask <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Zyven AI</span>.</h2>
+                <p style="color:var(--z-muted);font-size:14px;margin-top:16px;line-height:1.75;">Get instant answers about our services, pricing, timeline, and process - no waiting, no forms, no sales calls unless you want one.</p>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-top:28px;">
+                    <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--z-muted);">
+                        <i class="fas fa-bolt" style="color:var(--z-blue);width:16px;"></i> Instant answers, 24/7
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--z-muted);">
+                        <i class="fas fa-lock" style="color:var(--z-blue);width:16px;"></i> No signup required
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--z-muted);">
+                        <i class="fas fa-headset" style="color:var(--z-blue);width:16px;"></i> Escalate to a human anytime
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 reveal">
+                <div class="inline-chat-box">
+                    <div class="inline-chat-header">
+                        <div class="chat-header-info">
+                            <div class="chat-avatar-pulse"></div>
+                            <div>
+                                <div class="chat-header-name">Zyven AI</div>
+                                <div class="chat-header-status">Online - Ready to help</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="hero-terminal">
-                        <div class="terminal-bar">
-                            <div class="t-dot" style="background:#ff5f56"></div>
-                            <div class="t-dot" style="background:#ffbd2e"></div>
-                            <div class="t-dot" style="background:#27c93f"></div>
-                            <span class="t-filename">automation.py</span>
-                        </div>
-                        <div class="terminal-body">
-<span class="t-comment"># Replace manual workflow</span>
-<span class="t-key">async def</span> <span class="t-val">run_pipeline</span>():
-  data   = <span class="t-val">await</span> db.fetch_all()
-  report = <span class="t-val">await</span> ai.generate(
-    input=data,
-    format=<span class="t-str">"executive_summary"</span>
-  )
-  <span class="t-key">return</span> <span class="t-pink">AutoReport</span>(report, saved=<span class="t-str">"6hrs/week"</span>)
+                    <div class="chat-messages" id="inlineChatMessages" style="height:280px;">
+                        <div class="chat-msg bot">
+                            <div class="chat-bubble">👋 Hi! Ask me anything about Zyven - services, pricing, how we work, or anything else.</div>
                         </div>
                     </div>
-                    <div class="hero-terminal">
-                        <div class="terminal-bar">
-                            <div class="t-dot" style="background:#ff5f56"></div>
-                            <div class="t-dot" style="background:#ffbd2e"></div>
-                            <div class="t-dot" style="background:#27c93f"></div>
-                            <span class="t-filename">deploy.log</span>
-                        </div>
-                        <div class="terminal-body">
-<span class="t-comment">$ railway up</span>
-<span class="t-val">✓</span> Django app live
-<span class="t-val">✓</span> PostgreSQL connected
-<span class="t-val">✓</span> Automations running
-<span class="t-val">✓</span> Security hardened
-<span class="t-str">→ Day 7 beta complete</span> <span class="t-val">🚀</span>
-<span class="t-comment">  Day 14: full launch<span class="t-cursor"></span></span>
-                        </div>
+                    <div class="chat-quick-actions" id="inlineQuickActions">
+                        <button class="quick-btn" onclick="inlineQuickAsk('How much does a project cost?')">💰 Pricing</button>
+                        <button class="quick-btn" onclick="inlineQuickAsk('How fast can you build my system?')">⚡ Timeline</button>
+                        <button class="quick-btn" onclick="inlineQuickAsk('What services do you offer?')">🛠 Services</button>
+                        <button class="quick-btn" onclick="inlineQuickAsk('How does the free audit work?')">🎁 Free Audit</button>
+                        <button class="quick-btn" onclick="inlineQuickAsk('Do you offer managed services?')">🔧 Managed</button>
+                        <button class="quick-btn" onclick="inlineQuickAsk('What technologies do you use?')">💻 Tech Stack</button>
+                    </div>
+                    <div class="chat-input-row">
+                        <input type="text" id="inlineChatInput" class="chat-input" placeholder="Ask anything..." onkeydown="if(event.key==='Enter')inlineSendMsg()">
+                        <button class="chat-send" onclick="inlineSendMsg()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -373,7 +1013,7 @@
 
 
 <!-- PAIN POINTS -->
-<section id="pain-points" class="wbp-section wbp-section-border">
+<section id="pain-points" class="z-section z-section-border">
     <div class="container">
         <div class="reveal mb-5">
             <span class="section-label" id="t-pain-label">Sound familiar?</span>
@@ -410,11 +1050,11 @@
                 <p class="problem-text" id="t-pain5-text">By the time the quarterly numbers show the leak, you've already repeated the mistake twice.</p>
                 <div class="problem-cost" id="t-pain5-cost">→ Real-time data changes everything.</div>
             </div>
-            <div class="problem-item" style="background:linear-gradient(135deg,rgba(37,211,102,.06),transparent);border-left:2px solid var(--wbp-green)">
+            <div class="problem-item" style="background:linear-gradient(135deg,rgba(31,123,248,0.07),rgba(114,10,245,0.07));border-left:2px solid var(--z-blue)">
                 <div class="problem-icon">✅</div>
-                <div class="problem-title" id="t-pain6-title">We fix all of this — in 14 days.</div>
+                <div class="problem-title" id="t-pain6-title">We fix all of this - in 14 days.</div>
                 <p class="problem-text" id="t-pain6-text">One free session. We map your problems and show you the fix live on screen. No commitment.</p>
-                <a href="#contact" class="btn-primary-wbp d-inline-flex mt-3" style="font-size:13px;padding:10px 18px;">
+                <a href="#contact" class="btn-primary-z d-inline-flex mt-3" style="font-size:13px;padding:10px 18px;">
                     <span id="t-pain6-btn">Book Free Session</span>
                     <i class="fas fa-arrow-right" style="font-size:11px"></i>
                 </a>
@@ -425,58 +1065,58 @@
 
 
 <!-- SERVICES -->
-<section id="services" class="wbp-section wbp-section-border">
+<section id="services" class="z-section z-section-border">
     <div class="container">
         <div class="reveal">
             <span class="section-label" id="t-svc-label">What we build</span>
             <h2 class="section-title mb-3" id="t-svc-title">Everything your operation<br>needs to run lean.</h2>
-            <p style="color:var(--wbp-muted);max-width:480px;font-size:14px;" id="t-svc-sub">From a landing page to a full AI-powered operating system — built in 14 days at a fraction of enterprise prices.</p>
+            <p style="color:var(--z-muted);max-width:480px;font-size:14px;" id="t-svc-sub">From a landing page to a full AI-powered operating system - built in 14 days at a fraction of enterprise prices.</p>
         </div>
         <div class="services-grid-wrap reveal">
             <div class="service-card featured">
                 <div class="service-icon"><i class="fas fa-magnifying-glass-chart"></i></div>
                 <h3 id="t-svc1-title">System Audit & Optimization</h3>
-                <p style="color:gray;" id="t-svc1-text">We map your tools, workflows, and manual processes — and show you exactly where money is leaking. Free if we don't find real problems.</p>
+                <p id="t-svc1-text">We map your tools, workflows, and manual processes - and show you exactly where money is leaking. Free if we don't find real problems.</p>
                 <div>
-                    <span class="wbp-tag">Gap analysis</span>
-                    <span class="wbp-tag">Cost/ROI report</span>
-                    <span class="wbp-tag">Tech stack audit</span>
-                    <span class="wbp-tag">Visual system map</span>
+                    <span class="z-tag">Gap analysis</span>
+                    <span class="z-tag">Cost/ROI report</span>
+                    <span class="z-tag">Tech stack audit</span>
+                    <span class="z-tag">Visual system map</span>
                 </div>
             </div>
             <div class="service-card">
                 <div class="service-icon"><i class="fas fa-globe"></i></div>
                 <h3 id="t-svc2-title">Web & App Development</h3>
-                <p style="color:gray;" id="t-svc2-text">Landing pages, full web apps, dashboards, portals — custom-built on Django + PostgreSQL. Fast, mobile-ready, built to scale.</p>
+                <p id="t-svc2-text">Landing pages, full web apps, dashboards, portals - custom-built on Django + PostgreSQL. Fast, mobile-ready, built to scale.</p>
                 <div>
-                    <span class="wbp-tag">Django</span>
-                    <span class="wbp-tag">PostgreSQL</span>
-                    <span class="wbp-tag">Railway</span>
-                    <span class="wbp-tag">REST APIs</span>
-                    <span class="wbp-tag">Admin dashboards</span>
+                    <span class="z-tag">Django</span>
+                    <span class="z-tag">PostgreSQL</span>
+                    <span class="z-tag">Railway</span>
+                    <span class="z-tag">REST APIs</span>
+                    <span class="z-tag">Admin dashboards</span>
                 </div>
             </div>
             <div class="service-card">
                 <div class="service-icon"><i class="fas fa-robot"></i></div>
                 <h3 id="t-svc3-title">AI & Automation Builds</h3>
-                <p style="color:gray;" id="t-svc3-text">Replace repetitive manual work with automated pipelines. Chatbots, auto-reporting, intelligent workflows — embedded in your operations.</p>
+                <p id="t-svc3-text">Replace repetitive manual work with automated pipelines. Chatbots, auto-reporting, intelligent workflows - embedded in your operations.</p>
                 <div>
-                    <span class="wbp-tag">Workflow automation</span>
-                    <span class="wbp-tag">AI chatbots</span>
-                    <span class="wbp-tag">Auto reporting</span>
-                    <span class="wbp-tag">Process digitization</span>
+                    <span class="z-tag">Workflow automation</span>
+                    <span class="z-tag">AI chatbots</span>
+                    <span class="z-tag">Auto reporting</span>
+                    <span class="z-tag">Process digitization</span>
                 </div>
             </div>
             <div class="service-card">
                 <div class="service-icon"><i class="fas fa-shield-halved"></i></div>
                 <h3 id="t-svc4-title">Managed Services</h3>
-                <p style="color:gray;" id="t-svc4-text">Server, database, security, backups — all handled monthly. We keep the lights on so your team stays focused on the business.</p>
+                <p id="t-svc4-text">Server, database, security, backups - all handled monthly. We keep the lights on so your team stays focused on the business.</p>
                 <div>
-                    <span class="wbp-tag">Server monitoring</span>
-                    <span class="wbp-tag">DB maintenance</span>
-                    <span class="wbp-tag">Security patching</span>
-                    <span class="wbp-tag">Auto backups</span>
-                    <span class="wbp-tag">Priority support</span>
+                    <span class="z-tag">Server monitoring</span>
+                    <span class="z-tag">DB maintenance</span>
+                    <span class="z-tag">Security patching</span>
+                    <span class="z-tag">Auto backups</span>
+                    <span class="z-tag">Priority support</span>
                 </div>
             </div>
         </div>
@@ -485,7 +1125,7 @@
 
 
 <!-- TESTIMONIALS -->
-<section class="wbp-section wbp-section-border">
+<section class="z-section z-section-border">
     <div class="container">
         <div class="reveal mb-5">
             <span class="section-label" id="t-testi-label">Client results</span>
@@ -521,7 +1161,7 @@
             <div class="col-lg-4 reveal">
                 <div class="testi-card">
                     <div class="testi-stars">★★★★★</div>
-                    <p class="testi-quote" id="t-testi3-quote">"Client onboarding went from 3 weeks to 4 days. We closed two deals last month because we were simply faster than the competition. The ROI is not abstract — it's in our P&L."</p>
+                    <p class="testi-quote" id="t-testi3-quote">"Client onboarding went from 3 weeks to 4 days. We closed two deals last month because we were simply faster than the competition. The ROI is not abstract - it's in our P&L."</p>
                     <div class="testi-author">
                         <div class="testi-avatar">JL</div>
                         <div>
@@ -537,7 +1177,7 @@
 
 
 <!-- GUARANTEES -->
-<section id="guarantees" class="wbp-section wbp-section-border">
+<section id="guarantees" class="z-section z-section-border">
     <div class="container">
         <div class="reveal mb-5">
             <span class="section-label" id="t-guar-label">Zero risk</span>
@@ -547,17 +1187,17 @@
             <div class="col-lg-6 reveal">
                 <div class="guarantee-card">
                     <h4 id="t-guar1-title">The "See It Before You Sign It" Guarantee™</h4>
-                    <p id="t-guar1-text">Before you commit to a single dollar, we get on a live call and show you: a visual map of where your systems are broken and bleeding money — plus a working prototype of the solution, built for your business. Not a PDF. A live, clickable demo.</p>
-                    <p style="margin-top:12px;" id="t-guar1-text2">If we don't reveal at least 3 real problems — the call was free and you owe us nothing.</p>
+                    <p id="t-guar1-text">Before you commit to a single dollar, we get on a live call and show you: a visual map of where your systems are broken and bleeding money - plus a working prototype of the solution, built for your business. Not a PDF. A live, clickable demo.</p>
+                    <p style="margin-top:12px;" id="t-guar1-text2">If we don't reveal at least 3 real problems - the call was free and you owe us nothing.</p>
                     <div class="guarantee-tagline" id="t-guar1-tag">"See the problem. See the solution. Then decide."</div>
                 </div>
             </div>
             <div class="col-lg-6 reveal">
                 <div class="guarantee-card">
                     <h4 id="t-guar2-title">The "No Orphan Systems" Guarantee™</h4>
-                    <p id="t-guar2-text">Everything we build, you own completely. Full docs, full handover, full team training. If within 60 days anything stops working or your team can't operate it — we come back and fix it at zero cost.</p>
-                    <p style="margin-top:12px;" id="t-guar2-text2">Or let us run it for you. Managed services covering server, database, security, and maintenance — so your team never has to think about it.</p>
-                    <div class="guarantee-tagline" id="t-guar2-tag">"We build it so you can run it. Or we run it for you. Either way — you're never left stranded."</div>
+                    <p id="t-guar2-text">Everything we build, you own completely. Full docs, full handover, full team training. If within 60 days anything stops working or your team can't operate it - we come back and fix it at zero cost.</p>
+                    <p style="margin-top:12px;" id="t-guar2-text2">Or let us run it for you. Managed services covering server, database, security, and maintenance - so your team never has to think about it.</p>
+                    <div class="guarantee-tagline" id="t-guar2-tag">"We build it so you can run it. Or we run it for you. Either way - you're never left stranded."</div>
                 </div>
             </div>
         </div>
@@ -566,7 +1206,7 @@
 
 
 <!-- PROCESS -->
-<section id="process" class="wbp-section wbp-section-border">
+<section id="process" class="z-section z-section-border">
     <div class="container">
         <div class="reveal">
             <span class="section-label" id="t-proc-label">How we work</span>
@@ -578,7 +1218,7 @@
                     <div class="step-num">01</div>
                     <div>
                         <h5 id="t-step1-title">Free Live Blueprint Session</h5>
-                        <p id="t-step1-text">We screen-share a visual map of your broken systems and a working prototype of the fix — built for your business. Free if we don't find at least 3 real problems.</p>
+                        <p id="t-step1-text">We screen-share a visual map of your broken systems and a working prototype of the fix - built for your business. Free if we don't find at least 3 real problems.</p>
                     </div>
                 </div>
                 <div class="step">
@@ -599,10 +1239,10 @@
                     <div class="step-num">04</div>
                     <div>
                         <h5 id="t-step4-title">Full Launch (Days 8–14)</h5>
-                        <p id="t-step4-text">Production launch with security hardening, backups, and full docs. Your team owns it — or we manage it on a monthly plan.</p>
+                        <p id="t-step4-text">Production launch with security hardening, backups, and full docs. Your team owns it - or we manage it on a monthly plan.</p>
                     </div>
                 </div>
-                <a href="#contact" class="btn-primary-wbp d-inline-flex mt-4">
+                <a href="#contact" class="btn-primary-z d-inline-flex mt-4">
                     <span id="t-proc-btn">Start with a Free Session</span>
                     <i class="fas fa-arrow-right" style="font-size:12px"></i>
                 </a>
@@ -620,7 +1260,7 @@
                     <div class="tl-row">
                         <div class="tl-phase"><div class="tl-phase-label" id="t-phase2-label">Phase 2</div><div class="tl-phase-days" id="t-phase2-days">Days 3–5</div></div>
                         <div class="tl-items">
-                            <div class="tl-item"><div class="tl-dot"></div><span id="t-tl2-1">Core build — DB, backend, integrations</span></div>
+                            <div class="tl-item"><div class="tl-dot"></div><span id="t-tl2-1">Core build - DB, backend, integrations</span></div>
                             <div class="tl-item"><div class="tl-dot"></div><span id="t-tl2-2">Frontend & UI development</span></div>
                             <div class="tl-item"><div class="tl-dot"></div><span id="t-tl2-3">Automations and workflows configured</span></div>
                         </div>
@@ -638,7 +1278,7 @@
                         <div class="tl-items">
                             <div class="tl-item"><div class="tl-dot"></div><span id="t-tl4-1">Revisions from beta feedback</span></div>
                             <div class="tl-item"><div class="tl-dot"></div><span id="t-tl4-2">Security hardening + backups live</span></div>
-                            <div class="tl-item"><div class="tl-dot"></div><span id="t-tl4-3">Production launch — fully live</span></div>
+                            <div class="tl-item"><div class="tl-dot"></div><span id="t-tl4-3">Production launch - fully live</span></div>
                             <div class="tl-item"><div class="tl-dot"></div><span id="t-tl4-4">Docs, handover, or managed onboarding</span></div>
                         </div>
                     </div>
@@ -650,29 +1290,29 @@
 
 
 <!-- CTA -->
-<section id="contact" class="wbp-section wbp-section-border">
+<section id="contact" class="z-section z-section-border">
     <div class="container">
         <div class="cta-box reveal">
             <div class="row align-items-center g-4">
                 <div class="col-lg-8">
                     <span class="section-label" id="t-cta-label">Ready to start?</span>
-                    <h2 class="cta-title" id="t-cta-title">See <span class="ital">your</span> broken systems<br>fixed — live on screen.</h2>
-                    <p style="color:var(--wbp-muted);font-size:14px;max-width:480px;margin-bottom:16px;" id="t-cta-text">
+                    <h2 class="cta-title" id="t-cta-title">See <span class="ital">your</span> broken systems<br>fixed - live on screen.</h2>
+                    <p style="color:var(--z-muted);font-size:14px;max-width:480px;margin-bottom:16px;" id="t-cta-text">
                         Book a free 30-min Live Blueprint Session. We'll map every leak in your operation and show you a working prototype of the fix. If we don't find 3 real problems, you pay nothing.
                     </p>
-                    <div style="display:flex;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--wbp-muted);">
-                        <span><i class="fas fa-check" style="color:var(--wbp-green);margin-right:6px"></i><span id="t-cta-check1">Free 30-min session</span></span>
-                        <span><i class="fas fa-check" style="color:var(--wbp-green);margin-right:6px"></i><span id="t-cta-check2">No commitment</span></span>
-                        <span><i class="fas fa-check" style="color:var(--wbp-green);margin-right:6px"></i><span id="t-cta-check3">Live working demo</span></span>
-                        <span><i class="fas fa-check" style="color:var(--wbp-green);margin-right:6px"></i><span id="t-cta-check4">Fixed-price guarantee</span></span>
+                    <div style="display:flex;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--z-muted);">
+                        <span><i class="fas fa-check" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-right:6px"></i><span id="t-cta-check1">Free 30-min session</span></span>
+                        <span><i class="fas fa-check" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-right:6px"></i><span id="t-cta-check2">No commitment</span></span>
+                        <span><i class="fas fa-check" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-right:6px"></i><span id="t-cta-check3">Live working demo</span></span>
+                        <span><i class="fas fa-check" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-right:6px"></i><span id="t-cta-check4">Fixed-price guarantee</span></span>
                     </div>
                 </div>
                 <div class="col-lg-4 text-lg-end" style="position:relative;z-index:1">
-                    <a href="#" class="btn-primary-wbp d-inline-flex mb-3">
+                    <a href="#" class="btn-primary-z d-inline-flex mb-3">
                         <span id="t-cta-btn">Book My Free Blueprint Session</span>
                         <i class="fas fa-arrow-right" style="font-size:12px"></i>
                     </a>
-                    <div style="font-size:11px;color:var(--wbp-muted);letter-spacing:.04em;" id="t-cta-note">Free · 30 min · No commitment · $0 if we find nothing</div>
+                    <div style="font-size:11px;color:var(--z-muted);letter-spacing:.04em;" id="t-cta-note">Free · 30 min · No commitment · $0 if we find nothing</div>
                 </div>
             </div>
         </div>
@@ -681,13 +1321,13 @@
 
 
 <!-- FOOTER -->
-<footer class="wbp-footer">
+<footer class="z-footer">
     <div class="container">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
             <div style="display:flex;align-items:center;gap:10px;">
-                <div class="brand-mark" style="width:26px;height:26px;font-size:12px;">B</div>
-                <span style="font-family:'Syne',sans-serif;font-weight:700;color:var(--wbp-heading);">Zyven<span style="color:var(--wbp-green);"></span></span>
-                <span style="color:var(--wbp-border-md)">|</span>
+                <div class="brand-mark" style="width:26px;height:26px;font-size:12px;">Z</div>
+                <span style="font-family:'Syne',sans-serif;font-weight:700;color:var(--z-white);">Zyven</span>
+                <span style="color:var(--z-border-md)">|</span>
                 <span>B2B Tech Consulting © 2025</span>
             </div>
             <div class="d-flex gap-3 align-items-center">
@@ -701,6 +1341,56 @@
     </div>
 </footer>
 
+
+<!-- AI CHAT WIDGET -->
+<div id="chatWidget" class="chat-widget">
+    <div class="chat-header">
+        <div class="chat-header-info">
+            <div class="chat-avatar-pulse"></div>
+            <div>
+                <div class="chat-header-name">Zyven AI</div>
+                <div class="chat-header-status">Online - Ready to help</div>
+            </div>
+        </div>
+        <button class="chat-close" onclick="toggleChat()" aria-label="Close chat">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg bot">
+            <div class="chat-bubble">
+                👋 Hi! I'm Zyven AI. I can answer any questions about our services, pricing, or process. What would you like to know?
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-quick-actions">
+        <button class="quick-btn" onclick="quickAsk('How much does a project cost?')">💰 Pricing</button>
+        <button class="quick-btn" onclick="quickAsk('How fast can you build my system?')">⚡ Timeline</button>
+        <button class="quick-btn" onclick="quickAsk('What services do you offer?')">🛠 Services</button>
+        <button class="quick-btn" onclick="quickAsk('How does the free audit work?')">🎁 Free Audit</button>
+        <button class="quick-btn" onclick="quickAsk('Do you offer managed services?')">🔧 Managed</button>
+        <button class="quick-btn" onclick="quickAsk('What technologies do you use?')">💻 Tech Stack</button>
+    </div>
+
+    <div class="chat-input-row">
+        <input type="text" id="chatInput" class="chat-input" placeholder="Ask anything..." onkeydown="if(event.key==='Enter')sendMsg()">
+        <button class="chat-send" onclick="sendMsg()">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<!-- CHAT TOGGLE BUTTON -->
+<button class="chat-fab" id="chatFab" onclick="toggleChat()" aria-label="Open chat">
+    <span class="chat-fab-icon" id="chatFabIcon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.477 2 2 6.163 2 11.333c0 2.742 1.234 5.21 3.2 6.933L4 22l4.8-1.6A10.6 10.6 0 0012 20.667C17.523 20.667 22 16.503 22 11.333S17.523 2 12 2z" fill="white"/>
+        </svg>
+    </span>
+    <span class="chat-fab-badge" id="chatFabBadge">1</span>
+</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -723,7 +1413,7 @@
         let current = '';
         sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
         navLinks.forEach(a => {
-            a.style.color = a.getAttribute('href') === '#' + current ? 'var(--wbp-green)' : '';
+            a.style.color = a.getAttribute('href') === '#' + current ? 'var(--z-blue)' : '';
         });
     }, { passive: true });
 
@@ -740,7 +1430,7 @@
         // HERO
         'hero-badge':       { en: 'B2B Tech Consulting · Systems · Automation · AI', es: 'Consultoría Tech B2B · Sistemas · Automatización · IA' },
         'hero-title':       { en: 'We rebuild the<br><span class="ital">OS your business</span><br>runs on.', es: 'Reconstruimos el<br><span class="ital">sistema operativo</span><br>de tu empresa.' },
-        'hero-sub':         { en: "Custom systems, automation, and AI — built for B2B companies in 14 days. Fixed price. Zero guesswork. If we don't find problems, the audit is free.", es: 'Sistemas a medida, automatización e IA — construidos para empresas B2B en 14 días. Precio fijo. Sin sorpresas. Si no encontramos problemas, la auditoría es gratis.' },
+        'hero-sub':         { en: "Custom systems, automation, and AI - built for B2B companies in 14 days. Fixed price. Zero guesswork. If we don't find problems, the audit is free.", es: 'Sistemas a medida, automatización e IA - construidos para empresas B2B en 14 días. Precio fijo. Sin sorpresas. Si no encontramos problemas, la auditoría es gratis.' },
         'hero-btn-primary': { en: 'Get My Free Blueprint Session',  es: 'Obtener Mi Sesión Blueprint Gratis' },
         'hero-btn-ghost':   { en: 'See What We Build',              es: 'Ver Qué Construimos' },
         'stat-label-1':     { en: 'Beta live',                      es: 'Beta en vivo' },
@@ -766,22 +1456,22 @@
         'pain5-title':  { en: 'Flying blind on margins',                               es: 'Operando a ciegas en márgenes' },
         'pain5-text':   { en: "By the time the quarterly numbers show the leak, you've already repeated the mistake twice.", es: 'Para cuando los números trimestrales muestran la fuga, ya repetiste el error dos veces.' },
         'pain5-cost':   { en: '→ Real-time data changes everything.',                  es: '→ Los datos en tiempo real lo cambian todo.' },
-        'pain6-title':  { en: 'We fix all of this — in 14 days.',                     es: 'Nosotros lo solucionamos todo — en 14 días.' },
+        'pain6-title':  { en: 'We fix all of this - in 14 days.',                     es: 'Nosotros lo solucionamos todo - en 14 días.' },
         'pain6-text':   { en: 'One free session. We map your problems and show you the fix live on screen. No commitment.', es: 'Una sesión gratis. Mapeamos tus problemas y te mostramos la solución en pantalla. Sin compromiso.' },
         'pain6-btn':    { en: 'Book Free Session',                                     es: 'Agenda Sesión Gratis' },
 
         // SERVICES
         'svc-label':  { en: 'What we build',   es: 'Qué construimos' },
         'svc-title':  { en: 'Everything your operation<br>needs to run lean.', es: 'Todo lo que tu operación<br>necesita para funcionar bien.' },
-        'svc-sub':    { en: 'From a landing page to a full AI-powered operating system — built in 14 days at a fraction of enterprise prices.', es: 'Desde una landing page hasta un sistema operativo con IA — construido en 14 días a una fracción del costo empresarial.' },
+        'svc-sub':    { en: 'From a landing page to a full AI-powered operating system - built in 14 days at a fraction of enterprise prices.', es: 'Desde una landing page hasta un sistema operativo con IA - construido en 14 días a una fracción del costo empresarial.' },
         'svc1-title': { en: 'System Audit & Optimization', es: 'Auditoría y Optimización de Sistemas' },
-        'svc1-text':  { en: "We map your tools, workflows, and manual processes — and show you exactly where money is leaking. Free if we don't find real problems.", es: 'Mapeamos tus herramientas, flujos y procesos manuales — y te mostramos exactamente dónde se pierde dinero. Gratis si no encontramos problemas reales.' },
+        'svc1-text':  { en: "We map your tools, workflows, and manual processes - and show you exactly where money is leaking. Free if we don't find real problems.", es: 'Mapeamos tus herramientas, flujos y procesos manuales - y te mostramos exactamente dónde se pierde dinero. Gratis si no encontramos problemas reales.' },
         'svc2-title': { en: 'Web & App Development', es: 'Desarrollo Web y de Apps' },
-        'svc2-text':  { en: 'Landing pages, full web apps, dashboards, portals — custom-built on Django + PostgreSQL. Fast, mobile-ready, built to scale.', es: 'Landing pages, apps completas, dashboards, portales — construidos a medida con Django + PostgreSQL. Rápidos, responsivos y escalables.' },
+        'svc2-text':  { en: 'Landing pages, full web apps, dashboards, portals - custom-built on Django + PostgreSQL. Fast, mobile-ready, built to scale.', es: 'Landing pages, apps completas, dashboards, portales - construidos a medida con Django + PostgreSQL. Rápidos, responsivos y escalables.' },
         'svc3-title': { en: 'AI & Automation Builds', es: 'Automatización e IA' },
-        'svc3-text':  { en: 'Replace repetitive manual work with automated pipelines. Chatbots, auto-reporting, intelligent workflows — embedded in your operations.', es: 'Reemplaza el trabajo manual repetitivo con flujos automatizados. Chatbots, reportes automáticos, flujos inteligentes — integrados en tu operación.' },
+        'svc3-text':  { en: 'Replace repetitive manual work with automated pipelines. Chatbots, auto-reporting, intelligent workflows - embedded in your operations.', es: 'Reemplaza el trabajo manual repetitivo con flujos automatizados. Chatbots, reportes automáticos, flujos inteligentes - integrados en tu operación.' },
         'svc4-title': { en: 'Managed Services', es: 'Servicios Administrados' },
-        'svc4-text':  { en: 'Server, database, security, backups — all handled monthly. We keep the lights on so your team stays focused on the business.', es: 'Servidor, base de datos, seguridad, respaldos — todo gestionado mensualmente. Mantenemos todo funcionando para que tu equipo se enfoque en el negocio.' },
+        'svc4-text':  { en: 'Server, database, security, backups - all handled monthly. We keep the lights on so your team stays focused on the business.', es: 'Servidor, base de datos, seguridad, respaldos - todo gestionado mensualmente. Mantenemos todo funcionando para que tu equipo se enfoque en el negocio.' },
 
         // TESTIMONIALS
         'testi-label':  { en: 'Client results',                        es: 'Resultados de clientes' },
@@ -790,32 +1480,32 @@
         'testi1-role':  { en: 'COO · B2B Logistics Company',           es: 'COO · Empresa Logística B2B' },
         'testi2-quote': { en: '"We replaced 4 SaaS tools with one custom system. Monthly tech costs dropped by 60%. The system paid for itself in under 90 days. Genuinely wish we\'d done this two years ago."', es: '"Reemplazamos 4 herramientas SaaS con un sistema personalizado. Los costos tecnológicos bajaron un 60%. El sistema se pagó solo en menos de 90 días. Ojalá lo hubiéramos hecho hace dos años."' },
         'testi2-role':  { en: 'CEO · Tech Services Firm',              es: 'CEO · Firma de Servicios Tech' },
-        'testi3-quote': { en: '"Client onboarding went from 3 weeks to 4 days. We closed two deals last month because we were simply faster than the competition. The ROI is not abstract — it\'s in our P&L."', es: '"El onboarding de clientes pasó de 3 semanas a 4 días. Cerramos dos tratos el mes pasado porque simplemente fuimos más rápidos que la competencia. El ROI no es abstracto — está en nuestro P&L."' },
+        'testi3-quote': { en: '"Client onboarding went from 3 weeks to 4 days. We closed two deals last month because we were simply faster than the competition. The ROI is not abstract - it\'s in our P&L."', es: '"El onboarding de clientes pasó de 3 semanas a 4 días. Cerramos dos tratos el mes pasado porque simplemente fuimos más rápidos que la competencia. El ROI no es abstracto - está en nuestro P&L."' },
         'testi3-role':  { en: 'Founder · B2B SaaS Company',            es: 'Fundador · Empresa B2B SaaS' },
 
         // GUARANTEES
         'guar-label':   { en: 'Zero risk',                es: 'Cero riesgo' },
         'guar-title':   { en: 'We back everything<br>we build.', es: 'Respaldamos todo<br>lo que construimos.' },
         'guar1-title':  { en: 'The "See It Before You Sign It" Guarantee™', es: 'La Garantía™ "Véalo Antes de Firmarlo"' },
-        'guar1-text':   { en: 'Before you commit to a single dollar, we get on a live call and show you: a visual map of where your systems are broken and bleeding money — plus a working prototype of the solution, built for your business. Not a PDF. A live, clickable demo.', es: 'Antes de comprometer un solo peso, hacemos una llamada en vivo y te mostramos: un mapa visual de dónde tus sistemas están rotos y perdiendo dinero — más un prototipo funcional de la solución, construido para tu negocio. No un PDF. Un demo real, interactivo.' },
-        'guar1-text2':  { en: "If we don't reveal at least 3 real problems — the call was free and you owe us nothing.", es: 'Si no revelamos al menos 3 problemas reales — la llamada fue gratis y no nos debes nada.' },
+        'guar1-text':   { en: 'Before you commit to a single dollar, we get on a live call and show you: a visual map of where your systems are broken and bleeding money - plus a working prototype of the solution, built for your business. Not a PDF. A live, clickable demo.', es: 'Antes de comprometer un solo peso, hacemos una llamada en vivo y te mostramos: un mapa visual de dónde tus sistemas están rotos y perdiendo dinero - más un prototipo funcional de la solución, construido para tu negocio. No un PDF. Un demo real, interactivo.' },
+        'guar1-text2':  { en: "If we don't reveal at least 3 real problems - the call was free and you owe us nothing.", es: 'Si no revelamos al menos 3 problemas reales - la llamada fue gratis y no nos debes nada.' },
         'guar1-tag':    { en: '"See the problem. See the solution. Then decide."', es: '"Ve el problema. Ve la solución. Luego decide."' },
         'guar2-title':  { en: 'The "No Orphan Systems" Guarantee™', es: 'La Garantía™ "Sin Sistemas Huérfanos"' },
-        'guar2-text':   { en: "Everything we build, you own completely. Full docs, full handover, full team training. If within 60 days anything stops working or your team can't operate it — we come back and fix it at zero cost.", es: 'Todo lo que construimos es completamente tuyo. Documentación completa, transferencia total, capacitación del equipo. Si en 60 días algo deja de funcionar o tu equipo no puede operarlo — regresamos y lo arreglamos sin costo.' },
-        'guar2-text2':  { en: 'Or let us run it for you. Managed services covering server, database, security, and maintenance — so your team never has to think about it.', es: 'O déjanos operarlo por ti. Servicios administrados para servidor, base de datos, seguridad y mantenimiento — para que tu equipo nunca tenga que pensarlo.' },
-        'guar2-tag':    { en: '"We build it so you can run it. Or we run it for you. Either way — you\'re never left stranded."', es: '"Lo construimos para que lo operes. O lo operamos por ti. De cualquier forma — nunca te dejamos varado."' },
+        'guar2-text':   { en: "Everything we build, you own completely. Full docs, full handover, full team training. If within 60 days anything stops working or your team can't operate it - we come back and fix it at zero cost.", es: 'Todo lo que construimos es completamente tuyo. Documentación completa, transferencia total, capacitación del equipo. Si en 60 días algo deja de funcionar o tu equipo no puede operarlo - regresamos y lo arreglamos sin costo.' },
+        'guar2-text2':  { en: 'Or let us run it for you. Managed services covering server, database, security, and maintenance - so your team never has to think about it.', es: 'O déjanos operarlo por ti. Servicios administrados para servidor, base de datos, seguridad y mantenimiento - para que tu equipo nunca tenga que pensarlo.' },
+        'guar2-tag':    { en: '"We build it so you can run it. Or we run it for you. Either way - you\'re never left stranded."', es: '"Lo construimos para que lo operes. O lo operamos por ti. De cualquier forma - nunca te dejamos varado."' },
 
         // PROCESS
         'proc-label':  { en: 'How we work',                         es: 'Cómo trabajamos' },
         'proc-title':  { en: '7-day beta.<br>14-day full launch.',   es: 'Beta en 7 días.<br>Lanzamiento completo en 14.' },
         'step1-title': { en: 'Free Live Blueprint Session',          es: 'Sesión Blueprint en Vivo Gratis' },
-        'step1-text':  { en: "We screen-share a visual map of your broken systems and a working prototype of the fix — built for your business. Free if we don't find at least 3 real problems.", es: 'Compartimos pantalla con un mapa visual de tus sistemas rotos y un prototipo funcional de la solución — construido para tu negocio. Gratis si no encontramos al menos 3 problemas reales.' },
+        'step1-text':  { en: "We screen-share a visual map of your broken systems and a working prototype of the fix - built for your business. Free if we don't find at least 3 real problems.", es: 'Compartimos pantalla con un mapa visual de tus sistemas rotos y un prototipo funcional de la solución - construido para tu negocio. Gratis si no encontramos al menos 3 problemas reales.' },
         'step2-title': { en: 'Fixed-Price Proposal',                 es: 'Propuesta de Precio Fijo' },
         'step2-text':  { en: 'Clear scope, clear timeline, clear price. Day-one quote = final price. No surprises. No scope creep. Ever.', es: 'Alcance claro, cronograma claro, precio claro. La cotización del día uno = precio final. Sin sorpresas. Sin cambios de alcance. Nunca.' },
         'step3-title': { en: 'Build & Beta (Days 1–7)',              es: 'Construcción y Beta (Días 1–7)' },
         'step3-text':  { en: 'Core system deployed to staging. You walk through a live beta, give feedback, we tune it to exactly what you need.', es: 'Sistema base desplegado en staging. Recorres un beta en vivo, das retroalimentación y lo ajustamos exactamente a lo que necesitas.' },
         'step4-title': { en: 'Full Launch (Days 8–14)',              es: 'Lanzamiento Completo (Días 8–14)' },
-        'step4-text':  { en: 'Production launch with security hardening, backups, and full docs. Your team owns it — or we manage it on a monthly plan.', es: 'Lanzamiento a producción con seguridad reforzada, respaldos y documentación completa. Tu equipo lo opera — o nosotros lo gestionamos en un plan mensual.' },
+        'step4-text':  { en: 'Production launch with security hardening, backups, and full docs. Your team owns it - or we manage it on a monthly plan.', es: 'Lanzamiento a producción con seguridad reforzada, respaldos y documentación completa. Tu equipo lo opera - o nosotros lo gestionamos en un plan mensual.' },
         'proc-btn':    { en: 'Start with a Free Session',            es: 'Empieza con una Sesión Gratis' },
 
         // TIMELINE
@@ -830,7 +1520,7 @@
         'tl1-1': { en: 'Discovery call + intake form',              es: 'Llamada de descubrimiento + formulario' },
         'tl1-2': { en: 'System audit & gap map delivered',          es: 'Auditoría del sistema y mapa de brechas' },
         'tl1-3': { en: 'Architecture & tech decisions locked',       es: 'Arquitectura y decisiones técnicas confirmadas' },
-        'tl2-1': { en: 'Core build — DB, backend, integrations',    es: 'Construcción principal — BD, backend, integraciones' },
+        'tl2-1': { en: 'Core build - DB, backend, integrations',    es: 'Construcción principal - BD, backend, integraciones' },
         'tl2-2': { en: 'Frontend & UI development',                 es: 'Desarrollo de frontend e interfaz' },
         'tl2-3': { en: 'Automations and workflows configured',      es: 'Automatizaciones y flujos configurados' },
         'tl3-1': { en: 'Beta deployed to staging',                  es: 'Beta desplegada en staging' },
@@ -838,12 +1528,12 @@
         'tl3-3': { en: 'Security checks applied',                   es: 'Verificaciones de seguridad aplicadas' },
         'tl4-1': { en: 'Revisions from beta feedback',              es: 'Revisiones de la retroalimentación del beta' },
         'tl4-2': { en: 'Security hardening + backups live',         es: 'Seguridad reforzada + respaldos activos' },
-        'tl4-3': { en: 'Production launch — fully live',            es: 'Lanzamiento a producción — completamente activo' },
+        'tl4-3': { en: 'Production launch - fully live',            es: 'Lanzamiento a producción - completamente activo' },
         'tl4-4': { en: 'Docs, handover, or managed onboarding',     es: 'Documentación, transferencia u onboarding administrado' },
 
         // CTA
         'cta-label':   { en: 'Ready to start?',   es: '¿Listo para empezar?' },
-        'cta-title':   { en: 'See <span class="ital">your</span> broken systems<br>fixed — live on screen.', es: 'Ve <span class="ital">tus</span> sistemas rotos<br>solucionados — en vivo.' },
+        'cta-title':   { en: 'See <span class="ital">your</span> broken systems<br>fixed - live on screen.', es: 'Ve <span class="ital">tus</span> sistemas rotos<br>solucionados - en vivo.' },
         'cta-text':    { en: "Book a free 30-min Live Blueprint Session. We'll map every leak in your operation and show you a working prototype of the fix. If we don't find 3 real problems, you pay nothing.", es: 'Agenda una Sesión Blueprint en Vivo de 30 min gratis. Mapearemos cada fuga en tu operación y te mostraremos un prototipo funcional de la solución. Si no encontramos 3 problemas reales, no pagas nada.' },
         'cta-check1':  { en: 'Free 30-min session',       es: 'Sesión gratis de 30 min' },
         'cta-check2':  { en: 'No commitment',             es: 'Sin compromiso' },
@@ -858,11 +1548,18 @@
         'footer-contact':    { en: 'Contact',     es: 'Contacto' },
     };
 
-    function toggleLang() {
-        lang = lang === 'en' ? 'es' : 'en';
+    // ── Theme toggle ──
+    let currentTheme = 'dark';
+    function toggleTheme() {
+        currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', currentTheme === 'light' ? 'light' : '');
+        document.getElementById('theme-btn').textContent = currentTheme === 'dark' ? '🌙' : '☀️';
+    }
+
+    function toggleLang() {        lang = lang === 'en' ? 'es' : 'en';
         const btn = document.getElementById('lang-btn');
         btn.textContent = lang === 'en' ? '🌐 ES' : '🌐 EN';
-        btn.style.color = lang === 'es' ? 'var(--wbp-green)' : 'var(--wbp-muted)';
+        btn.style.color = lang === 'es' ? 'var(--z-blue)' : 'var(--z-muted)';
         applyLang();
     }
 
@@ -877,29 +1574,29 @@
 <script>
     particlesJS('particles-js', {
         particles: {
-            number: { value: 100, density: { enable: true, value_area: 900 } },
-            color: { value: '#25D366' },
+            number: { value: 80, density: { enable: true, value_area: 900 } },
+            color: { value: ['#1f7bf8', '#720af5'] },
             shape: { type: 'circle' },
             opacity: {
-                value: 0.45,
+                value: 0.35,
                 random: true,
                 anim: { enable: true, speed: 0.6, opacity_min: 0.05, sync: false }
             },
             size: {
-                value: 3.5,
+                value: 2.5,
                 random: true,
                 anim: { enable: false }
             },
             line_linked: {
                 enable: true,
-                distance: 240,
-                color: '#25D366',
-                opacity: 0.10,
+                distance: 220,
+                color: '#1f7bf8',
+                opacity: 0.08,
                 width: 1
             },
             move: {
                 enable: true,
-                speed: 0.8,
+                speed: 0.7,
                 direction: 'none',
                 random: true,
                 straight: false,
@@ -915,11 +1612,171 @@
                 resize: true
             },
             modes: {
-                grab: { distance: 340, line_linked: { opacity: 0.25 } }
+                grab: { distance: 300, line_linked: { opacity: 0.2 } }
             }
         },
         retina_detect: true
     });
 </script>
+<!-- CLIENTS CAROUSEL JS -->
+<script>
+(function() {
+    const logos = [
+        { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1757828536/whatsbizproLogoSquare_rithsi.png',  alt: 'WhatsBizPro' },
+        { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1775856062/logo_ideacon_1000x431_nretqf.png',  alt: 'Ideacon' },
+        { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1775871056/C.I.A.-II-Logo-R-1024x536_cbivyq.png', alt: 'CIA II' },
+        { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1775871160/rio_sa_transparent_kbzwpq.png', alt: 'Rio SA' },
+    ];
+    // Duplicate for infinite scroll
+    const all = [...logos, ...logos, ...logos, ...logos];
+    const track = document.getElementById('clientsTrack');
+    all.forEach(({ url, alt }) => {
+        const div = document.createElement('div');
+        div.className = 'client-logo';
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = alt;
+        img.loading = 'lazy';
+        div.appendChild(img);
+        track.appendChild(div);
+    });
+})();
+</script>
+
+<!-- CHAT WIDGET JS -->
+<script>
+let chatOpen = false;
+
+function toggleChat() {
+    chatOpen = !chatOpen;
+    const widget = document.getElementById('chatWidget');
+    const badge  = document.getElementById('chatFabBadge');
+    widget.classList.toggle('open', chatOpen);
+    badge.classList.toggle('hide', chatOpen);
+    if (chatOpen) {
+        setTimeout(() => document.getElementById('chatInput').focus(), 300);
+    }
+}
+
+function quickAsk(text) {
+    document.getElementById('chatInput').value = text;
+    sendMsg();
+}
+
+function sendMsg() {
+    const input = document.getElementById('chatInput');
+    const text  = input.value.trim();
+    if (!text) return;
+    addMsg(text, 'user');
+    input.value = '';
+    setTimeout(() => addTyping(), 400);
+    setTimeout(() => {
+        removeTyping();
+        addMsg(getBotReply(text), 'bot');
+    }, 1600);
+}
+
+function addMsg(text, role) {
+    const msgs = document.getElementById('chatMessages');
+    const div  = document.createElement('div');
+    div.className = `chat-msg ${role}`;
+    div.innerHTML = `<div class="chat-bubble">${text}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addTyping() {
+    const msgs = document.getElementById('chatMessages');
+    const div  = document.createElement('div');
+    div.className = 'chat-msg bot';
+    div.id = 'typingIndicator';
+    div.innerHTML = `<div class="chat-bubble" style="padding:12px 16px;">
+        <span style="display:inline-flex;gap:4px;align-items:center;">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:0s"></span>
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:.2s"></span>
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:.4s"></span>
+        </span>
+    </div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+    const el = document.getElementById('typingIndicator');
+    if (el) el.remove();
+}
+
+const style = document.createElement('style');
+style.textContent = `@keyframes dotBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}`;
+document.head.appendChild(style);
+
+function getBotReply(msg) {
+    const m = msg.toLowerCase();
+    if (m.includes('cost') || m.includes('pric') || m.includes('how much')) {
+        return "💰 Our projects start with a <strong>free 30-min Blueprint Session</strong> - zero cost, zero commitment. After that, we give you a fixed price on day one - what you see is what you pay. No surprises, ever.";
+    }
+    if (m.includes('fast') || m.includes('timeline') || m.includes('how long') || m.includes('days')) {
+        return "⚡ We move fast - <strong>beta in 7 days, full launch in 14 days</strong>. That's not a goal, it's a guarantee baked into every fixed-price proposal.";
+    }
+    if (m.includes('service') || m.includes('build') || m.includes('offer')) {
+        return "🛠 We build: <strong>System Audits</strong>, custom <strong>Web Apps</strong> (Django + PostgreSQL), <strong>AI & Automation</strong> pipelines, and <strong>Managed Services</strong>. Basically anything your business needs to stop leaking money and run lean.";
+    }
+    if (m.includes('audit') || m.includes('free') || m.includes('blueprint')) {
+        return "🎁 The <strong>Free Blueprint Session</strong> is a live 30-min call where we screen-share a visual map of your broken systems + a working prototype of the fix. If we don't find at least 3 real problems - you pay nothing.";
+    }
+    if (m.includes('managed') || m.includes('support') || m.includes('maintenance')) {
+        return "🔧 Yes! Our <strong>Managed Services</strong> cover server, database, security, and backups on a monthly plan. Your team stays focused on the business - we keep the lights on.";
+    }
+    if (m.includes('tech') || m.includes('stack') || m.includes('technolog')) {
+        return "💻 We primarily build with <strong>Django, PostgreSQL, React, and Python</strong>. For AI we use OpenAI, Claude, and custom fine-tuned models depending on the use case.";
+    }
+    if (m.includes('hello') || m.includes('hi') || m.includes('hey')) {
+        return "👋 Hey! Great to meet you. Want to start with a <strong>Free Blueprint Session</strong>? We'll map your biggest system leaks live on screen - at zero cost to you.";
+    }
+    return "Great question! The best next step is a <strong>Free 30-min Blueprint Session</strong> - we'll dive into your specific situation and show you exactly what we'd fix. Want to book one? Click the button above.";
+}
+
+function inlineQuickAsk(text) {
+    document.getElementById('inlineChatInput').value = text;
+    inlineSendMsg();
+}
+
+function inlineSendMsg() {
+    const input = document.getElementById('inlineChatInput');
+    const text  = input.value.trim();
+    if (!text) return;
+    inlineAddMsg(text, 'user');
+    input.value = '';
+    const msgs = document.getElementById('inlineChatMessages');
+    // typing indicator
+    const typing = document.createElement('div');
+    typing.className = 'chat-msg bot';
+    typing.id = 'inlineTyping';
+    typing.innerHTML = `<div class="chat-bubble" style="padding:12px 16px;">
+        <span style="display:inline-flex;gap:4px;align-items:center;">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:0s"></span>
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:.2s"></span>
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:.4s"></span>
+        </span>
+    </div>`;
+    msgs.appendChild(typing);
+    msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(() => {
+        const t = document.getElementById('inlineTyping');
+        if (t) t.remove();
+        inlineAddMsg(getBotReply(text), 'bot');
+    }, 1600);
+}
+
+function inlineAddMsg(text, role) {
+    const msgs = document.getElementById('inlineChatMessages');
+    const div  = document.createElement('div');
+    div.className = `chat-msg ${role}`;
+    div.innerHTML = `<div class="chat-bubble">${text}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+}
+</script>
+
 </body>
 </html>
