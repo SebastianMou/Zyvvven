@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Lead, Client, Project, Task, Note
+from .models import Lead, Client, Project, Task, Note, ChatMessage
+from django.contrib.sessions.models import Session
 
 
 @admin.register(Lead)
@@ -73,3 +74,23 @@ class NoteAdmin(admin.ModelAdmin):
     list_filter     = ['author']
     search_fields   = ['body']
     readonly_fields = ['created_at']
+
+@admin.register(ChatMessage)
+class ChatMessageAdmin(admin.ModelAdmin):
+    list_display  = ['session_id', 'role', 'source', 'short_message', 'ip_address', 'created_at']
+    list_filter   = ['role', 'source', 'created_at']
+    search_fields = ['session_id', 'message', 'ip_address']
+    readonly_fields = ['session_id', 'role', 'message', 'source', 'ip_address', 'user_agent', 'created_at']
+    ordering      = ['-created_at']
+
+    def short_message(self, obj):
+        return obj.message[:80] + '...' if len(obj.message) > 80 else obj.message
+    short_message.short_description = 'Message'
+
+# Inside ChatMessageAdmin add:
+actions = ['clear_sessions']
+
+def clear_sessions(self, request, queryset):
+    Session.objects.all().delete()
+    self.message_user(request, "All chat sessions cleared.")
+clear_sessions.short_description = "Clear all chat sessions"

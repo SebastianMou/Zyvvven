@@ -1,0 +1,733 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bahía 50's — AI-Powered Google Review Generator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── DARK MODE (default) ── */
+        :root {
+            --z-bg:         #020202;
+            --z-surface:    #0a0a0a;
+            --z-card:       #111111;
+            --z-card2:      #181818;
+            --z-border:     rgba(255,255,255,0.07);
+            --z-border-md:  rgba(255,255,255,0.13);
+            --z-blue:       #1f7bf8;
+            --z-purple:     #720af5;
+            --z-blue-dim:   rgba(31,123,248,0.10);
+            --z-purple-dim: rgba(114,10,245,0.10);
+            --z-glow-blue:  rgba(31,123,248,0.22);
+            --z-glow-purple:rgba(114,10,245,0.18);
+            --z-white:      #ffffff;
+            --z-off-white:  #e8eaf0;
+            --z-muted:      #7a7a8a;
+            --z-heading:    #f2f2f5;
+            --z-text:       #b0b0bf;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: dark;
+
+            --art-h1:       #f2f2f5;
+            --art-h2:       #e8eaf0;
+            --art-p:        #b0b0bf;
+            --art-li:       #b0b0bf;
+            --art-meta:     #7a7a8a;
+            --art-hr:       rgba(255,255,255,0.08);
+            --art-card-bg:  #111111;
+            --art-card-border: rgba(255,255,255,0.08);
+            --art-accent:   #1f7bf8;
+            --art-tag-bg:   rgba(31,123,248,0.12);
+            --art-tag-color:#7db8fc;
+        }
+
+        /* ── LIGHT MODE ── */
+        [data-theme="light"] {
+            --z-bg:         #ffffff;
+            --z-surface:    #f5f5f7;
+            --z-card:       #f0f0f4;
+            --z-card2:      #e8e8ee;
+            --z-border:     rgba(0,0,0,0.08);
+            --z-border-md:  rgba(0,0,0,0.15);
+            --z-blue:       #1f7bf8;
+            --z-purple:     #720af5;
+            --z-blue-dim:   rgba(31,123,248,0.08);
+            --z-purple-dim: rgba(114,10,245,0.08);
+            --z-glow-blue:  rgba(31,123,248,0.18);
+            --z-glow-purple:rgba(114,10,245,0.14);
+            --z-white:      #020202;
+            --z-off-white:  #1a1a1a;
+            --z-muted:      #6b6b7a;
+            --z-heading:    #0a0a0a;
+            --z-text:       #444452;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: light;
+
+            --art-h1:       #0a0a1a;
+            --art-h2:       #1a1a2e;
+            --art-p:        #3a3a4a;
+            --art-li:       #3a3a4a;
+            --art-meta:     #6b6b7a;
+            --art-hr:       rgba(0,0,0,0.08);
+            --art-card-bg:  #f5f5f7;
+            --art-card-border: rgba(0,0,0,0.08);
+            --art-accent:   #1f7bf8;
+            --art-tag-bg:   rgba(31,123,248,0.10);
+            --art-tag-color:#1a5bbf;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            background-color: var(--z-bg);
+            color: var(--z-text);
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background-color .3s ease, color .3s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px; left: -200px;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(31,123,248,0.06) 0%, transparent 65%);
+            pointer-events: none; z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -200px; right: -200px;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(114,10,245,0.07) 0%, transparent 65%);
+            pointer-events: none; z-index: 0;
+        }
+
+        nav, section, footer, main { position: relative; z-index: 1; }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: rgba(2,2,2,0.88) !important;
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--z-border);
+            padding: 0;
+            height: 68px;
+            transition: background .3s;
+        }
+        [data-theme="light"] .navbar { background: rgba(255,255,255,0.92) !important; }
+        .navbar .container { height: 100%; }
+
+        .navbar-brand { display:flex; align-items:center; gap:6px; padding:0; text-decoration:none; }
+
+        /* ── LOGO VISIBILITY (dark / light swap) ── */
+        .logo-light { display: none; }
+        .logo-dark  { display: block; }
+        [data-theme="light"] .logo-light { display: block; }
+        [data-theme="light"] .logo-dark  { display: none; }
+
+        .nav-link {
+            color: var(--z-muted) !important;
+            font-size: 13px; letter-spacing:.02em;
+            transition: color .2s;
+            padding: .4rem .9rem !important;
+        }
+        .nav-link:hover { color: var(--z-white) !important; }
+
+        .btn-nav-cta {
+            background: var(--grad);
+            color: #fff !important;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 13px;
+            padding: 8px 20px !important;
+            border-radius: 8px;
+            transition: all .2s !important;
+            box-shadow: 0 0 20px var(--z-glow-blue);
+        }
+        .btn-nav-cta:hover {
+            opacity: .88;
+            transform: translateY(-1px);
+            box-shadow: 0 0 30px var(--z-glow-purple);
+        }
+
+        .theme-toggle, .lang-btn {
+            background: transparent;
+            border: 1px solid var(--z-border-md);
+            border-radius: 8px;
+            padding: 7px 14px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all .2s;
+            color: var(--z-muted);
+            font-family: 'Manrope', sans-serif;
+            letter-spacing: .04em;
+        }
+        .theme-toggle { border-radius: 50%; width: 36px; height: 36px; padding: 0; font-size: 16px; }
+        .theme-toggle:hover, .lang-btn:hover {
+            border-color: var(--z-blue);
+            color: var(--z-blue);
+        }
+        .theme-toggle:hover { transform: rotate(20deg); }
+        .navbar-toggler { border-color: var(--z-border-md); }
+        .navbar-toggler-icon { filter: invert(1); }
+        [data-theme="light"] .navbar-toggler-icon { filter: invert(0); }
+
+        /* ── ARTICLE WRAPPER ── */
+        main {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 108px 28px 80px;
+        }
+
+        /* ── BACK LINK ── */
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; font-weight: 600;
+            color: var(--z-muted);
+            text-decoration: none;
+            letter-spacing: .06em; text-transform: uppercase;
+            margin-bottom: 32px;
+            transition: color .2s;
+        }
+        .back-link:hover { color: var(--z-blue); }
+
+        /* ── TAGS ── */
+        .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px; font-weight: 600;
+            letter-spacing: .5px; text-transform: uppercase;
+            background: var(--art-tag-bg);
+            color: var(--art-tag-color);
+            border: 1px solid rgba(31,123,248,.2);
+        }
+
+        /* ── H1 ── */
+        .article-h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(24px, 4vw, 38px);
+            font-weight: 800;
+            color: var(--art-h1);
+            line-height: 1.15;
+            letter-spacing: -.03em;
+            margin-bottom: 12px;
+        }
+
+        /* ── META ── */
+        .meta {
+            font-size: 13px;
+            color: var(--art-meta);
+            margin-bottom: 36px;
+            display: flex; flex-wrap: wrap; gap: 4px 16px;
+        }
+        .meta a { color: var(--art-accent); text-decoration: none; }
+        .meta a:hover { text-decoration: underline; }
+
+        /* ── DIVIDER ── */
+        hr {
+            border: none;
+            border-top: 1px solid var(--art-hr);
+            margin: 40px 0;
+        }
+
+        /* ── SECTION HEADINGS ── */
+        h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 16px; font-weight: 700;
+            color: var(--art-h2);
+            margin-top: 40px; margin-bottom: 12px;
+            padding-left: 14px;
+            border-left: 3px solid var(--z-blue);
+            transition: color .3s;
+        }
+
+        /* ── BODY TEXT ── */
+        p {
+            color: var(--art-p);
+            margin-bottom: 14px;
+            transition: color .3s;
+        }
+
+        ul, ol {
+            color: var(--art-li);
+            padding-left: 22px;
+            margin-bottom: 16px;
+            transition: color .3s;
+        }
+        li { margin-bottom: 8px; }
+
+        a { color: var(--art-accent); }
+        strong { color: var(--art-h2); font-weight: 700; }
+
+        /* ── INFO CARD ── */
+        .info-card {
+            background: var(--art-card-bg);
+            border: 1px solid var(--art-card-border);
+            border-radius: 12px;
+            padding: 22px 26px;
+            margin: 16px 0 24px;
+            transition: background .3s, border-color .3s;
+        }
+        .info-card li { margin-bottom: 10px; font-size: 13.5px; }
+
+        /* ── METRIC CARDS ── */
+        .metric-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 20px 0 28px;
+        }
+        .metric-card {
+            background: var(--art-card-bg);
+            border: 1px solid var(--art-card-border);
+            border-radius: 12px;
+            padding: 18px 20px;
+            text-align: center;
+            transition: background .3s, border-color .3s;
+        }
+        .metric-card .metric-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 26px; font-weight: 800;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        .metric-card .metric-label {
+            font-size: 11.5px;
+            color: var(--z-muted);
+            margin-top: 4px;
+            letter-spacing: .03em;
+        }
+
+        /* ── FOOTER NOTE ── */
+        .footer-note {
+            font-size: 13px;
+            color: var(--art-meta);
+            margin-top: 8px;
+        }
+        .footer-note a { color: var(--art-accent); }
+
+        /* ── CTA BLOCK ── */
+        .cta-block {
+            background: linear-gradient(135deg, rgba(31,123,248,0.08), rgba(114,10,245,0.08));
+            border: 1px solid rgba(31,123,248,0.2);
+            border-radius: 14px;
+            padding: 28px 30px;
+            margin: 40px 0 0;
+            text-align: center;
+        }
+        .cta-block h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px; font-weight: 800;
+            color: var(--art-h1);
+            margin-bottom: 8px;
+        }
+        .cta-block p {
+            font-size: 14px;
+            color: var(--z-muted);
+            margin-bottom: 20px;
+        }
+        .btn-cta {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--grad);
+            color: #fff;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 14px;
+            padding: 12px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all .2s;
+            box-shadow: 0 0 24px var(--z-glow-blue);
+        }
+        .btn-cta:hover {
+            color: #fff;
+            opacity: .88;
+            transform: translateY(-2px);
+            box-shadow: 0 0 36px var(--z-glow-purple);
+        }
+
+        @media (max-width: 600px) {
+            .metric-row { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── NAVBAR ── -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'zyven-logo-text.png' %}" alt="Zyven" class="logo-dark"
+                    style="height:102px;width:auto;margin-top:12px;">
+                <img src="{% static 'zyven_black_letters.png' %}" alt="Zyven" class="logo-light"
+                    style="height:102px;width:auto;margin-top:12px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Services" data-es="Servicios">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Guarantees" data-es="Garantías">Guarantees</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Process" data-es="Proceso">Process</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🌐 ES</button>
+                    </li>
+                    <li class="nav-item ms-lg-1">
+                        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark mode">🌙</button>
+                    </li>
+                    <li class="nav-item ms-lg-1">
+                        <a class="nav-link btn-nav-cta" href="#contact" data-en="Book a Free Call" data-es="Agendar Llamada">Book a Free Call</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── ARTICLE ── -->
+    <main>
+
+        <a href="#" class="back-link">
+            <i class="fa fa-arrow-left" style="font-size:11px;"></i>
+            <span data-en="Back to Projects" data-es="Volver a Proyectos">Back to Projects</span>
+        </a>
+
+        <div class="tag-row">
+            <span class="tag" data-en="Hospitality" data-es="Hospitalidad">Hospitality</span>
+            <span class="tag" data-en="AI-Powered Tool" data-es="Herramienta con IA">AI-Powered Tool</span>
+            <span class="tag">Flask · Python · Claude API</span>
+        </div>
+
+        <h1 class="article-h1">
+            <span data-en="Bahía 50's: An AI Review Generator That Turns Happy Guests Into Google Reviews"
+                  data-es="Bahía 50's: Un Generador de Reseñas con IA que Convierte Huéspedes Felices en Reseñas de Google">
+                Bahía 50's: An AI Review Generator That Turns Happy Guests Into Google Reviews
+            </span>
+        </h1>
+
+        <div class="meta">
+            <span><span data-en="Client:" data-es="Cliente:">Client:</span> <a href="#">Bahía 50's — Villas Bahía Dorada Acapulco</a></span>
+            <span>·</span>
+            <span data-en="Last updated: April 2026" data-es="Última actualización: Abril 2026">Last updated: April 2026</span>
+            <span>·</span>
+            <span data-en="Status: Active Production" data-es="Estado: En Producción Activa">Status: Active Production</span>
+        </div>
+
+        <hr>
+
+        <!-- Project Overview -->
+        <h2 data-en="Project Overview" data-es="Descripción del Proyecto">Project Overview</h2>
+        <p data-en="Bahía 50's is a retro-themed villa rental in Las Playas, Acapulco — one of Mexico's most iconic coastal locations. The property offers ocean views, a private pool, and the kind of 1950s atmosphere that guests genuinely love. The problem was simple: guests loved the experience but rarely followed through on leaving a Google review. The intent was there. The friction wasn't."
+           data-es="Bahía 50's es un alquiler de villa con temática retro en Las Playas, Acapulco — una de las ubicaciones costeras más icónicas de México. La propiedad ofrece vistas al mar, alberca privada y ese ambiente de los años 50 que los huéspedes realmente adoran. El problema era simple: los huéspedes amaban la experiencia pero raramente terminaban dejando una reseña en Google. La intención estaba. La fricción también.">
+            Bahía 50's is a retro-themed villa rental in Las Playas, Acapulco — one of Mexico's most iconic coastal locations. The property offers ocean views, a private pool, and the kind of 1950s atmosphere that guests genuinely love. The problem was simple: guests loved the experience but rarely followed through on leaving a Google review. The intent was there. The friction wasn't.
+        </p>
+
+        <p data-en="We built a fully custom AI-powered web app that eliminates that friction entirely. Guests pick a star rating, tap the highlights they want to mention, choose their language, and optionally add a personal note. The app generates a polished, natural-sounding Google review in seconds — then puts the text in their clipboard and drops them directly onto the Google review page. One tap, one review."
+           data-es="Construimos una aplicación web completamente personalizada con IA que elimina esa fricción por completo. Los huéspedes eligen una calificación de estrellas, tocan los aspectos destacados que quieren mencionar, eligen su idioma y opcionalmente añaden una nota personal. La app genera una reseña de Google pulida y natural en segundos — luego coloca el texto en su portapapeles y los lleva directamente a la página de reseñas de Google. Un toque, una reseña.">
+            We built a fully custom AI-powered web app that eliminates that friction entirely. Guests pick a star rating, tap the highlights they want to mention, choose their language, and optionally add a personal note. The app generates a polished, natural-sounding Google review in seconds — then puts the text in their clipboard and drops them directly onto the Google review page. One tap, one review.
+        </p>
+
+        <!-- Key Numbers -->
+        <div class="metric-row">
+            <div class="metric-card">
+                <div class="metric-value">&lt;30s</div>
+                <div class="metric-label" data-en="From landing the page to review posted" data-es="Desde abrir la página hasta publicar la reseña">From landing the page to review posted</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">3</div>
+                <div class="metric-label" data-en="Languages supported out of the box" data-es="Idiomas disponibles desde el inicio">Languages supported out of the box</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">0</div>
+                <div class="metric-label" data-en="Words the guest has to write themselves" data-es="Palabras que el huésped tiene que escribir">Words the guest has to write themselves</div>
+            </div>
+        </div>
+
+        <!-- The Problem -->
+        <h2 data-en="The Problem We Solved" data-es="El Problema que Resolvimos">The Problem We Solved</h2>
+        <p data-en="Online reputation is the lifeblood of short-term rentals. A property with 12 reviews and 4.2 stars loses to a competitor with 80 reviews and 4.8 stars every time — even if the actual experience is identical. Bahía 50's had the experience. What it didn't have was a system for turning that experience into reviews at scale."
+           data-es="La reputación en línea es el alma de los alquileres de corta estancia. Una propiedad con 12 reseñas y 4.2 estrellas pierde ante un competidor con 80 reseñas y 4.8 estrellas siempre — incluso si la experiencia real es idéntica. Bahía 50's tenía la experiencia. Lo que no tenía era un sistema para convertir esa experiencia en reseñas a escala.">
+            Online reputation is the lifeblood of short-term rentals. A property with 12 reviews and 4.2 stars loses to a competitor with 80 reviews and 4.8 stars every time — even if the actual experience is identical. Bahía 50's had the experience. What it didn't have was a system for turning that experience into reviews at scale.
+        </p>
+        <ul>
+            <li>
+                <strong data-en="Guests wanted to leave reviews but didn't:" data-es="Los huéspedes querían dejar reseñas pero no lo hacían:">Guests wanted to leave reviews but didn't:</strong>
+                <span data-en="Staring at a blank Google text box after a trip is intimidating. Most guests don't know what to write, feel it'll take too long, or simply forget by the time they get home."
+                      data-es="Mirar un cuadro de texto de Google en blanco después de un viaje es intimidante. La mayoría de los huéspedes no saben qué escribir, sienten que llevará demasiado tiempo o simplemente lo olvidan cuando llegan a casa.">
+                    Staring at a blank Google text box after a trip is intimidating. Most guests don't know what to write, feel it'll take too long, or simply forget by the time they get home.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Generic review-request emails get ignored:" data-es="Los correos genéricos solicitando reseñas se ignoran:">Generic review-request emails get ignored:</strong>
+                <span data-en="A follow-up email saying 'please leave us a review' has a near-zero conversion rate. Guests need a tool that does the work for them, presented at exactly the right moment — while they're still at the property or just leaving."
+                      data-es="Un correo de seguimiento diciendo 'por favor déjanos una reseña' tiene una tasa de conversión casi nula. Los huéspedes necesitan una herramienta que haga el trabajo por ellos, presentada en el momento exacto — mientras aún están en la propiedad o recién se van.">
+                    A follow-up email saying "please leave us a review" has a near-zero conversion rate. Guests need a tool that does the work for them, presented at exactly the right moment — while they're still at the property or just leaving.
+                </span>
+            </li>
+            <li>
+                <strong data-en="International guests face a language barrier:" data-es="Los huéspedes internacionales enfrentan una barrera idiomática:">International guests face a language barrier:</strong>
+                <span data-en="Acapulco attracts visitors from across Latin America, the US, and Europe. A Spanish-only review prompt alienates a significant portion of guests who would otherwise gladly share their experience."
+                      data-es="Acapulco atrae visitantes de toda América Latina, EE. UU. y Europa. Un formulario solo en español aleja a una parte significativa de huéspedes que de otro modo encantados compartirían su experiencia.">
+                    Acapulco attracts visitors from across Latin America, the US, and Europe. A Spanish-only review prompt alienates a significant portion of guests who would otherwise gladly share their experience.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Reviews that do exist sound robotic or short:" data-es="Las reseñas que existen suenan robóticas o son cortas:">Reviews that do exist sound robotic or short:</strong>
+                <span data-en="When guests do write reviews on their own, the result is often 'very nice place, good location' — not the kind of rich, specific review that builds trust with future guests or boosts search ranking."
+                      data-es="Cuando los huéspedes escriben reseñas por su cuenta, el resultado suele ser 'lugar muy bonito, buena ubicación' — no el tipo de reseña rica y específica que genera confianza en futuros huéspedes o mejora el posicionamiento en búsquedas.">
+                    When guests do write reviews on their own, the result is often "very nice place, good location" — not the kind of rich, specific review that builds trust with future guests or boosts search ranking.
+                </span>
+            </li>
+        </ul>
+
+        <!-- What We Built -->
+        <h2 data-en="What We Built" data-es="Lo que Construimos">What We Built</h2>
+        <p data-en="We delivered a mobile-first Flask web app with a branded, hotel-quality UI — designed to feel like part of the Bahía 50's experience, not a generic form. The entire user journey from opening the page to copying the generated review and landing on Google takes under 30 seconds."
+           data-es="Entregamos una aplicación web Flask mobile-first con una UI de marca y calidad hotelera — diseñada para sentirse como parte de la experiencia de Bahía 50's, no como un formulario genérico. Todo el recorrido del usuario desde abrir la página hasta copiar la reseña generada y aterrizar en Google toma menos de 30 segundos.">
+            We delivered a mobile-first Flask web app with a branded, hotel-quality UI — designed to feel like part of the Bahía 50's experience, not a generic form. The entire user journey from opening the page to copying the generated review and landing on Google takes under 30 seconds.
+        </p>
+
+        <div class="info-card">
+            <ul style="margin:0;padding-left:18px;">
+                <li>
+                    <strong data-en="Star Rating Selection:" data-es="Selección de Calificación por Estrellas:">Star Rating Selection:</strong>
+                    <span data-en="Guests tap their star rating directly in the app. The default is 5 stars — a deliberate framing decision that sets a positive tone before the guest has typed a single word."
+                          data-es="Los huéspedes tocan su calificación de estrellas directamente en la app. El predeterminado es 5 estrellas — una decisión de encuadre deliberada que establece un tono positivo antes de que el huésped haya escrito una sola palabra.">
+                        Guests tap their star rating directly in the app. The default is 5 stars — a deliberate framing decision that sets a positive tone before the guest has typed a single word.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Highlight Chips — What Did You Enjoy?" data-es="Chips de Aspectos Destacados — ¿Qué Disfrutaste?">Highlight Chips — What Did You Enjoy?</strong>
+                    <span data-en="10 tappable chips cover the property's strongest selling points: ocean view, pool, cleanliness, location, service, 50's atmosphere, privacy, sunsets, tranquility, and parking. Guests tap what resonated — the AI handles the rest."
+                          data-es="10 chips seleccionables cubren los puntos de venta más fuertes de la propiedad: vista al mar, alberca, limpieza, ubicación, servicio, ambiente 50's, privacidad, atardeceres, tranquilidad y estacionamiento. Los huéspedes tocan lo que les resonó — la IA se encarga del resto.">
+                        10 tappable chips cover the property's strongest selling points: ocean view, pool, cleanliness, location, service, 50's atmosphere, privacy, sunsets, tranquility, and parking. Guests tap what resonated — the AI handles the rest.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="3-Language Support — Spanish, English, French:" data-es="Soporte en 3 Idiomas — Español, Inglés, Francés:">3-Language Support — Spanish, English, French:</strong>
+                    <span data-en="Guests choose their preferred language with a single tap. The AI generates the review entirely in that language — not a translation of a Spanish original, but a natively written review in that guest's voice."
+                          data-es="Los huéspedes eligen su idioma preferido con un solo toque. La IA genera la reseña completamente en ese idioma — no una traducción de un original en español, sino una reseña escrita nativamente en la voz de ese huésped.">
+                        Guests choose their preferred language with a single tap. The AI generates the review entirely in that language — not a translation of a Spanish original, but a natively written review in that guest's voice.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Optional Personal Note:" data-es="Nota Personal Opcional:">Optional Personal Note:</strong>
+                    <span data-en="A free-text field lets guests add anything specific — 'we came with kids and it was perfect', 'the staff helped us a lot with luggage'. The AI weaves these details into the generated review naturally."
+                          data-es="Un campo de texto libre permite a los huéspedes agregar algo específico — 'llegamos con niños y fue perfecto', 'el personal nos ayudó mucho con el equipaje'. La IA teje estos detalles en la reseña generada de forma natural.">
+                        A free-text field lets guests add anything specific — "we came with kids and it was perfect", "the staff helped us a lot with luggage". The AI weaves these details into the generated review naturally.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="One-Tap Copy + Redirect to Google:" data-es="Copia con un Toque + Redirección a Google:">One-Tap Copy + Redirect to Google:</strong>
+                    <span data-en="The copy button places the generated review in the guest's clipboard and immediately redirects them to the Bahía 50's Google review page. The guest arrives with the text already copied — they just paste and submit."
+                          data-es="El botón de copia coloca la reseña generada en el portapapeles del huésped y lo redirige inmediatamente a la página de reseñas de Google de Bahía 50's. El huésped llega con el texto ya copiado — solo pega y envía.">
+                        The copy button places the generated review in the guest's clipboard and immediately redirects them to the Bahía 50's Google review page. The guest arrives with the text already copied — they just paste and submit.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Branded Mobile UI — Hotel-Quality Feel:" data-es="UI Móvil con Marca — Calidad Hotelera:">Branded Mobile UI — Hotel-Quality Feel:</strong>
+                    <span data-en="The interface uses Bahía 50's visual language — a Playfair Display headline, a glassmorphism card over a hero background, warm coastal tones, and copy that matches the property's personality. It doesn't look like a form. It looks like part of the stay."
+                          data-es="La interfaz usa el lenguaje visual de Bahía 50's — un titular en Playfair Display, una tarjeta con glassmorfismo sobre un fondo hero, tonos cálidos costeros y texto que coincide con la personalidad de la propiedad. No parece un formulario. Parece parte de la estancia.">
+                        The interface uses Bahía 50's visual language — a Playfair Display headline, a glassmorphism card over a hero background, warm coastal tones, and copy that matches the property's personality. It doesn't look like a form. It looks like part of the stay.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Technical Implementation -->
+        <h2 data-en="Technical Implementation" data-es="Implementación Técnica">Technical Implementation</h2>
+        <div class="info-card">
+            <ul style="margin:0;padding-left:18px;">
+                <li>
+                    <strong data-en="Backend:" data-es="Backend:">Backend:</strong>
+                    <span data-en="Flask — a single clean route receives the guest's selections, builds a structured prompt, calls the AI API, and returns the generated review. Minimal, fast, zero unnecessary dependencies."
+                          data-es="Flask — una sola ruta limpia recibe las selecciones del huésped, construye un prompt estructurado, llama a la API de IA y devuelve la reseña generada. Mínimo, rápido, sin dependencias innecesarias.">
+                        Flask — a single clean route receives the guest's selections, builds a structured prompt, calls the AI API, and returns the generated review. Minimal, fast, zero unnecessary dependencies.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="AI Review Generation:" data-es="Generación de Reseñas con IA:">AI Review Generation:</strong>
+                    <span data-en="The prompt engine combines the star rating, selected highlight chips, chosen language, and optional personal note into a structured instruction that produces a genuine-sounding first-person review — not a template fill-in."
+                          data-es="El motor de prompts combina la calificación de estrellas, los chips de aspectos seleccionados, el idioma elegido y la nota personal opcional en una instrucción estructurada que produce una reseña en primera persona que suena genuina — no un relleno de plantilla.">
+                        The prompt engine combines the star rating, selected highlight chips, chosen language, and optional personal note into a structured instruction that produces a genuine-sounding first-person review — not a template fill-in.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Frontend:" data-es="Frontend:">Frontend:</strong>
+                    <span data-en="Bootstrap 5 with a fully custom stylesheet — glassmorphism card, interactive star rating, toggle chip groups, animated loading state on the generate button, and a toast notification confirming the copy action. All served from Django templates."
+                          data-es="Bootstrap 5 con una hoja de estilo completamente personalizada — tarjeta glassmorfismo, calificación de estrellas interactiva, grupos de chips toggle, estado de carga animado en el botón de generar y una notificación toast confirmando la acción de copia. Todo servido desde plantillas Django.">
+                        Bootstrap 5 with a fully custom stylesheet — glassmorphism card, interactive star rating, toggle chip groups, animated loading state on the generate button, and a toast notification confirming the copy action. All served from Django templates.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Fonts &amp; Icons:" data-es="Fuentes e Íconos:">Fonts &amp; Icons:</strong>
+                    <span data-en="Playfair Display for the hero headline (matches the property's retro personality), DM Sans for body text, and Bootstrap Icons for UI elements — a deliberate pairing that feels editorial and warm rather than corporate."
+                          data-es="Playfair Display para el titular hero (coincide con la personalidad retro de la propiedad), DM Sans para el cuerpo del texto y Bootstrap Icons para elementos de UI — una combinación deliberada que se siente editorial y cálida en lugar de corporativa.">
+                        Playfair Display for the hero headline (matches the property's retro personality), DM Sans for body text, and Bootstrap Icons for UI elements — a deliberate pairing that feels editorial and warm rather than corporate.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Clipboard + Redirect Flow:" data-es="Flujo de Portapapeles + Redirección:">Clipboard + Redirect Flow:</strong>
+                    <span data-en="The copy action uses the native Clipboard API with a graceful fallback. On success, a toast confirms the copy and a JavaScript redirect fires to the Google review URL — the two actions are sequenced so the copy always completes before the redirect."
+                          data-es="La acción de copia usa la API nativa del portapapeles con un fallback elegante. Al tener éxito, un toast confirma la copia y un redireccionamiento de JavaScript se activa hacia la URL de reseñas de Google — las dos acciones están secuenciadas para que la copia siempre se complete antes del redireccionamiento.">
+                        The copy action uses the native Clipboard API with a graceful fallback. On success, a toast confirms the copy and a JavaScript redirect fires to the Google review URL — the two actions are sequenced so the copy always completes before the redirect.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Deployment:" data-es="Despliegue:">Deployment:</strong>
+                    <span data-en="Served as a Django-integrated Flask view, deployable to any standard Python host. Static assets (CSS, JS) managed via Django's static file system with template tag loaders."
+                          data-es="Servido como una vista Flask integrada en Django, desplegable en cualquier host Python estándar. Los activos estáticos (CSS, JS) se gestionan a través del sistema de archivos estáticos de Django con cargadores de etiquetas de plantilla.">
+                        Served as a Django-integrated Flask view, deployable to any standard Python host. Static assets (CSS, JS) managed via Django's static file system with template tag loaders.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- How It Works -->
+        <h2 data-en="How the Guest Journey Works" data-es="Cómo Funciona el Recorrido del Huésped">How the Guest Journey Works</h2>
+        <p data-en="The property shares the link via QR code at checkout, WhatsApp, or printed card. From there the guest does five things — and most of them are just taps:"
+           data-es="La propiedad comparte el enlace vía código QR al hacer checkout, WhatsApp o tarjeta impresa. Desde ahí el huésped hace cinco cosas — y la mayoría son solo toques:">
+            The property shares the link via QR code at checkout, WhatsApp, or printed card. From there the guest does five things — and most of them are just taps:
+        </p>
+        <ol>
+            <li data-en="Tap their star rating. Default is 5 — the bar is set from the first interaction."
+                data-es="Tocar su calificación de estrellas. El predeterminado es 5 — el estándar se establece desde la primera interacción.">
+                Tap their star rating. Default is 5 — the bar is set from the first interaction.
+            </li>
+            <li data-en="Tap the highlights that resonated: ocean view, pool, sunsets, 50's atmosphere, or any combination of the 10 available chips."
+                data-es="Tocar los aspectos que les resonaron: vista al mar, alberca, atardeceres, ambiente 50's o cualquier combinación de los 10 chips disponibles.">
+                Tap the highlights that resonated: ocean view, pool, sunsets, 50's atmosphere, or any combination of the 10 available chips.
+            </li>
+            <li data-en="Select the review language — Spanish, English, or French."
+                data-es="Seleccionar el idioma de la reseña — español, inglés o francés.">
+                Select the review language — Spanish, English, or French.
+            </li>
+            <li data-en="Optionally type a personal detail. Or skip it entirely — the AI generates a great review either way."
+                data-es="Opcionalmente escribir un detalle personal. O saltárselo por completo — la IA genera una excelente reseña de cualquier manera.">
+                Optionally type a personal detail. Or skip it entirely — the AI generates a great review either way.
+            </li>
+            <li data-en="Tap 'Generate my review'. Read it, tap 'Copy and leave a review on Google' — the text lands in their clipboard and they're taken straight to Google. Paste, submit, done."
+                data-es="Tocar 'Generar mi reseña'. Leerla, tocar 'Copiar y dejar reseña en Google' — el texto llega a su portapapeles y son llevados directamente a Google. Pegar, enviar, listo.">
+                Tap "Generate my review". Read it, tap "Copy and leave a review on Google" — the text lands in their clipboard and they're taken straight to Google. Paste, submit, done.
+            </li>
+        </ol>
+
+        <!-- Business Value -->
+        <h2 data-en="Business Value" data-es="Valor para el Negocio">Business Value</h2>
+        <ul>
+            <li>
+                <strong data-en="Dramatically Higher Review Conversion:" data-es="Conversión de Reseñas Dramáticamente Mayor:">Dramatically Higher Review Conversion:</strong>
+                <span data-en="Removing the blank-page problem is the single biggest lever for review conversion. Guests who would have abandoned a manual review process now complete it in under 30 seconds — because the only thing they have to do is tap and paste."
+                      data-es="Eliminar el problema de la página en blanco es la palanca más grande para la conversión de reseñas. Los huéspedes que habrían abandonado un proceso manual de reseña ahora lo completan en menos de 30 segundos — porque lo único que tienen que hacer es tocar y pegar.">
+                    Removing the blank-page problem is the single biggest lever for review conversion. Guests who would have abandoned a manual review process now complete it in under 30 seconds — because the only thing they have to do is tap and paste.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Higher-Quality Reviews That Actually Drive Bookings:" data-es="Reseñas de Mayor Calidad que Realmente Generan Reservas:">Higher-Quality Reviews That Actually Drive Bookings:</strong>
+                <span data-en="The AI produces specific, natural reviews that mention the ocean view, the pool, the 50's atmosphere — the exact details that future guests search for. A review that says 'great ocean views and perfect for families' converts better than 'nice place'."
+                      data-es="La IA produce reseñas específicas y naturales que mencionan la vista al mar, la alberca, el ambiente 50's — exactamente los detalles que buscan los futuros huéspedes. Una reseña que dice 'excelentes vistas al mar y perfecta para familias' convierte mejor que 'lugar bonito'.">
+                    The AI produces specific, natural reviews that mention the ocean view, the pool, the 50's atmosphere — the exact details that future guests search for. A review that says "great ocean views and perfect for families" converts better than "nice place."
+                </span>
+            </li>
+            <li>
+                <strong data-en="International Guest Inclusion:" data-es="Inclusión de Huéspedes Internacionales:">International Guest Inclusion:</strong>
+                <span data-en="English and French support means international guests who would never write a review in Spanish can now contribute to the property's reputation in their own language — expanding the total addressable reviewer pool significantly."
+                      data-es="El soporte en inglés y francés significa que los huéspedes internacionales que nunca escribirían una reseña en español ahora pueden contribuir a la reputación de la propiedad en su propio idioma — expandiendo significativamente el grupo total de reseñadores potenciales.">
+                    English and French support means international guests who would never write a review in Spanish can now contribute to the property's reputation in their own language — expanding the total addressable reviewer pool significantly.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Zero Staff Effort:" data-es="Cero Esfuerzo del Personal:">Zero Effort Staff:</strong>
+                <span data-en="No staff training, no follow-up emails to send, no manual process. The QR code at checkout does the work. The property owner shares a link — the system handles everything else."
+                      data-es="Sin capacitación del personal, sin correos de seguimiento que enviar, sin proceso manual. El código QR al hacer checkout hace el trabajo. El dueño de la propiedad comparte un enlace — el sistema se encarga de todo lo demás.">
+                    No staff training, no follow-up emails to send, no manual process. The QR code at checkout does the work. The property owner shares a link — the system handles everything else.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Compounding SEO Value:" data-es="Valor SEO Acumulado:">Compounding SEO Value:</strong>
+                <span data-en="More reviews, higher average rating, and more keyword-rich review text all compound over time into stronger Google Maps visibility — the single most important ranking factor for short-term rentals in a competitive tourist destination like Acapulco."
+                      data-es="Más reseñas, calificación promedio más alta y texto de reseña más rico en palabras clave se acumulan con el tiempo en mayor visibilidad en Google Maps — el factor de clasificación más importante para alquileres de corta estancia en un destino turístico competitivo como Acapulco.">
+                    More reviews, higher average rating, and more keyword-rich review text all compound over time into stronger Google Maps visibility — the single most important ranking factor for short-term rentals in a competitive tourist destination like Acapulco.
+                </span>
+            </li>
+        </ul>
+
+        <hr>
+
+        <!-- CTA Block -->
+        <div class="cta-block" id="contact">
+            <h3 data-en="Does your property deserve more reviews?" data-es="¿Tu propiedad merece más reseñas?">Does your property deserve more reviews?</h3>
+            <p data-en="If your guests love the experience but the reviews don't show it, the problem isn't the guests — it's the friction. We've built this before. We can build it for you, customized to your property, your brand, and your guests' languages, faster than you'd expect."
+               data-es="Si tus huéspedes aman la experiencia pero las reseñas no lo reflejan, el problema no son los huéspedes — es la fricción. Ya hemos construido esto antes. Podemos construirlo para ti, personalizado para tu propiedad, tu marca y los idiomas de tus huéspedes, más rápido de lo que esperarías.">
+                If your guests love the experience but the reviews don't show it, the problem isn't the guests — it's the friction. We've built this before. We can build it for you, customized to your property, your brand, and your guests' languages, faster than you'd expect.
+            </p>
+            <a href="#" class="btn-cta">
+                <i class="fa fa-calendar" style="font-size:13px;"></i>
+                <span data-en="Book a Free Strategy Call" data-es="Agendar una Llamada de Estrategia Gratis">Book a Free Strategy Call</span>
+            </a>
+        </div>
+
+        <hr>
+        <p class="footer-note">
+            <span data-en="Built by" data-es="Construido por">Built by</span>
+            <a href="#">Zyven</a>
+            &nbsp;·&nbsp;
+            <span data-en="Questions? Let's talk." data-es="¿Preguntas? Hablemos.">Questions? Let's talk.</span>
+        </p>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /* ── THEME ── */
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById('theme-btn').textContent = theme === 'dark' ? '🌙' : '☀️';
+            localStorage.setItem('theme', theme);
+            currentTheme = theme;
+        }
+
+        function toggleTheme() {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        /* ── LANGUAGE ── */
+        let currentLang = 'en';
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            const btn = document.getElementById('lang-btn');
+            btn.textContent = currentLang === 'en' ? '🌐 ES' : '🌐 EN';
+
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const text = el.getAttribute('data-' + currentLang);
+                if (!text) return;
+                if (el.children.length === 0) {
+                    el.textContent = text;
+                }
+            });
+
+            document.documentElement.lang = currentLang;
+        }
+
+        applyTheme(currentTheme);
+    </script>
+</body>
+</html>

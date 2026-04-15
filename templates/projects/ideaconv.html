@@ -1,0 +1,755 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideaconv — Investment Management Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── DARK MODE (default) ── */
+        :root {
+            --z-bg:         #020202;
+            --z-surface:    #0a0a0a;
+            --z-card:       #111111;
+            --z-card2:      #181818;
+            --z-border:     rgba(255,255,255,0.07);
+            --z-border-md:  rgba(255,255,255,0.13);
+            --z-blue:       #1f7bf8;
+            --z-purple:     #720af5;
+            --z-blue-dim:   rgba(31,123,248,0.10);
+            --z-purple-dim: rgba(114,10,245,0.10);
+            --z-glow-blue:  rgba(31,123,248,0.22);
+            --z-glow-purple:rgba(114,10,245,0.18);
+            --z-white:      #ffffff;
+            --z-off-white:  #e8eaf0;
+            --z-muted:      #7a7a8a;
+            --z-heading:    #f2f2f5;
+            --z-text:       #b0b0bf;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: dark;
+
+            --art-h1:       #f2f2f5;
+            --art-h2:       #e8eaf0;
+            --art-p:        #b0b0bf;
+            --art-li:       #b0b0bf;
+            --art-meta:     #7a7a8a;
+            --art-hr:       rgba(255,255,255,0.08);
+            --art-card-bg:  #111111;
+            --art-card-border: rgba(255,255,255,0.08);
+            --art-accent:   #1f7bf8;
+            --art-tag-bg:   rgba(31,123,248,0.12);
+            --art-tag-color:#7db8fc;
+        }
+
+        /* ── LIGHT MODE ── */
+        [data-theme="light"] {
+            --z-bg:         #ffffff;
+            --z-surface:    #f5f5f7;
+            --z-card:       #f0f0f4;
+            --z-card2:      #e8e8ee;
+            --z-border:     rgba(0,0,0,0.08);
+            --z-border-md:  rgba(0,0,0,0.15);
+            --z-blue:       #1f7bf8;
+            --z-purple:     #720af5;
+            --z-blue-dim:   rgba(31,123,248,0.08);
+            --z-purple-dim: rgba(114,10,245,0.08);
+            --z-glow-blue:  rgba(31,123,248,0.18);
+            --z-glow-purple:rgba(114,10,245,0.14);
+            --z-white:      #020202;
+            --z-off-white:  #1a1a1a;
+            --z-muted:      #6b6b7a;
+            --z-heading:    #0a0a0a;
+            --z-text:       #444452;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: light;
+
+            --art-h1:       #0a0a1a;
+            --art-h2:       #1a1a2e;
+            --art-p:        #3a3a4a;
+            --art-li:       #3a3a4a;
+            --art-meta:     #6b6b7a;
+            --art-hr:       rgba(0,0,0,0.08);
+            --art-card-bg:  #f5f5f7;
+            --art-card-border: rgba(0,0,0,0.08);
+            --art-accent:   #1f7bf8;
+            --art-tag-bg:   rgba(31,123,248,0.10);
+            --art-tag-color:#1a5bbf;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            background-color: var(--z-bg);
+            color: var(--z-text);
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background-color .3s ease, color .3s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px; left: -200px;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(31,123,248,0.06) 0%, transparent 65%);
+            pointer-events: none; z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -200px; right: -200px;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(114,10,245,0.07) 0%, transparent 65%);
+            pointer-events: none; z-index: 0;
+        }
+
+        nav, section, footer, main { position: relative; z-index: 1; }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: rgba(2,2,2,0.88) !important;
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--z-border);
+            padding: 0;
+            height: 68px;
+            transition: background .3s;
+        }
+        [data-theme="light"] .navbar { background: rgba(255,255,255,0.92) !important; }
+        .navbar .container { height: 100%; }
+
+        .navbar-brand { display:flex; align-items:center; gap:6px; padding:0; text-decoration:none; }
+
+        /* logo visibility */
+        .logo-light { display: none; }
+        .logo-dark  { display: block; }
+        [data-theme="light"] .logo-light { display: block; }
+        [data-theme="light"] .logo-dark  { display: none; }
+
+        .nav-link {
+            color: var(--z-muted) !important;
+            font-size: 13px; letter-spacing:.02em;
+            transition: color .2s;
+            padding: .4rem .9rem !important;
+        }
+        .nav-link:hover { color: var(--z-white) !important; }
+
+        .btn-nav-cta {
+            background: var(--grad);
+            color: #fff !important;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 13px;
+            padding: 8px 20px !important;
+            border-radius: 8px;
+            transition: all .2s !important;
+            box-shadow: 0 0 20px var(--z-glow-blue);
+        }
+        .btn-nav-cta:hover {
+            opacity: .88;
+            transform: translateY(-1px);
+            box-shadow: 0 0 30px var(--z-glow-purple);
+        }
+
+        .theme-toggle, .lang-btn {
+            background: transparent;
+            border: 1px solid var(--z-border-md);
+            border-radius: 8px;
+            padding: 7px 14px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all .2s;
+            color: var(--z-muted);
+            font-family: 'Manrope', sans-serif;
+            letter-spacing: .04em;
+        }
+        .theme-toggle { border-radius: 50%; width: 36px; height: 36px; padding: 0; font-size: 16px; }
+        .theme-toggle:hover, .lang-btn:hover {
+            border-color: var(--z-blue);
+            color: var(--z-blue);
+        }
+        .theme-toggle:hover { transform: rotate(20deg); }
+        .navbar-toggler { border-color: var(--z-border-md); }
+        .navbar-toggler-icon { filter: invert(1); }
+        [data-theme="light"] .navbar-toggler-icon { filter: invert(0); }
+
+        /* ── ARTICLE WRAPPER ── */
+        main {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 108px 28px 80px;
+        }
+
+        /* ── BACK LINK ── */
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; font-weight: 600;
+            color: var(--z-muted);
+            text-decoration: none;
+            letter-spacing: .06em; text-transform: uppercase;
+            margin-bottom: 32px;
+            transition: color .2s;
+        }
+        .back-link:hover { color: var(--z-blue); }
+
+        /* ── TAGS ── */
+        .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px; font-weight: 600;
+            letter-spacing: .5px; text-transform: uppercase;
+            background: var(--art-tag-bg);
+            color: var(--art-tag-color);
+            border: 1px solid rgba(31,123,248,.2);
+        }
+
+        /* ── H1 ── */
+        .article-h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(24px, 4vw, 38px);
+            font-weight: 800;
+            color: var(--art-h1);
+            line-height: 1.15;
+            letter-spacing: -.03em;
+            margin-bottom: 12px;
+        }
+
+        /* ── META ── */
+        .meta {
+            font-size: 13px;
+            color: var(--art-meta);
+            margin-bottom: 36px;
+            display: flex; flex-wrap: wrap; gap: 4px 16px;
+        }
+        .meta a { color: var(--art-accent); text-decoration: none; }
+        .meta a:hover { text-decoration: underline; }
+
+        /* ── DIVIDER ── */
+        hr {
+            border: none;
+            border-top: 1px solid var(--art-hr);
+            margin: 40px 0;
+        }
+
+        /* ── SECTION HEADINGS ── */
+        h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 16px; font-weight: 700;
+            color: var(--art-h2);
+            margin-top: 40px; margin-bottom: 12px;
+            padding-left: 14px;
+            border-left: 3px solid var(--z-blue);
+            transition: color .3s;
+        }
+
+        /* ── BODY TEXT ── */
+        p {
+            color: var(--art-p);
+            margin-bottom: 14px;
+            transition: color .3s;
+        }
+
+        ul, ol {
+            color: var(--art-li);
+            padding-left: 22px;
+            margin-bottom: 16px;
+            transition: color .3s;
+        }
+        li { margin-bottom: 8px; }
+
+        a { color: var(--art-accent); }
+        strong { color: var(--art-h2); font-weight: 700; }
+
+        /* ── INFO CARD ── */
+        .info-card {
+            background: var(--art-card-bg);
+            border: 1px solid var(--art-card-border);
+            border-radius: 12px;
+            padding: 22px 26px;
+            margin: 16px 0 24px;
+            transition: background .3s, border-color .3s;
+        }
+        .info-card li { margin-bottom: 10px; font-size: 13.5px; }
+
+        /* ── METRIC CARDS ── */
+        .metric-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 20px 0 28px;
+        }
+        .metric-card {
+            background: var(--art-card-bg);
+            border: 1px solid var(--art-card-border);
+            border-radius: 12px;
+            padding: 18px 20px;
+            text-align: center;
+            transition: background .3s, border-color .3s;
+        }
+        .metric-card .metric-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 26px; font-weight: 800;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        .metric-card .metric-label {
+            font-size: 11.5px;
+            color: var(--z-muted);
+            margin-top: 4px;
+            letter-spacing: .03em;
+        }
+
+        /* ── FOOTER NOTE ── */
+        .footer-note {
+            font-size: 13px;
+            color: var(--art-meta);
+            margin-top: 8px;
+        }
+        .footer-note a { color: var(--art-accent); }
+
+        /* ── CTA BLOCK ── */
+        .cta-block {
+            background: linear-gradient(135deg, rgba(31,123,248,0.08), rgba(114,10,245,0.08));
+            border: 1px solid rgba(31,123,248,0.2);
+            border-radius: 14px;
+            padding: 28px 30px;
+            margin: 40px 0 0;
+            text-align: center;
+        }
+        .cta-block h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px; font-weight: 800;
+            color: var(--art-h1);
+            margin-bottom: 8px;
+        }
+        .cta-block p {
+            font-size: 14px;
+            color: var(--z-muted);
+            margin-bottom: 20px;
+        }
+        .btn-cta {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--grad);
+            color: #fff;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 14px;
+            padding: 12px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all .2s;
+            box-shadow: 0 0 24px var(--z-glow-blue);
+        }
+        .btn-cta:hover {
+            color: #fff;
+            opacity: .88;
+            transform: translateY(-2px);
+            box-shadow: 0 0 36px var(--z-glow-purple);
+        }
+
+        @media (max-width: 600px) {
+            .metric-row { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── NAVBAR ── -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'zyven-logo-text.png' %}" alt="Zyven" class="logo-dark"
+                    style="height:102px;width:auto;margin-top:12px;">
+                <img src="{% static 'zyven_black_letters.png' %}" alt="Zyven" class="logo-light"
+                    style="height:102px;width:auto;margin-top:12px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Services" data-es="Servicios">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Guarantees" data-es="Garantías">Guarantees</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Process" data-es="Proceso">Process</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🌐 ES</button>
+                    </li>
+                    <li class="nav-item ms-lg-1">
+                        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark mode">🌙</button>
+                    </li>
+                    <li class="nav-item ms-lg-1">
+                        <a class="nav-link btn-nav-cta" href="#contact" data-en="Book a Free Call" data-es="Agendar Llamada">Book a Free Call</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── ARTICLE ── -->
+    <main>
+
+        <a href="#" class="back-link">
+            <i class="fa fa-arrow-left" style="font-size:11px;"></i>
+            <span data-en="Back to Projects" data-es="Volver a Proyectos">Back to Projects</span>
+        </a>
+
+        <div class="tag-row">
+            <span class="tag" data-en="FinTech" data-es="FinTech">FinTech</span>
+            <span class="tag" data-en="Investment Management" data-es="Gestión de Inversiones">Investment Management</span>
+            <span class="tag">Django · Python · REST API</span>
+        </div>
+
+        <h1 class="article-h1">
+            <span data-en="Ideaconv: A Full-Stack Investment Management Platform Built to Scale"
+                  data-es="Ideaconv: Una Plataforma Full-Stack de Gestión de Inversiones Diseñada para Escalar">
+                Ideaconv: A Full-Stack Investment Management Platform Built to Scale
+            </span>
+        </h1>
+
+        <div class="meta">
+            <span><span data-en="Client:" data-es="Cliente:">Client:</span> <a href="#">Ideaconv S.A. de C.V.</a></span>
+            <span>·</span>
+            <span data-en="Last updated: April 2026" data-es="Última actualización: Abril 2026">Last updated: April 2026</span>
+            <span>·</span>
+            <span data-en="Status: Active Production" data-es="Estado: En Producción Activa">Status: Active Production</span>
+        </div>
+
+        <hr>
+
+        <!-- Project Overview -->
+        <h2 data-en="Project Overview" data-es="Descripción del Proyecto">Project Overview</h2>
+        <p data-en="Ideaconv is a production-grade internal management system built for Ideaconv S.A. de C.V., a private investment firm based in Monterrey, México. The platform centralizes the entire lifecycle of private capital investments — from onboarding new investors and managing active portfolios to calculating monthly interest, generating legally-formatted account statements, and confirming payments — all within a single, branded web application."
+           data-es="Ideaconv es un sistema de gestión interno de nivel productivo desarrollado para Ideaconv S.A. de C.V., una firma de inversión privada en Monterrey, México. La plataforma centraliza el ciclo completo de inversiones de capital privado: desde el alta de nuevos inversionistas y la gestión de portafolios activos, hasta el cálculo de intereses mensuales, la generación de estados de cuenta con formato legal y la confirmación de pagos, todo dentro de una sola aplicación web de marca propia."
+        >
+            Ideaconv is a production-grade internal management system built for Ideaconv S.A. de C.V., a private investment firm based in Monterrey, México. The platform centralizes the entire lifecycle of private capital investments — from onboarding new investors and managing active portfolios to calculating monthly interest, generating legally-formatted account statements, and confirming payments — all within a single, branded web application.
+        </p>
+
+        <p data-en="Before this system existed, the firm managed hundreds of investors across spreadsheets, manual PDF generation, and scattered email threads. Ideaconv eliminated that entirely. Today, closing a monthly cycle — calculations, PDF generation, and email delivery to every investor — takes minutes instead of days."
+           data-es="Antes de este sistema, la empresa gestionaba cientos de inversionistas con hojas de cálculo, generación manual de PDFs e hilos de correo dispersos. Ideaconv eliminó todo eso. Hoy, cerrar un ciclo mensual —cálculos, generación de PDF y envío por correo a cada inversionista— toma minutos en lugar de días.">
+            Before this system existed, the firm managed hundreds of investors across spreadsheets, manual PDF generation, and scattered email threads. Ideaconv eliminated that entirely. Today, closing a monthly cycle — calculations, PDF generation, and email delivery to every investor — takes minutes instead of days.
+        </p>
+
+        <!-- Key Numbers -->
+        <div class="metric-row">
+            <div class="metric-card">
+                <div class="metric-value">100%</div>
+                <div class="metric-label" data-en="Monthly cycle automated" data-es="Ciclo mensual automatizado">Monthly cycle automated</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">7</div>
+                <div class="metric-label" data-en="Core modules delivered" data-es="Módulos core entregados">Core modules delivered</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">0</div>
+                <div class="metric-label" data-en="Spreadsheets still needed" data-es="Hojas de cálculo aún necesarias">Spreadsheets still needed</div>
+            </div>
+        </div>
+
+        <!-- The Problem -->
+        <h2 data-en="The Problem We Solved" data-es="El Problema que Resolvimos">The Problem We Solved</h2>
+        <p data-en="Private investment firms operating below institutional scale face a common operational trap: they're too big for manual processes but too specialized for off-the-shelf accounting software. Ideaconv was caught in exactly that gap."
+           data-es="Las firmas de inversión privada que operan por debajo de escala institucional enfrentan una trampa operativa común: son demasiado grandes para los procesos manuales pero demasiado especializadas para el software contable genérico. Ideaconv estaba exactamente en esa brecha.">
+            Private investment firms operating below institutional scale face a common operational trap: they're too big for manual processes but too specialized for off-the-shelf accounting software. Ideaconv was caught in exactly that gap.
+        </p>
+        <ul>
+            <li>
+                <strong data-en="Interest calculations done manually per investor:" data-es="Cálculos de intereses manuales por inversionista:">Interest calculations done manually per investor:</strong>
+                <span data-en="Each month, staff had to apply ISR (20%), IVA (16%), and external payment splits by hand for every contract — an error-prone process taking 2–3 days."
+                      data-es="Cada mes, el equipo tenía que aplicar ISR (20%), IVA (16%) y divisiones de pago externo a mano por cada contrato — un proceso propenso a errores que tomaba 2-3 días.">
+                    Each month, staff had to apply ISR (20%), IVA (16%), and external payment splits by hand for every contract — an error-prone process taking 2–3 days.
+                </span>
+            </li>
+            <li>
+                <strong data-en="No tranche awareness:" data-es="Sin conciencia de tramos:">No tranche awareness:</strong>
+                <span data-en="When an investor added or withdrew capital mid-period, the old process couldn't pro-rate correctly. Interest was either over or under-calculated."
+                      data-es="Cuando un inversionista realizaba un abono o retiro a mitad del período, el proceso antiguo no podía prorratear correctamente. El interés se calculaba de más o de menos.">
+                    When an investor added or withdrew capital mid-period, the old process couldn't pro-rate correctly. Interest was either over or under-calculated.
+                </span>
+            </li>
+            <li>
+                <strong data-en="PDF statements created one by one:" data-es="Estados de cuenta en PDF creados uno a uno:">PDF statements created one by one:</strong>
+                <span data-en="Each branded account statement was assembled manually in Word or a PDF editor, then emailed individually. With 50+ investors, this was unsustainable."
+                      data-es="Cada estado de cuenta de marca se ensamblaba manualmente en Word o un editor de PDF, luego se enviaba individualmente por correo. Con 50+ inversionistas, era insostenible.">
+                    Each branded account statement was assembled manually in Word or a PDF editor, then emailed individually. With 50+ investors, this was unsustainable.
+                </span>
+            </li>
+            <li>
+                <strong data-en="No single source of truth:" data-es="Sin fuente única de verdad:">No single source of truth:</strong>
+                <span data-en="Investor records lived in spreadsheets, payment confirmations in email, and contracts in physical folders. Reconciliation was a weekly nightmare."
+                      data-es="Los registros de inversionistas vivían en hojas de cálculo, las confirmaciones de pago en el correo y los contratos en carpetas físicas. La conciliación era una pesadilla semanal.">
+                    Investor records lived in spreadsheets, payment confirmations in email, and contracts in physical folders. Reconciliation was a weekly nightmare.
+                </span>
+            </li>
+        </ul>
+
+        <!-- What We Built -->
+        <h2 data-en="What We Built" data-es="Lo que Construimos">What We Built</h2>
+        <p data-en="We delivered a fully custom Django application with a REST API backend and a modern JavaScript frontend — no third-party SaaS, no templates, no compromises. Every screen was designed around exactly how the Ideaconv team works."
+           data-es="Entregamos una aplicación Django completamente personalizada con un backend REST API y un frontend JavaScript moderno — sin SaaS de terceros, sin plantillas, sin compromisos. Cada pantalla fue diseñada alrededor de exactamente cómo trabaja el equipo de Ideaconv.">
+            We delivered a fully custom Django application with a REST API backend and a modern JavaScript frontend — no third-party SaaS, no templates, no compromises. Every screen was designed around exactly how the Ideaconv team works.
+        </p>
+
+        <div class="info-card">
+            <ul style="margin:0;padding-left:18px;">
+                <li>
+                    <strong data-en="Investor CRM:" data-es="CRM de Inversionistas:">Investor CRM:</strong>
+                    <span data-en="Full investor profiles including personal data, fiscal information (RFC, CURP, tax regime), bank details, and document management. Supports both individuals and corporations."
+                          data-es="Perfiles completos de inversionistas con datos personales, información fiscal (RFC, CURP, régimen fiscal), datos bancarios y gestión de documentos. Compatible con personas físicas y morales.">
+                        Full investor profiles including personal data, fiscal information (RFC, CURP, tax regime), bank details, and document management. Supports both individuals and corporations.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Multi-Investment Portfolio Management:" data-es="Gestión de Portafolio Multi-Inversión:">Multi-Investment Portfolio Management:</strong>
+                    <span data-en="Each investor can hold multiple active investment contracts simultaneously, each with independent rates, bases (360/365), billing percentages, start dates, and maturity dates."
+                          data-es="Cada inversionista puede tener múltiples contratos de inversión activos simultáneamente, cada uno con tasas independientes, bases (360/365), porcentajes de facturación, fechas de inicio y vencimiento.">
+                        Each investor can hold multiple active investment contracts simultaneously, each with independent rates, bases (360/365), billing percentages, start dates, and maturity dates.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Tranche-Based Interest Engine:" data-es="Motor de Intereses por Tramos:">Tranche-Based Interest Engine:</strong>
+                    <span data-en="Mid-period capital movements (deposits or withdrawals) automatically split the calculation period into pro-rated tranches. Each tranche earns interest only on the actual capital balance for that sub-period."
+                          data-es="Los movimientos de capital a mitad del período (depósitos o retiros) dividen automáticamente el período de cálculo en tramos prorrateados. Cada tramo gana interés solo sobre el saldo de capital real para ese sub-período.">
+                        Mid-period capital movements (deposits or withdrawals) automatically split the calculation period into pro-rated tranches. Each tranche earns interest only on the actual capital balance for that sub-period.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Consolidated Monthly Statements:" data-es="Estados de Cuenta Mensuales Consolidados:">Consolidated Monthly Statements:</strong>
+                    <span data-en="A single account statement per investor consolidates all their active investments for the period — one PDF, one email, regardless of how many contracts they hold."
+                          data-es="Un único estado de cuenta por inversionista consolida todas sus inversiones activas del período — un PDF, un correo, sin importar cuántos contratos tengan.">
+                        A single account statement per investor consolidates all their active investments for the period — one PDF, one email, regardless of how many contracts they hold.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Automated PDF Generation & Email Dispatch:" data-es="Generación Automática de PDF y Envío por Correo:">Automated PDF Generation & Email Dispatch:</strong>
+                    <span data-en="One click generates branded PDFs using ReportLab and delivers them via transactional email (Resend/Anymail). Closing an entire monthly cycle for all investors takes under 60 seconds."
+                          data-es="Un clic genera PDFs de marca usando ReportLab y los entrega por correo transaccional (Resend/Anymail). Cerrar todo el ciclo mensual para todos los inversionistas toma menos de 60 segundos.">
+                        One click generates branded PDFs using ReportLab and delivers them via transactional email (Resend/Anymail). Closing an entire monthly cycle for all investors takes under 60 seconds.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Payment Tracking & Receipts:" data-es="Seguimiento de Pagos y Comprobantes:">Payment Tracking & Receipts:</strong>
+                    <span data-en="Every account statement generates a payment record. Staff confirm payments with date, method, and confirmation ID. Printable receipts are generated on demand, split between invoiced and external payment amounts."
+                          data-es="Cada estado de cuenta genera un registro de pago. El personal confirma los pagos con fecha, método e ID de confirmación. Los comprobantes imprimibles se generan bajo demanda, divididos entre montos facturados y pagos externos.">
+                        Every account statement generates a payment record. Staff confirm payments with date, method, and confirmation ID. Printable receipts are generated on demand, split between invoiced and external payment amounts.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Prospect Pipeline:" data-es="Pipeline de Prospectos:">Prospect Pipeline:</strong>
+                    <span data-en="A Kanban-style prospect board tracks leads from initial contact through to full investor onboarding. One-click conversion promotes a prospect directly into the investor CRM."
+                          data-es="Un tablero de prospectos estilo Kanban rastrea leads desde el contacto inicial hasta el alta completa como inversionista. La conversión con un clic promueve un prospecto directamente al CRM de inversionistas.">
+                        A Kanban-style prospect board tracks leads from initial contact through to full investor onboarding. One-click conversion promotes a prospect directly into the investor CRM.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Technical Implementation -->
+        <h2 data-en="Technical Implementation" data-es="Implementación Técnica">Technical Implementation</h2>
+        <div class="info-card">
+            <ul style="margin:0;padding-left:18px;">
+                <li>
+                    <strong data-en="Backend:" data-es="Backend:">Backend:</strong>
+                    <span data-en="Django 6 + Django REST Framework — custom API endpoints for every resource, no boilerplate generators."
+                          data-es="Django 6 + Django REST Framework — endpoints API personalizados para cada recurso, sin generadores de boilerplate.">
+                        Django 6 + Django REST Framework — custom API endpoints for every resource, no boilerplate generators.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Frontend:" data-es="Frontend:">Frontend:</strong>
+                    <span data-en="Vanilla JavaScript with a custom design system — no React, no build pipeline. Fast, zero-dependency UI served directly from Django templates."
+                          data-es="JavaScript vanilla con un sistema de diseño personalizado — sin React, sin pipeline de compilación. UI rápida y sin dependencias servida directamente desde plantillas Django.">
+                        Vanilla JavaScript with a custom design system — no React, no build pipeline. Fast, zero-dependency UI served directly from Django templates.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="PDF Engine:" data-es="Motor de PDF:">PDF Engine:</strong>
+                    <span data-en="ReportLab Platypus — fully branded multi-page PDFs including a cover summary page and per-investment detail pages with historical payment tables."
+                          data-es="ReportLab Platypus — PDFs multi-página de marca completa con una página de resumen inicial y páginas de detalle por inversión con tablas históricas de pagos.">
+                        ReportLab Platypus — fully branded multi-page PDFs including a cover summary page and per-investment detail pages with historical payment tables.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Email:" data-es="Correo:">Email:</strong>
+                    <span data-en="Anymail + Resend for transactional delivery with PDF attachments. Responsive HTML email templates included."
+                          data-es="Anymail + Resend para entrega transaccional con adjuntos en PDF. Incluye plantillas de correo HTML responsivas.">
+                        Anymail + Resend for transactional delivery with PDF attachments. Responsive HTML email templates included.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Database:" data-es="Base de Datos:">Database:</strong>
+                    <span data-en="PostgreSQL in production via dj-database-url. SQLite for local development."
+                          data-es="PostgreSQL en producción vía dj-database-url. SQLite para desarrollo local.">
+                        PostgreSQL in production via dj-database-url. SQLite for local development.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Security:" data-es="Seguridad:">Security:</strong>
+                    <span data-en="Honeypot fake admin panel to log and capture brute-force attempts. CSRF protection, session security, and login-required guards on all views."
+                          data-es="Panel de administración falso honeypot para registrar y capturar intentos de fuerza bruta. Protección CSRF, seguridad de sesión y protección de inicio de sesión en todas las vistas.">
+                        Honeypot fake admin panel to log and capture brute-force attempts. CSRF protection, session security, and login-required guards on all views.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Hosting:" data-es="Alojamiento:">Hosting:</strong>
+                    <span data-en="WhiteNoise for static files, deployable to any WSGI-compatible host (Render, Railway, or VPS)."
+                          data-es="WhiteNoise para archivos estáticos, desplegable en cualquier host compatible con WSGI (Render, Railway o VPS).">
+                        WhiteNoise for static files, deployable to any WSGI-compatible host (Render, Railway, or VPS).
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- How It Works -->
+        <h2 data-en="How the Monthly Cycle Works" data-es="Cómo Funciona el Ciclo Mensual">How the Monthly Cycle Works</h2>
+        <p data-en="What used to take the Ideaconv team 2–3 full working days now happens in under 5 minutes:"
+           data-es="Lo que antes tomaba al equipo de Ideaconv 2-3 días hábiles completos ahora ocurre en menos de 5 minutos:">
+            What used to take the Ideaconv team 2–3 full working days now happens in under 5 minutes:
+        </p>
+        <ol>
+            <li data-en="Navigate to the Account Statements module and click 'Monthly Close'."
+                data-es="Navegar al módulo de Estados de Cuenta y hacer clic en 'Cierre de Mes'.">
+                Navigate to the Account Statements module and click "Monthly Close."
+            </li>
+            <li data-en="Set the period start and end dates. The system calculates the exact number of days automatically."
+                data-es="Establecer las fechas de inicio y fin del período. El sistema calcula el número exacto de días automáticamente.">
+                Set the period start and end dates. The system calculates the exact number of days automatically.
+            </li>
+            <li data-en="Click 'Generate for All' — the engine loops every active investor, consolidates all their investments, applies tranche math for any mid-period movements, and creates one account statement per investor."
+                data-es="Hacer clic en 'Generar para Todos' — el motor recorre cada inversionista activo, consolida todas sus inversiones, aplica el cálculo por tramos para movimientos a mitad del período y crea un estado de cuenta por inversionista.">
+                Click "Generate for All" — the engine loops every active investor, consolidates all their investments, applies tranche math for any mid-period movements, and creates one account statement per investor.
+            </li>
+            <li data-en="Review the Cut Summary — a detailed breakdown table showing every investor's gross interest, ISR withholding, IVA, external payment, and net payable."
+                data-es="Revisar el Resumen de Corte — una tabla de desglose detallada con el interés bruto de cada inversionista, retención ISR, IVA, pago externo y neto a pagar.">
+                Review the Cut Summary — a detailed breakdown table showing every investor's gross interest, ISR withholding, IVA, external payment, and net payable.
+            </li>
+            <li data-en="Click 'Send to All' — the system generates a branded PDF for each investor and dispatches it via email. Done."
+                data-es="Hacer clic en 'Enviar a Todos' — el sistema genera un PDF de marca para cada inversionista y lo envía por correo. Listo.">
+                Click "Send to All" — the system generates a branded PDF for each investor and dispatches it via email. Done.
+            </li>
+        </ol>
+
+        <!-- Business Value -->
+        <h2 data-en="Business Value" data-es="Valor para el Negocio">Business Value</h2>
+        <ul>
+            <li>
+                <strong data-en="Operational Time Savings:" data-es="Ahorro de Tiempo Operativo:">Operational Time Savings:</strong>
+                <span data-en="Monthly close cycle reduced from 2–3 days to under 5 minutes. That's roughly 150+ hours saved per year."
+                      data-es="El ciclo de cierre mensual se redujo de 2-3 días a menos de 5 minutos. Eso representa más de 150 horas ahorradas por año.">
+                    Monthly close cycle reduced from 2–3 days to under 5 minutes. That's roughly 150+ hours saved per year.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Calculation Accuracy:" data-es="Precisión en Cálculos:">Calculation Accuracy:</strong>
+                <span data-en="The tranche-based engine handles every edge case that manual spreadsheets missed — mid-period deposits, partial withdrawals, mixed billing percentages. Zero rounding errors."
+                      data-es="El motor de tramos maneja cada caso extremo que las hojas de cálculo manuales omitían — depósitos a mitad del período, retiros parciales, porcentajes de facturación mixtos. Cero errores de redondeo.">
+                    The tranche-based engine handles every edge case that manual spreadsheets missed — mid-period deposits, partial withdrawals, mixed billing percentages. Zero rounding errors.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Professional Investor Experience:" data-es="Experiencia Profesional para Inversionistas:">Professional Investor Experience:</strong>
+                <span data-en="Investors receive a polished, branded PDF statement every month — the same quality they'd expect from a bank — reinforcing trust and reducing inbound support calls."
+                      data-es="Los inversionistas reciben un estado de cuenta en PDF de marca y calidad profesional cada mes — la misma calidad que esperarían de un banco — reforzando la confianza y reduciendo las llamadas de soporte entrantes.">
+                    Investors receive a polished, branded PDF statement every month — the same quality they'd expect from a bank — reinforcing trust and reducing inbound support calls.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Growth-Ready Architecture:" data-es="Arquitectura Lista para Crecer:">Growth-Ready Architecture:</strong>
+                <span data-en="The system was built to handle hundreds of investors without degradation. Adding a new investor or investment takes seconds. The REST API makes future integrations (accounting software, investor portal) straightforward."
+                      data-es="El sistema fue construido para manejar cientos de inversionistas sin degradación. Agregar un nuevo inversionista o inversión toma segundos. La API REST hace sencillas las integraciones futuras (software contable, portal de inversionistas).">
+                    The system was built to handle hundreds of investors without degradation. Adding a new investor or investment takes seconds. The REST API makes future integrations (accounting software, investor portal) straightforward.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Full Visibility & Audit Trail:" data-es="Visibilidad Total y Rastro de Auditoría:">Full Visibility & Audit Trail:</strong>
+                <span data-en="Every payment, movement, and statement is timestamped and linked. The dashboard surfaces expiring contracts, pending payments, and data quality warnings in real time."
+                      data-es="Cada pago, movimiento y estado de cuenta tiene marca de tiempo y está vinculado. El dashboard muestra contratos por vencer, pagos pendientes y advertencias de calidad de datos en tiempo real.">
+                    Every payment, movement, and statement is timestamped and linked. The dashboard surfaces expiring contracts, pending payments, and data quality warnings in real time.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Prospect-to-Investor Conversion:" data-es="Conversión de Prospecto a Inversionista:">Prospect-to-Investor Conversion:</strong>
+                <span data-en="The built-in prospect pipeline gives the sales team a structured way to track and nurture leads. Converting a qualified prospect to a full investor profile is a single button press."
+                      data-es="El pipeline de prospectos integrado da al equipo de ventas una forma estructurada de rastrear y nutrir leads. Convertir un prospecto calificado a un perfil completo de inversionista es un solo botón.">
+                    The built-in prospect pipeline gives the sales team a structured way to track and nurture leads. Converting a qualified prospect to a full investor profile is a single button press.
+                </span>
+            </li>
+        </ul>
+
+        <hr>
+
+        <!-- CTA Block -->
+        <div class="cta-block" id="contact">
+            <h3 data-en="Does your firm run on spreadsheets?" data-es="¿Tu empresa todavía opera con hojas de cálculo?">Does your firm run on spreadsheets?</h3>
+            <p data-en="If you manage investors, capital, and monthly interest payments manually, there's a better way. We've built this before — we can build it for you, faster and at a fraction of the cost of off-the-shelf software that doesn't actually fit."
+               data-es="Si gestionas inversionistas, capital y pagos de intereses mensuales de forma manual, hay una mejor manera. Hemos construido esto antes — podemos construirlo para ti, más rápido y a una fracción del costo del software genérico que en realidad no se adapta.">
+                If you manage investors, capital, and monthly interest payments manually, there's a better way. We've built this before — we can build it for you, faster and at a fraction of the cost of off-the-shelf software that doesn't actually fit.
+            </p>
+            <a href="#" class="btn-cta">
+                <i class="fa fa-calendar" style="font-size:13px;"></i>
+                <span data-en="Book a Free Strategy Call" data-es="Agendar una Llamada de Estrategia Gratis">Book a Free Strategy Call</span>
+            </a>
+        </div>
+
+        <hr>
+        <p class="footer-note">
+            <span data-en="Built by" data-es="Construido por">Built by</span>
+            <a href="#">Zyven</a>
+            &nbsp;·&nbsp;
+            <span data-en="Questions? Let's talk." data-es="¿Preguntas? Hablemos.">Questions? Let's talk.</span>
+        </p>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /* ── THEME ── */
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById('theme-btn').textContent = theme === 'dark' ? '🌙' : '☀️';
+            localStorage.setItem('theme', theme);
+            currentTheme = theme;
+        }
+
+        function toggleTheme() {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        /* ── LANGUAGE ── */
+        let currentLang = 'en';
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            const btn = document.getElementById('lang-btn');
+            btn.textContent = currentLang === 'en' ? '🌐 ES' : '🌐 EN';
+
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const text = el.getAttribute('data-' + currentLang);
+                if (!text) return;
+                if (el.children.length === 0) {
+                    el.textContent = text;
+                }
+            });
+
+            document.documentElement.lang = currentLang;
+        }
+
+        applyTheme(currentTheme);
+    </script>
+</body>
+</html>

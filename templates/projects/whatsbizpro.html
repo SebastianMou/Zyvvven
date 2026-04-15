@@ -1,0 +1,740 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsBizPro — AI-Powered WhatsApp Business Extension</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── DARK MODE (default) ── */
+        :root {
+            --z-bg:         #020202;
+            --z-surface:    #0a0a0a;
+            --z-card:       #111111;
+            --z-card2:      #181818;
+            --z-border:     rgba(255,255,255,0.07);
+            --z-border-md:  rgba(255,255,255,0.13);
+            --z-blue:       #1f7bf8;
+            --z-purple:     #720af5;
+            --z-blue-dim:   rgba(31,123,248,0.10);
+            --z-purple-dim: rgba(114,10,245,0.10);
+            --z-glow-blue:  rgba(31,123,248,0.22);
+            --z-glow-purple:rgba(114,10,245,0.18);
+            --z-white:      #ffffff;
+            --z-off-white:  #e8eaf0;
+            --z-muted:      #7a7a8a;
+            --z-heading:    #f2f2f5;
+            --z-text:       #b0b0bf;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: dark;
+
+            --art-h1:       #f2f2f5;
+            --art-h2:       #e8eaf0;
+            --art-p:        #b0b0bf;
+            --art-li:       #b0b0bf;
+            --art-meta:     #7a7a8a;
+            --art-hr:       rgba(255,255,255,0.08);
+            --art-card-bg:  #111111;
+            --art-card-border: rgba(255,255,255,0.08);
+            --art-accent:   #1f7bf8;
+            --art-tag-bg:   rgba(31,123,248,0.12);
+            --art-tag-color:#7db8fc;
+        }
+
+        /* ── LIGHT MODE ── */
+        [data-theme="light"] {
+            --z-bg:         #ffffff;
+            --z-surface:    #f5f5f7;
+            --z-card:       #f0f0f4;
+            --z-card2:      #e8e8ee;
+            --z-border:     rgba(0,0,0,0.08);
+            --z-border-md:  rgba(0,0,0,0.15);
+            --z-blue:       #1f7bf8;
+            --z-purple:     #720af5;
+            --z-blue-dim:   rgba(31,123,248,0.08);
+            --z-purple-dim: rgba(114,10,245,0.08);
+            --z-glow-blue:  rgba(31,123,248,0.18);
+            --z-glow-purple:rgba(114,10,245,0.14);
+            --z-white:      #020202;
+            --z-off-white:  #1a1a1a;
+            --z-muted:      #6b6b7a;
+            --z-heading:    #0a0a0a;
+            --z-text:       #444452;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: light;
+
+            --art-h1:       #0a0a1a;
+            --art-h2:       #1a1a2e;
+            --art-p:        #3a3a4a;
+            --art-li:       #3a3a4a;
+            --art-meta:     #6b6b7a;
+            --art-hr:       rgba(0,0,0,0.08);
+            --art-card-bg:  #f5f5f7;
+            --art-card-border: rgba(0,0,0,0.08);
+            --art-accent:   #1f7bf8;
+            --art-tag-bg:   rgba(31,123,248,0.10);
+            --art-tag-color:#1a5bbf;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            background-color: var(--z-bg);
+            color: var(--z-text);
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background-color .3s ease, color .3s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px; left: -200px;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(31,123,248,0.06) 0%, transparent 65%);
+            pointer-events: none; z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -200px; right: -200px;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(114,10,245,0.07) 0%, transparent 65%);
+            pointer-events: none; z-index: 0;
+        }
+
+        nav, section, footer, main { position: relative; z-index: 1; }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: rgba(2,2,2,0.88) !important;
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--z-border);
+            padding: 0;
+            height: 68px;
+            transition: background .3s;
+        }
+        [data-theme="light"] .navbar { background: rgba(255,255,255,0.92) !important; }
+        .navbar .container { height: 100%; }
+
+        .navbar-brand { display:flex; align-items:center; gap:6px; padding:0; text-decoration:none; }
+
+        /* ── LOGO VISIBILITY (dark / light swap) ── */
+        .logo-light { display: none; }
+        .logo-dark  { display: block; }
+        [data-theme="light"] .logo-light { display: block; }
+        [data-theme="light"] .logo-dark  { display: none; }
+
+        .nav-link {
+            color: var(--z-muted) !important;
+            font-size: 13px; letter-spacing:.02em;
+            transition: color .2s;
+            padding: .4rem .9rem !important;
+        }
+        .nav-link:hover { color: var(--z-white) !important; }
+
+        .btn-nav-cta {
+            background: var(--grad);
+            color: #fff !important;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 13px;
+            padding: 8px 20px !important;
+            border-radius: 8px;
+            transition: all .2s !important;
+            box-shadow: 0 0 20px var(--z-glow-blue);
+        }
+        .btn-nav-cta:hover {
+            opacity: .88;
+            transform: translateY(-1px);
+            box-shadow: 0 0 30px var(--z-glow-purple);
+        }
+
+        .theme-toggle, .lang-btn {
+            background: transparent;
+            border: 1px solid var(--z-border-md);
+            border-radius: 8px;
+            padding: 7px 14px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all .2s;
+            color: var(--z-muted);
+            font-family: 'Manrope', sans-serif;
+            letter-spacing: .04em;
+        }
+        .theme-toggle { border-radius: 50%; width: 36px; height: 36px; padding: 0; font-size: 16px; }
+        .theme-toggle:hover, .lang-btn:hover {
+            border-color: var(--z-blue);
+            color: var(--z-blue);
+        }
+        .theme-toggle:hover { transform: rotate(20deg); }
+        .navbar-toggler { border-color: var(--z-border-md); }
+        .navbar-toggler-icon { filter: invert(1); }
+        [data-theme="light"] .navbar-toggler-icon { filter: invert(0); }
+
+        /* ── ARTICLE WRAPPER ── */
+        main {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 108px 28px 80px;
+        }
+
+        /* ── BACK LINK ── */
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; font-weight: 600;
+            color: var(--z-muted);
+            text-decoration: none;
+            letter-spacing: .06em; text-transform: uppercase;
+            margin-bottom: 32px;
+            transition: color .2s;
+        }
+        .back-link:hover { color: var(--z-blue); }
+
+        /* ── TAGS ── */
+        .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px; font-weight: 600;
+            letter-spacing: .5px; text-transform: uppercase;
+            background: var(--art-tag-bg);
+            color: var(--art-tag-color);
+            border: 1px solid rgba(31,123,248,.2);
+        }
+
+        /* ── H1 ── */
+        .article-h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(24px, 4vw, 38px);
+            font-weight: 800;
+            color: var(--art-h1);
+            line-height: 1.15;
+            letter-spacing: -.03em;
+            margin-bottom: 12px;
+        }
+
+        /* ── META ── */
+        .meta {
+            font-size: 13px;
+            color: var(--art-meta);
+            margin-bottom: 36px;
+            display: flex; flex-wrap: wrap; gap: 4px 16px;
+        }
+        .meta a { color: var(--art-accent); text-decoration: none; }
+        .meta a:hover { text-decoration: underline; }
+
+        /* ── DIVIDER ── */
+        hr {
+            border: none;
+            border-top: 1px solid var(--art-hr);
+            margin: 40px 0;
+        }
+
+        /* ── SECTION HEADINGS ── */
+        h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 16px; font-weight: 700;
+            color: var(--art-h2);
+            margin-top: 40px; margin-bottom: 12px;
+            padding-left: 14px;
+            border-left: 3px solid var(--z-blue);
+            transition: color .3s;
+        }
+
+        /* ── BODY TEXT ── */
+        p {
+            color: var(--art-p);
+            margin-bottom: 14px;
+            transition: color .3s;
+        }
+
+        ul, ol {
+            color: var(--art-li);
+            padding-left: 22px;
+            margin-bottom: 16px;
+            transition: color .3s;
+        }
+        li { margin-bottom: 8px; }
+
+        a { color: var(--art-accent); }
+        strong { color: var(--art-h2); font-weight: 700; }
+
+        /* ── INFO CARD ── */
+        .info-card {
+            background: var(--art-card-bg);
+            border: 1px solid var(--art-card-border);
+            border-radius: 12px;
+            padding: 22px 26px;
+            margin: 16px 0 24px;
+            transition: background .3s, border-color .3s;
+        }
+        .info-card li { margin-bottom: 10px; font-size: 13.5px; }
+
+        /* ── METRIC CARDS ── */
+        .metric-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 20px 0 28px;
+        }
+        .metric-card {
+            background: var(--art-card-bg);
+            border: 1px solid var(--art-card-border);
+            border-radius: 12px;
+            padding: 18px 20px;
+            text-align: center;
+            transition: background .3s, border-color .3s;
+        }
+        .metric-card .metric-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 26px; font-weight: 800;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        .metric-card .metric-label {
+            font-size: 11.5px;
+            color: var(--z-muted);
+            margin-top: 4px;
+            letter-spacing: .03em;
+        }
+
+        /* ── FOOTER NOTE ── */
+        .footer-note {
+            font-size: 13px;
+            color: var(--art-meta);
+            margin-top: 8px;
+        }
+        .footer-note a { color: var(--art-accent); }
+
+        /* ── CTA BLOCK ── */
+        .cta-block {
+            background: linear-gradient(135deg, rgba(31,123,248,0.08), rgba(114,10,245,0.08));
+            border: 1px solid rgba(31,123,248,0.2);
+            border-radius: 14px;
+            padding: 28px 30px;
+            margin: 40px 0 0;
+            text-align: center;
+        }
+        .cta-block h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px; font-weight: 800;
+            color: var(--art-h1);
+            margin-bottom: 8px;
+        }
+        .cta-block p {
+            font-size: 14px;
+            color: var(--z-muted);
+            margin-bottom: 20px;
+        }
+        .btn-cta {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--grad);
+            color: #fff;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 14px;
+            padding: 12px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all .2s;
+            box-shadow: 0 0 24px var(--z-glow-blue);
+        }
+        .btn-cta:hover {
+            color: #fff;
+            opacity: .88;
+            transform: translateY(-2px);
+            box-shadow: 0 0 36px var(--z-glow-purple);
+        }
+
+        @media (max-width: 600px) {
+            .metric-row { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── NAVBAR ── -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'zyven-logo-text.png' %}" alt="Zyven" class="logo-dark"
+                    style="height:102px;width:auto;margin-top:12px;">
+                <img src="{% static 'zyven_black_letters.png' %}" alt="Zyven" class="logo-light"
+                    style="height:102px;width:auto;margin-top:12px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Services" data-es="Servicios">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Guarantees" data-es="Garantías">Guarantees</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Process" data-es="Proceso">Process</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🌐 ES</button>
+                    </li>
+                    <li class="nav-item ms-lg-1">
+                        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark mode">🌙</button>
+                    </li>
+                    <li class="nav-item ms-lg-1">
+                        <a class="nav-link btn-nav-cta" href="#contact" data-en="Book a Free Call" data-es="Agendar Llamada">Book a Free Call</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── ARTICLE ── -->
+    <main>
+
+        <a href="#" class="back-link">
+            <i class="fa fa-arrow-left" style="font-size:11px;"></i>
+            <span data-en="Back to Projects" data-es="Volver a Proyectos">Back to Projects</span>
+        </a>
+
+        <div class="tag-row">
+            <span class="tag" data-en="SaaS" data-es="SaaS">SaaS</span>
+            <span class="tag" data-en="Chrome Extension" data-es="Extensión Chrome">Chrome Extension</span>
+            <span class="tag">Django · Python · Gemini AI · Stripe</span>
+        </div>
+
+        <h1 class="article-h1">
+            <span data-en="WhatsBizPro: A Full-Stack WhatsApp Business Platform Built from Scratch"
+                  data-es="WhatsBizPro: Una Plataforma de Negocios para WhatsApp Construida desde Cero">
+                WhatsBizPro: A Full-Stack WhatsApp Business Platform Built from Scratch
+            </span>
+        </h1>
+
+        <div class="meta">
+            <span><span data-en="Client:" data-es="Cliente:">Client:</span> <a href="#">WhatsBizPro</a></span>
+            <span>·</span>
+            <span data-en="Last updated: April 2026" data-es="Última actualización: Abril 2026">Last updated: April 2026</span>
+            <span>·</span>
+            <span data-en="Status: Active Production" data-es="Estado: En Producción Activa">Status: Active Production</span>
+        </div>
+
+        <hr>
+
+        <!-- Project Overview -->
+        <h2 data-en="Project Overview" data-es="Descripción del Proyecto">Project Overview</h2>
+        <p data-en="WhatsBizPro is a production SaaS product — a Chrome extension that supercharges WhatsApp Web with AI-powered response generation, CRM contact management, broadcast messaging, message scheduling, and real-time conversation analysis. It ships with a full Django backend, JWT authentication, Stripe subscription billing, fraud detection, and a bilingual support chat — all built and deployed as a single cohesive product."
+           data-es="WhatsBizPro es un producto SaaS en producción — una extensión de Chrome que potencia WhatsApp Web con generación de respuestas con IA, gestión de contactos CRM, mensajería masiva, programación de mensajes y análisis de conversaciones en tiempo real. Incluye un backend Django completo, autenticación JWT, facturación de suscripciones con Stripe, detección de fraude y un chat de soporte bilingüe — todo construido y desplegado como un producto cohesivo.">
+            WhatsBizPro is a production SaaS product — a Chrome extension that supercharges WhatsApp Web with AI-powered response generation, CRM contact management, broadcast messaging, message scheduling, and real-time conversation analysis. It ships with a full Django backend, JWT authentication, Stripe subscription billing, fraud detection, and a bilingual support chat — all built and deployed as a single cohesive product.
+        </p>
+
+        <p data-en="This was not a prototype or internal tool — it's a live, monetized product with real subscribers, a 14-day free trial funnel, tiered pricing in USD and MXN, cancellation flows, and webhook-driven subscription lifecycle management. Every line was written from scratch."
+           data-es="Esto no fue un prototipo ni una herramienta interna — es un producto vivo y monetizado con suscriptores reales, un embudo de prueba gratuita de 14 días, precios escalonados en USD y MXN, flujos de cancelación y gestión del ciclo de vida de suscripciones basada en webhooks. Cada línea fue escrita desde cero.">
+            This was not a prototype or internal tool — it's a live, monetized product with real subscribers, a 14-day free trial funnel, tiered pricing in USD and MXN, cancellation flows, and webhook-driven subscription lifecycle management. Every line was written from scratch.
+        </p>
+
+        <!-- Key Numbers -->
+        <div class="metric-row">
+            <div class="metric-card">
+                <div class="metric-value">6</div>
+                <div class="metric-label" data-en="Core extension features shipped" data-es="Funcionalidades core entregadas">Core extension features shipped</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">3</div>
+                <div class="metric-label" data-en="Subscription tiers with Stripe billing" data-es="Niveles de suscripción con Stripe">Subscription tiers with Stripe billing</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">2</div>
+                <div class="metric-label" data-en="Languages supported — EN &amp; ES" data-es="Idiomas soportados — EN y ES">Languages supported — EN &amp; ES</div>
+            </div>
+        </div>
+
+        <!-- The Problem -->
+        <h2 data-en="The Problem We Solved" data-es="El Problema que Resolvimos">The Problem We Solved</h2>
+        <p data-en="WhatsApp is where business happens in Latin America — but WhatsApp Web is a bare-bones messaging interface. Sales teams, service businesses, and solo operators were copy-pasting responses, losing track of leads, manually following up at odd hours, and broadcasting messages one by one. There was no tool that addressed all of this inside WhatsApp itself."
+           data-es="WhatsApp es donde ocurren los negocios en América Latina — pero WhatsApp Web es una interfaz de mensajería básica. Equipos de ventas, negocios de servicios y operadores independientes copiaban y pegaban respuestas, perdían el rastro de prospectos, hacían seguimiento manual a horas inconvenientes y enviaban mensajes masivos uno por uno. No había ninguna herramienta que abordara todo esto dentro del propio WhatsApp.">
+            WhatsApp is where business happens in Latin America — but WhatsApp Web is a bare-bones messaging interface. Sales teams, service businesses, and solo operators were copy-pasting responses, losing track of leads, manually following up at odd hours, and broadcasting messages one by one. There was no tool that addressed all of this inside WhatsApp itself.
+        </p>
+        <ul>
+            <li>
+                <strong data-en="No AI assistance in WhatsApp:" data-es="Sin asistencia de IA en WhatsApp:">No AI assistance in WhatsApp:</strong>
+                <span data-en="Users had to context-switch to a separate AI tool, draft a response, copy it, and paste it back. Every single time."
+                      data-es="Los usuarios tenían que cambiar a una herramienta de IA separada, redactar una respuesta, copiarla y pegarla de vuelta. Cada vez.">
+                    Users had to context-switch to a separate AI tool, draft a response, copy it, and paste it back. Every single time.
+                </span>
+            </li>
+            <li>
+                <strong data-en="No CRM in WhatsApp:" data-es="Sin CRM en WhatsApp:">No CRM in WhatsApp:</strong>
+                <span data-en="Contact notes, lead status, custom fields, and business context lived in spreadsheets completely disconnected from the conversation happening right there on screen."
+                      data-es="Las notas de contactos, el estado de prospectos, los campos personalizados y el contexto del negocio vivían en hojas de cálculo completamente desconectadas de la conversación que ocurría en pantalla.">
+                    Contact notes, lead status, custom fields, and business context lived in spreadsheets completely disconnected from the conversation happening right there on screen.
+                </span>
+            </li>
+            <li>
+                <strong data-en="No scheduling:" data-es="Sin programación:">No scheduling:</strong>
+                <span data-en="Following up at 9am tomorrow meant either staying up or forgetting entirely. There was no native way to queue a message for a future time."
+                      data-es="Hacer seguimiento a las 9am del día siguiente implicaba quedarse despierto o olvidarlo por completo. No había manera nativa de programar un mensaje para un momento futuro.">
+                    Following up at 9am tomorrow meant either staying up or forgetting entirely. There was no native way to queue a message for a future time.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Broadcast was a manual nightmare:" data-es="Los mensajes masivos eran una pesadilla manual:">Broadcast was a manual nightmare:</strong>
+                <span data-en="Sending the same promotional or operational message to a list of contacts required opening each chat individually. For 50 contacts that was an hour of work."
+                      data-es="Enviar el mismo mensaje promocional u operativo a una lista de contactos requería abrir cada chat individualmente. Para 50 contactos eso era una hora de trabajo.">
+                    Sending the same promotional or operational message to a list of contacts required opening each chat individually. For 50 contacts that was an hour of work.
+                </span>
+            </li>
+        </ul>
+
+        <!-- What We Built -->
+        <h2 data-en="What We Built" data-es="Lo que Construimos">What We Built</h2>
+        <p data-en="We delivered a complete SaaS ecosystem — a Chrome extension that lives inside WhatsApp Web, a Django backend that handles auth, AI, subscriptions, and fraud, and a Stripe-powered billing system with full webhook lifecycle management. The product shipped with a freemium model and real paying subscribers on day one."
+           data-es="Entregamos un ecosistema SaaS completo — una extensión de Chrome que vive dentro de WhatsApp Web, un backend Django que maneja autenticación, IA, suscripciones y fraude, y un sistema de facturación con Stripe con gestión completa del ciclo de vida por webhooks. El producto se lanzó con un modelo freemium y suscriptores reales de pago desde el primer día.">
+            We delivered a complete SaaS ecosystem — a Chrome extension that lives inside WhatsApp Web, a Django backend that handles auth, AI, subscriptions, and fraud, and a Stripe-powered billing system with full webhook lifecycle management. The product shipped with a freemium model and real paying subscribers on day one.
+        </p>
+
+        <div class="info-card">
+            <ul style="margin:0;padding-left:18px;">
+                <li>
+                    <strong data-en="AI Response Generator:" data-es="Generador de Respuestas con IA:">AI Response Generator:</strong>
+                    <span data-en="A floating AI button injected into WhatsApp Web's input area. The AI reads the last 10 messages of context, applies the user's custom personality configuration, and generates a natural response in their voice. One click copies it to clipboard — no tab switching, no copy-paste friction."
+                          data-es="Un botón de IA flotante inyectado en el área de entrada de WhatsApp Web. La IA lee los últimos 10 mensajes de contexto, aplica la configuración de personalidad personalizada del usuario y genera una respuesta natural en su voz. Un clic la copia al portapapeles — sin cambiar de pestaña, sin fricción de copiar y pegar.">
+                        A floating AI button injected into WhatsApp Web's input area. The AI reads the last 10 messages of context, applies the user's custom personality configuration, and generates a natural response in their voice. One click copies it to clipboard — no tab switching, no copy-paste friction.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="CRM Side Panel:" data-es="Panel Lateral CRM:">CRM Side Panel:</strong>
+                    <span data-en="A full contact management panel that slides in from the right while keeping the WhatsApp chat visible. Standard fields (name, phone, email, address, company, status, tags, notes), custom fields per contact, and global field templates that propagate across all contacts — all stored locally for privacy. Exportable to CSV/Excel."
+                          data-es="Un panel completo de gestión de contactos que se desliza desde la derecha manteniendo el chat de WhatsApp visible. Campos estándar (nombre, teléfono, email, dirección, empresa, estado, etiquetas, notas), campos personalizados por contacto y plantillas de campos globales que se propagan a todos los contactos — todo almacenado localmente por privacidad. Exportable a CSV/Excel.">
+                        A full contact management panel that slides in from the right while keeping the WhatsApp chat visible. Standard fields (name, phone, email, address, company, status, tags, notes), custom fields per contact, and global field templates that propagate across all contacts — all stored locally for privacy. Exportable to CSV/Excel.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="AI Chat Insights:" data-es="Insights de Chat con IA:">AI Chat Insights:</strong>
+                    <span data-en="A side panel that lets users ask natural language questions about the current conversation: 'What address did they mention?', 'What was the final agreed price?', 'What times were discussed?'. The AI extracts and surfaces specific data from the full conversation history stored locally."
+                          data-es="Un panel lateral que permite a los usuarios hacer preguntas en lenguaje natural sobre la conversación actual: '¿Qué dirección mencionaron?', '¿Cuál fue el precio acordado final?', '¿Qué horarios se discutieron?'. La IA extrae y presenta datos específicos del historial completo de conversaciones almacenado localmente.">
+                        A side panel that lets users ask natural language questions about the current conversation: "What address did they mention?", "What was the final agreed price?", "What times were discussed?". The AI extracts and surfaces specific data from the full conversation history stored locally.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Broadcast Engine:" data-es="Motor de Broadcast:">Broadcast Engine:</strong>
+                    <span data-en="Select contacts from the WhatsApp sidebar via injected checkboxes, compose a message, and send it to all of them sequentially — the extension handles the search, chat opening, typing, and sending automatically. Built-in 3-second delays between messages to avoid rate limiting."
+                          data-es="Selecciona contactos de la barra lateral de WhatsApp mediante checkboxes inyectados, redacta un mensaje y envíalo a todos secuencialmente — la extensión gestiona la búsqueda, apertura del chat, escritura y envío automáticamente. Retrasos de 3 segundos entre mensajes para evitar limitaciones de velocidad.">
+                        Select contacts from the WhatsApp sidebar via injected checkboxes, compose a message, and send it to all of them sequentially — the extension handles the search, chat opening, typing, and sending automatically. Built-in 3-second delays between messages to avoid rate limiting.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Message Scheduler:" data-es="Programador de Mensajes:">Message Scheduler:</strong>
+                    <span data-en="Schedule messages for any future date and time for the currently open contact. The scheduler checks every 30 seconds. When a message is due, it navigates to the contact, types the message, and sends it automatically. If the browser was closed, it shows a popup with the message ready to copy — no silent failures."
+                          data-es="Programa mensajes para cualquier fecha y hora futura para el contacto actualmente abierto. El programador verifica cada 30 segundos. Cuando llega el momento, navega al contacto, escribe el mensaje y lo envía automáticamente. Si el navegador estaba cerrado, muestra un popup con el mensaje listo para copiar — sin fallos silenciosos.">
+                        Schedule messages for any future date and time for the currently open contact. The scheduler checks every 30 seconds. When a message is due, it navigates to the contact, types the message, and sends it automatically. If the browser was closed, it shows a popup with the message ready to copy — no silent failures.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Quick Responses:" data-es="Respuestas Rápidas:">Quick Responses:</strong>
+                    <span data-en="A floating panel anchored to the left edge of the chat column. Users save frequently used messages by name, then copy any of them to clipboard with one click — without opening any panel or navigating away."
+                          data-es="Un panel flotante anclado al borde izquierdo de la columna de chat. Los usuarios guardan mensajes de uso frecuente por nombre y luego copian cualquiera al portapapeles con un clic — sin abrir ningún panel ni navegar.">
+                        A floating panel anchored to the left edge of the chat column. Users save frequently used messages by name, then copy any of them to clipboard with one click — without opening any panel or navigating away.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Technical Implementation -->
+        <h2 data-en="Technical Implementation" data-es="Implementación Técnica">Technical Implementation</h2>
+        <div class="info-card">
+            <ul style="margin:0;padding-left:18px;">
+                <li>
+                    <strong data-en="Extension Architecture:" data-es="Arquitectura de la Extensión:">Extension Architecture:</strong>
+                    <span data-en="Three-layer Chrome extension — background service worker for auth and stats caching, content scripts injected into WhatsApp Web (AI button, CRM panel, broadcast handler, scheduler, DOM injector), and a popup for stats and navigation. All layers communicate via chrome.runtime messaging."
+                          data-es="Extensión Chrome de tres capas — service worker en background para autenticación y caché de estadísticas, content scripts inyectados en WhatsApp Web (botón IA, panel CRM, manejador de broadcast, programador, inyector DOM), y un popup para estadísticas y navegación. Todas las capas se comunican mediante mensajería chrome.runtime.">
+                        Three-layer Chrome extension — background service worker for auth and stats caching, content scripts injected into WhatsApp Web (AI button, CRM panel, broadcast handler, scheduler, DOM injector), and a popup for stats and navigation. All layers communicate via <code>chrome.runtime</code> messaging.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Backend:" data-es="Backend:">Backend:</strong>
+                    <span data-en="Django 5 with Django REST Framework — custom API endpoints for AI generation, chat insights, document analysis, subscription management, and auth. JWT authentication via Simple JWT with access and refresh token rotation. All API responses include CORS headers for WhatsApp Web origin."
+                          data-es="Django 5 con Django REST Framework — endpoints API personalizados para generación de IA, insights de chat, análisis de documentos, gestión de suscripciones y autenticación. Autenticación JWT mediante Simple JWT con rotación de tokens de acceso y actualización. Todas las respuestas API incluyen encabezados CORS para el origen de WhatsApp Web.">
+                        Django 5 with Django REST Framework — custom API endpoints for AI generation, chat insights, document analysis, subscription management, and auth. JWT authentication via Simple JWT with access and refresh token rotation. All API responses include CORS headers for WhatsApp Web origin.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="AI Engine:" data-es="Motor de IA:">AI Engine:</strong>
+                    <span data-en="Google Gemini 2.5 Flash — used for response generation, chat insights extraction, and PDF document analysis. Each user can upload up to 3 business PDFs; the AI analyzes them to auto-generate a custom personality configuration (communication style, business context, tone) that governs every AI response."
+                          data-es="Google Gemini 2.5 Flash — usado para generación de respuestas, extracción de insights de chat y análisis de documentos PDF. Cada usuario puede subir hasta 3 PDFs empresariales; la IA los analiza para generar automáticamente una configuración de personalidad personalizada (estilo de comunicación, contexto de negocio, tono) que rige cada respuesta de IA.">
+                        Google Gemini 2.5 Flash — used for response generation, chat insights extraction, and PDF document analysis. Each user can upload up to 3 business PDFs; the AI analyzes them to auto-generate a custom personality configuration (communication style, business context, tone) that governs every AI response.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Subscription &amp; Billing:" data-es="Suscripción y Facturación:">Subscription &amp; Billing:</strong>
+                    <span data-en="Full Stripe integration — checkout sessions, customer portal, webhook lifecycle handling (subscription.created, subscription.updated, subscription.deleted, invoice.payment_succeeded, invoice.payment_failed), automatic tax, and dual currency pricing (USD/MXN). Cancellation includes a structured feedback form before processing."
+                          data-es="Integración completa con Stripe — sesiones de checkout, portal de cliente, manejo del ciclo de vida por webhooks (subscription.created, subscription.updated, subscription.deleted, invoice.payment_succeeded, invoice.payment_failed), impuesto automático y precios en doble moneda (USD/MXN). La cancelación incluye un formulario de feedback estructurado antes de procesar.">
+                        Full Stripe integration — checkout sessions, customer portal, webhook lifecycle handling (<code>subscription.created</code>, <code>subscription.updated</code>, <code>subscription.deleted</code>, <code>invoice.payment_succeeded</code>, <code>invoice.payment_failed</code>), automatic tax, and dual currency pricing (USD/MXN). Cancellation includes a structured feedback form before processing.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Fraud Detection:" data-es="Detección de Fraude:">Fraud Detection:</strong>
+                    <span data-en="Custom fraud detection layer that runs on every new subscription — payment method fingerprinting to detect card reuse across accounts, IP address risk scoring, trial abuse detection, and automated fraud alerts for the admin team."
+                          data-es="Capa de detección de fraude personalizada que se ejecuta en cada nueva suscripción — huella digital de métodos de pago para detectar reutilización de tarjetas entre cuentas, puntuación de riesgo por dirección IP, detección de abuso de prueba gratuita y alertas de fraude automatizadas para el equipo de administración.">
+                        Custom fraud detection layer that runs on every new subscription — payment method fingerprinting to detect card reuse across accounts, IP address risk scoring, trial abuse detection, and automated fraud alerts for the admin team.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Auth &amp; Security:" data-es="Autenticación y Seguridad:">Auth &amp; Security:</strong>
+                    <span data-en="Email verification flow with account activation tokens, brute-force login protection (rate limiting by IP), honeypot admin panel, JWT blacklisting on logout, and CSRF protection. The extension communicates with the Django backend exclusively over HTTPS with Bearer token authentication."
+                          data-es="Flujo de verificación de email con tokens de activación de cuenta, protección contra fuerza bruta (limitación de velocidad por IP), panel de administración honeypot, lista negra de JWT al cerrar sesión y protección CSRF. La extensión se comunica con el backend Django exclusivamente mediante HTTPS con autenticación por token Bearer.">
+                        Email verification flow with account activation tokens, brute-force login protection (rate limiting by IP), honeypot admin panel, JWT blacklisting on logout, and CSRF protection. The extension communicates with the Django backend exclusively over HTTPS with Bearer token authentication.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Email:" data-es="Correo:">Email:</strong>
+                    <span data-en="Resend API for all transactional email — account activation, subscription welcome, cancellation confirmation, reactivation confirmation. All emails sent asynchronously in background threads to keep the request lifecycle fast."
+                          data-es="API de Resend para todos los correos transaccionales — activación de cuenta, bienvenida de suscripción, confirmación de cancelación, confirmación de reactivación. Todos los correos se envían de forma asíncrona en hilos en background para mantener el ciclo de vida de la solicitud rápido.">
+                        Resend API for all transactional email — account activation, subscription welcome, cancellation confirmation, reactivation confirmation. All emails sent asynchronously in background threads to keep the request lifecycle fast.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- How It Works -->
+        <h2 data-en="How the Product Works End-to-End" data-es="Cómo Funciona el Producto de Extremo a Extremo">How the Product Works End-to-End</h2>
+        <p data-en="From install to AI-assisted conversation in under 3 minutes:"
+           data-es="Desde la instalación hasta la conversación asistida por IA en menos de 3 minutos:">
+            From install to AI-assisted conversation in under 3 minutes:
+        </p>
+        <ol>
+            <li data-en="User installs the Chrome extension and registers on whatsbizpro.org — email verification required. A 14-day free trial starts automatically with trial abuse detection running in the background."
+                data-es="El usuario instala la extensión de Chrome y se registra en whatsbizpro.org — se requiere verificación de email. Una prueba gratuita de 14 días comienza automáticamente con detección de abuso de prueba ejecutándose en background.">
+                User installs the Chrome extension and registers on <code>whatsbizpro.org</code> — email verification required. A 14-day free trial starts automatically with trial abuse detection running in the background.
+            </li>
+            <li data-en="The extension injects its UI into WhatsApp Web — a floating panel, AI button in the input area, Quick Response button on the left edge, and checkboxes on every contact in the sidebar."
+                data-es="La extensión inyecta su UI en WhatsApp Web — un panel flotante, botón de IA en el área de entrada, botón de Respuesta Rápida en el borde izquierdo y checkboxes en cada contacto de la barra lateral.">
+                The extension injects its UI into WhatsApp Web — a floating panel, AI button in the input area, Quick Response button on the left edge, and checkboxes on every contact in the sidebar.
+            </li>
+            <li data-en="The user optionally uploads business PDFs in the extension settings. The Django backend calls Gemini to analyze them and auto-populate the AI personality — communication style, business context, and tone — which shapes all future AI responses."
+                data-es="El usuario opcionalmente sube PDFs de negocio en la configuración de la extensión. El backend Django llama a Gemini para analizarlos y auto-rellenar la personalidad de IA — estilo de comunicación, contexto de negocio y tono — que moldea todas las futuras respuestas de IA.">
+                The user optionally uploads business PDFs in the extension settings. The Django backend calls Gemini to analyze them and auto-populate the AI personality — communication style, business context, and tone — which shapes all future AI responses.
+            </li>
+            <li data-en="While chatting, the user hits the AI button. The extension reads the last 10 messages, sends them to the Django AI endpoint with the user's personality config, and displays the generated response above the input area. One click copies it — the user pastes and sends."
+                data-es="Al chatear, el usuario presiona el botón de IA. La extensión lee los últimos 10 mensajes, los envía al endpoint de IA de Django con la configuración de personalidad del usuario y muestra la respuesta generada sobre el área de entrada. Un clic la copia — el usuario pega y envía.">
+                While chatting, the user hits the AI button. The extension reads the last 10 messages, sends them to the Django AI endpoint with the user's personality config, and displays the generated response above the input area. One click copies it — the user pastes and sends.
+            </li>
+            <li data-en="At trial end, the user upgrades via the Stripe checkout page. Webhooks fire to update their subscription status in real time. The extension reads the updated status from chrome.storage on every AI request to gate access."
+                data-es="Al terminar la prueba, el usuario actualiza mediante la página de checkout de Stripe. Los webhooks se activan para actualizar su estado de suscripción en tiempo real. La extensión lee el estado actualizado desde chrome.storage en cada solicitud de IA para controlar el acceso.">
+                At trial end, the user upgrades via the Stripe checkout page. Webhooks fire to update their subscription status in real time. The extension reads the updated status from <code>chrome.storage</code> on every AI request to gate access.
+            </li>
+        </ol>
+
+        <!-- Business Value -->
+        <h2 data-en="Business Value" data-es="Valor para el Negocio">Business Value</h2>
+        <ul>
+            <li>
+                <strong data-en="A Complete Product, Not a Feature:" data-es="Un Producto Completo, No una Funcionalidad:">A Complete Product, Not a Feature:</strong>
+                <span data-en="WhatsBizPro isn't a plugin with one trick — it's a full business productivity suite that lives inside the tool millions of Latin American businesses already use every day. Every feature was designed to eliminate a specific, painful manual process."
+                      data-es="WhatsBizPro no es un plugin con un solo truco — es una suite completa de productividad empresarial que vive dentro de la herramienta que millones de negocios latinoamericanos ya usan cada día. Cada funcionalidad fue diseñada para eliminar un proceso manual específico y doloroso.">
+                    WhatsBizPro isn't a plugin with one trick — it's a full business productivity suite that lives inside the tool millions of Latin American businesses already use every day. Every feature was designed to eliminate a specific, painful manual process.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Privacy-First Architecture:" data-es="Arquitectura Priorizando la Privacidad:">Privacy-First Architecture:</strong>
+                <span data-en="CRM data lives in the user's browser localStorage — never on our servers. Conversation content is only sent to the AI backend when the user explicitly requests analysis. This isn't just a technical decision — it's the core trust proposition that makes business users comfortable giving the extension access to their WhatsApp."
+                      data-es="Los datos del CRM viven en el localStorage del navegador del usuario — nunca en nuestros servidores. El contenido de las conversaciones solo se envía al backend de IA cuando el usuario solicita análisis explícitamente. Esto no es solo una decisión técnica — es la propuesta de confianza central que hace que los usuarios de negocios se sientan cómodos dando a la extensión acceso a su WhatsApp.">
+                    CRM data lives in the user's browser <code>localStorage</code> — never on our servers. Conversation content is only sent to the AI backend when the user explicitly requests analysis. This isn't just a technical decision — it's the core trust proposition that makes business users comfortable giving the extension access to their WhatsApp.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Monetization Built In From Day One:" data-es="Monetización Integrada desde el Primer Día:">Monetization Built In From Day One:</strong>
+                <span data-en="Free trial → Essentials (free forever) → Pro ($9/month USD or $165/month MXN). Stripe handles billing, the webhook pipeline handles status updates, and the extension gates Pro features with a subscription check on every sensitive request."
+                      data-es="Prueba gratuita → Esenciales (gratuito para siempre) → Pro ($9/mes USD o $165/mes MXN). Stripe maneja la facturación, el pipeline de webhooks maneja las actualizaciones de estado y la extensión controla las funcionalidades Pro con una verificación de suscripción en cada solicitud sensible.">
+                    Free trial → Essentials (free forever) → Pro ($9/month USD or $165/month MXN). Stripe handles billing, the webhook pipeline handles status updates, and the extension gates Pro features with a subscription check on every sensitive request.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Bilingual from the Ground Up:" data-es="Bilingüe desde la Base:">Bilingual from the Ground Up:</strong>
+                <span data-en="The Chrome extension uses the <code>chrome.i18n</code> API with full EN/ES locale files. The Django backend detects document language (Spanish vs English) and generates AI responses and personality suggestions in the correct language automatically. The landing page and support chat adapt to browser locale."
+                      data-es="La extensión Chrome usa la API chrome.i18n con archivos de idioma completos EN/ES. El backend Django detecta el idioma del documento (español vs inglés) y genera respuestas de IA y sugerencias de personalidad en el idioma correcto automáticamente. La página de destino y el chat de soporte se adaptan al idioma del navegador.">
+                    The Chrome extension uses the <code>chrome.i18n</code> API with full EN/ES locale files. The Django backend detects document language (Spanish vs English) and generates AI responses and personality suggestions in the correct language automatically. The landing page and support chat adapt to browser locale.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Fraud Protection That Scales:" data-es="Protección contra Fraude que Escala:">Fraud Protection That Scales:</strong>
+                <span data-en="Trial abuse is the silent killer of freemium SaaS. The fraud detection system fingerprints payment cards, scores IP addresses, tracks trial history, and creates admin alerts — all without adding friction to the legitimate onboarding flow."
+                      data-es="El abuso de prueba gratuita es el asesino silencioso del SaaS freemium. El sistema de detección de fraude toma la huella digital de tarjetas de pago, puntúa direcciones IP, rastrea el historial de pruebas y crea alertas de administración — todo sin agregar fricción al flujo de incorporación legítimo.">
+                    Trial abuse is the silent killer of freemium SaaS. The fraud detection system fingerprints payment cards, scores IP addresses, tracks trial history, and creates admin alerts — all without adding friction to the legitimate onboarding flow.
+                </span>
+            </li>
+        </ul>
+
+        <hr>
+
+        <!-- CTA Block -->
+        <div class="cta-block" id="contact">
+            <h3 data-en="Want a SaaS product built end-to-end?" data-es="¿Quieres un producto SaaS construido de extremo a extremo?">Want a SaaS product built end-to-end?</h3>
+            <p data-en="From Chrome extension to Django backend, Stripe billing, AI integration, fraud detection, and bilingual UX — we've built the full stack before. If you have a product idea or an existing tool that needs a professional engineering team, we can take it from zero to production faster than you'd expect."
+               data-es="Desde extensión Chrome hasta backend Django, facturación con Stripe, integración de IA, detección de fraude y UX bilingüe — ya hemos construido el stack completo. Si tienes una idea de producto o una herramienta existente que necesita un equipo de ingeniería profesional, podemos llevarlo de cero a producción más rápido de lo que esperarías.">
+                From Chrome extension to Django backend, Stripe billing, AI integration, fraud detection, and bilingual UX — we've built the full stack before. If you have a product idea or an existing tool that needs a professional engineering team, we can take it from zero to production faster than you'd expect.
+            </p>
+            <a href="#" class="btn-cta">
+                <i class="fa fa-calendar" style="font-size:13px;"></i>
+                <span data-en="Book a Free Strategy Call" data-es="Agendar una Llamada de Estrategia Gratis">Book a Free Strategy Call</span>
+            </a>
+        </div>
+
+        <hr>
+        <p class="footer-note">
+            <span data-en="Built by" data-es="Construido por">Built by</span>
+            <a href="#">Zyven</a>
+            &nbsp;·&nbsp;
+            <span data-en="Questions? Let's talk." data-es="¿Preguntas? Hablemos.">Questions? Let's talk.</span>
+        </p>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /* ── THEME ── */
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById('theme-btn').textContent = theme === 'dark' ? '🌙' : '☀️';
+            localStorage.setItem('theme', theme);
+            currentTheme = theme;
+        }
+
+        function toggleTheme() {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        /* ── LANGUAGE ── */
+        let currentLang = 'en';
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            const btn = document.getElementById('lang-btn');
+            btn.textContent = currentLang === 'en' ? '🌐 ES' : '🌐 EN';
+
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const text = el.getAttribute('data-' + currentLang);
+                if (!text) return;
+                if (el.children.length === 0) {
+                    el.textContent = text;
+                }
+            });
+
+            document.documentElement.lang = currentLang;
+        }
+
+        applyTheme(currentTheme);
+    </script>
+</body>
+</html>

@@ -1,0 +1,545 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6cias AI Bot — Zyven Project</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── DARK MODE (default) ── */
+        :root {
+            --z-bg:         #020202;
+            --z-surface:    #0a0a0a;
+            --z-card:       #111111;
+            --z-card2:      #181818;
+            --z-border:     rgba(255,255,255,0.07);
+            --z-border-md:  rgba(255,255,255,0.13);
+            --z-blue:       #1f7bf8;
+            --z-purple:     #720af5;
+            --z-blue-dim:   rgba(31,123,248,0.10);
+            --z-purple-dim: rgba(114,10,245,0.10);
+            --z-glow-blue:  rgba(31,123,248,0.22);
+            --z-glow-purple:rgba(114,10,245,0.18);
+            --z-white:      #ffffff;
+            --z-off-white:  #e8eaf0;
+            --z-muted:      #7a7a8a;
+            --z-heading:    #f2f2f5;
+            --z-text:       #b0b0bf;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: dark;
+
+            /* article */
+            --art-h1:       #f2f2f5;
+            --art-h2:       #e8eaf0;
+            --art-p:        #b0b0bf;
+            --art-li:       #b0b0bf;
+            --art-meta:     #7a7a8a;
+            --art-hr:       rgba(255,255,255,0.08);
+            --art-card-bg:  #111111;
+            --art-card-border: rgba(255,255,255,0.08);
+            --art-accent:   #1f7bf8;
+            --art-tag-bg:   rgba(31,123,248,0.12);
+            --art-tag-color:#7db8fc;
+        }
+
+        /* ── LIGHT MODE ── */
+        [data-theme="light"] {
+            --z-bg:         #ffffff;
+            --z-surface:    #f5f5f7;
+            --z-card:       #f0f0f4;
+            --z-card2:      #e8e8ee;
+            --z-border:     rgba(0,0,0,0.08);
+            --z-border-md:  rgba(0,0,0,0.15);
+            --z-blue:       #1f7bf8;
+            --z-purple:     #720af5;
+            --z-blue-dim:   rgba(31,123,248,0.08);
+            --z-purple-dim: rgba(114,10,245,0.08);
+            --z-glow-blue:  rgba(31,123,248,0.18);
+            --z-glow-purple:rgba(114,10,245,0.14);
+            --z-white:      #020202;
+            --z-off-white:  #1a1a1a;
+            --z-muted:      #6b6b7a;
+            --z-heading:    #0a0a0a;
+            --z-text:       #444452;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: light;
+
+            /* article */
+            --art-h1:       #0a0a1a;
+            --art-h2:       #1a1a2e;
+            --art-p:        #3a3a4a;
+            --art-li:       #3a3a4a;
+            --art-meta:     #6b6b7a;
+            --art-hr:       rgba(0,0,0,0.08);
+            --art-card-bg:  #f5f5f7;
+            --art-card-border: rgba(0,0,0,0.08);
+            --art-accent:   #1f7bf8;
+            --art-tag-bg:   rgba(31,123,248,0.10);
+            --art-tag-color:#1a5bbf;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            background-color: var(--z-bg);
+            color: var(--z-text);
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background-color .3s ease, color .3s ease;
+        }
+
+        /* logo visibility */
+        .logo-light { display: none; }
+        .logo-dark  { display: block; }
+        [data-theme="light"] .logo-light { display: block; }
+        [data-theme="light"] .logo-dark  { display: none; }
+
+        /* ── GLOBAL ORBS ── */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px; left: -200px;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(31,123,248,0.06) 0%, transparent 65%);
+            pointer-events: none; z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -200px; right: -200px;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(114,10,245,0.07) 0%, transparent 65%);
+            pointer-events: none; z-index: 0;
+        }
+
+        nav, section, footer, main { position: relative; z-index: 1; }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: rgba(2,2,2,0.88) !important;
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--z-border);
+            padding: 0;
+            height: 68px;
+            transition: background .3s;
+        }
+        [data-theme="light"] .navbar { background: rgba(255,255,255,0.92) !important; }
+        .navbar .container { height: 100%; }
+
+        .navbar-brand { display:flex; align-items:center; gap:6px; padding:0; text-decoration:none; }
+
+        .brand-name {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 20px;
+            color: var(--z-white); letter-spacing: -.02em;
+        }
+        .brand-name span {
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            color: var(--z-muted) !important;
+            font-size: 13px; letter-spacing:.02em;
+            transition: color .2s;
+            padding: .4rem .9rem !important;
+        }
+        .nav-link:hover { color: var(--z-white) !important; }
+
+        .btn-nav-cta {
+            background: var(--grad);
+            color: #fff !important;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 13px;
+            padding: 8px 20px !important;
+            border-radius: 8px;
+            transition: all .2s !important;
+            box-shadow: 0 0 20px var(--z-glow-blue);
+        }
+        .btn-nav-cta:hover {
+            opacity: .88;
+            transform: translateY(-1px);
+            box-shadow: 0 0 30px var(--z-glow-purple);
+        }
+
+        /* theme + lang buttons */
+        .theme-toggle, .lang-btn {
+            background: transparent;
+            border: 1px solid var(--z-border-md);
+            border-radius: 8px;
+            padding: 7px 14px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all .2s;
+            color: var(--z-muted);
+            font-family: 'Manrope', sans-serif;
+            letter-spacing: .04em;
+        }
+        .theme-toggle { border-radius: 50%; width: 36px; height: 36px; padding: 0; font-size: 16px; }
+        .theme-toggle:hover, .lang-btn:hover {
+            border-color: var(--z-blue);
+            color: var(--z-blue);
+        }
+        .theme-toggle:hover { transform: rotate(20deg); }
+
+        .navbar-toggler { border-color: var(--z-border-md); }
+        .navbar-toggler-icon { filter: invert(1); }
+        [data-theme="light"] .navbar-toggler-icon { filter: invert(0); }
+
+        /* ── ARTICLE WRAPPER ── */
+        main {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 108px 28px 80px;
+        }
+
+        /* ── BACK LINK ── */
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; font-weight: 600;
+            color: var(--z-muted);
+            text-decoration: none;
+            letter-spacing: .06em; text-transform: uppercase;
+            margin-bottom: 32px;
+            transition: color .2s;
+        }
+        .back-link:hover { color: var(--z-blue); }
+
+        /* ── TAGS ── */
+        .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px; font-weight: 600;
+            letter-spacing: .5px; text-transform: uppercase;
+            background: var(--art-tag-bg);
+            color: var(--art-tag-color);
+            border: 1px solid rgba(31,123,248,.2);
+        }
+
+        /* ── H1 ── */
+        .article-h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(24px, 4vw, 38px);
+            font-weight: 800;
+            color: var(--art-h1);
+            line-height: 1.15;
+            letter-spacing: -.03em;
+            margin-bottom: 12px;
+        }
+
+        /* ── META ── */
+        .meta {
+            font-size: 13px;
+            color: var(--art-meta);
+            margin-bottom: 36px;
+            display: flex; flex-wrap: wrap; gap: 4px 16px;
+        }
+        .meta a { color: var(--art-accent); text-decoration: none; }
+        .meta a:hover { text-decoration: underline; }
+
+        /* ── DIVIDER ── */
+        hr {
+            border: none;
+            border-top: 1px solid var(--art-hr);
+            margin: 40px 0;
+        }
+
+        /* ── SECTION HEADINGS ── */
+        h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 16px; font-weight: 700;
+            color: var(--art-h2);
+            margin-top: 40px; margin-bottom: 12px;
+            padding-left: 14px;
+            border-left: 3px solid var(--z-blue);
+            transition: color .3s;
+        }
+
+        /* ── BODY TEXT ── */
+        p {
+            color: var(--art-p);
+            margin-bottom: 14px;
+            transition: color .3s;
+        }
+
+        ul, ol {
+            color: var(--art-li);
+            padding-left: 22px;
+            margin-bottom: 16px;
+            transition: color .3s;
+        }
+        li { margin-bottom: 8px; }
+
+        a { color: var(--art-accent); }
+
+        strong { color: var(--art-h2); font-weight: 700; }
+
+        /* ── INFO CARD (used for tech section) ── */
+        .info-card {
+            background: var(--art-card-bg);
+            border: 1px solid var(--art-card-border);
+            border-radius: 12px;
+            padding: 22px 26px;
+            margin: 16px 0 24px;
+            transition: background .3s, border-color .3s;
+        }
+        .info-card li { margin-bottom: 10px; font-size: 13.5px; }
+
+        /* ── FOOTER NOTE ── */
+        .footer-note {
+            font-size: 13px;
+            color: var(--art-meta);
+            margin-top: 8px;
+        }
+        .footer-note a { color: var(--art-accent); }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── NAVBAR ── -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'zyven-logo-text.png' %}" alt="Zyven" class="logo-dark"
+                    style="height:102px;width:auto;margin-top:12px;">
+                <img src="{% static 'zyven_black_letters.png' %}" alt="Zyven" class="logo-light"
+                    style="height:102px;width:auto;margin-top:12px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+                    <li class="nav-item"><a class="nav-link" href="#services" data-en="Services" data-es="Servicios">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#guarantees" data-en="Guarantees" data-es="Garantías">Guarantees</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#process" data-en="Process" data-es="Proceso">Process</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🌐 ES</button>
+                    </li>
+                    <li class="nav-item ms-lg-1">
+                        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark mode">🌙</button>
+                    </li>
+                    <li class="nav-item ms-lg-1">
+                        <a class="nav-link btn-nav-cta" href="#contact" data-en="Book a Free Call" data-es="Agendar Llamada">Book a Free Call</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── ARTICLE ── -->
+    <main>
+
+        <a href="#" class="back-link">
+            <i class="fa fa-arrow-left" style="font-size:11px;"></i>
+            <span data-en="Back to Projects" data-es="Volver a Proyectos">Back to Projects</span>
+        </a>
+
+        <div class="tag-row">
+            <span class="tag" data-en="AI Automation" data-es="Automatización IA">AI Automation</span>
+            <span class="tag" data-en="Recruitment" data-es="Reclutamiento">Recruitment</span>
+            <span class="tag">HTML · Frontend</span>
+        </div>
+
+        <h1 class="article-h1">
+            <span data-en="6cias AI Bot: Automating Recruitment with AI-Powered Interviews"
+                  data-es="6cias AI Bot: Automatizando el Reclutamiento con Entrevistas de IA">
+                6cias AI Bot: Automating Recruitment with AI-Powered Interviews
+            </span>
+        </h1>
+
+        <div class="meta">
+            <span><span data-en="Client:" data-es="Cliente:">Client:</span> <a href="https://6cias.com/" target="_blank">6cias.com</a></span>
+            <span>·</span>
+            <span><span data-en="Last updated: March 2026" data-es="Última actualización: Marzo 2026">Last updated: March 2026</span></span>
+            <span>·</span>
+            <span><span data-en="Status: Active Development" data-es="Estado: En Desarrollo Activo">Status: Active Development</span></span>
+        </div>
+
+        <hr>
+
+        <!-- Project Overview -->
+        <h2 data-en="Project Overview" data-es="Descripción del Proyecto">Project Overview</h2>
+        <p data-en="The 6cias AI Bot is an intelligent automation solution developed for 6cias (https://6cias.com/), a recruitment-focused company. This project represents a modern approach to streamlining the hiring process by leveraging artificial intelligence to automate the initial interview screening phase. The bot is seamlessly integrated directly into the 6cias website, providing candidates with an immediate, accessible interview experience."
+           data-es="El 6cias AI Bot es una solución de automatización inteligente desarrollada para 6cias (https://6cias.com/), una empresa enfocada en reclutamiento. Este proyecto representa un enfoque moderno para agilizar el proceso de contratación, aprovechando la inteligencia artificial para automatizar la fase inicial de selección de entrevistas. El bot está integrado directamente en el sitio web de 6cias, ofreciendo a los candidatos una experiencia de entrevista inmediata y accesible.">
+            The 6cias AI Bot is an intelligent automation solution developed for <a href="https://6cias.com/" target="_blank">6cias</a>, a recruitment-focused company. This project represents a modern approach to streamlining the hiring process by leveraging artificial intelligence to automate the initial interview screening phase. The bot is seamlessly integrated directly into the 6cias website, providing candidates with an immediate, accessible interview experience.
+        </p>
+
+        <!-- Purpose -->
+        <h2 data-en="Purpose &amp; Key Functions" data-es="Propósito y Funciones Clave">Purpose &amp; Key Functions</h2>
+        <ul>
+            <li><strong data-en="Standardize Initial Screening:" data-es="Estandarizar la Selección Inicial:">Standardize Initial Screening:</strong>
+                <span data-en="Provide consistent, objective evaluation of candidates in the first interview stage."
+                      data-es="Proporcionar una evaluación consistente y objetiva de los candidatos en la primera etapa de entrevista.">
+                    Provide consistent, objective evaluation of candidates in the first interview stage.
+                </span>
+            </li>
+            <li><strong data-en="Increase Efficiency:" data-es="Aumentar la Eficiencia:">Increase Efficiency:</strong>
+                <span data-en="Reduce manual workload for recruiters by automating preliminary candidate assessments."
+                      data-es="Reducir la carga de trabajo manual de los reclutadores automatizando las evaluaciones preliminares de candidatos.">
+                    Reduce manual workload for recruiters by automating preliminary candidate assessments.
+                </span>
+            </li>
+            <li><strong data-en="Scale Recruitment:" data-es="Escalar el Reclutamiento:">Scale Recruitment:</strong>
+                <span data-en="Handle multiple candidate interviews simultaneously without human intervention."
+                      data-es="Gestionar múltiples entrevistas de candidatos simultáneamente sin intervención humana.">
+                    Handle multiple candidate interviews simultaneously without human intervention.
+                </span>
+            </li>
+            <li><strong data-en="Improve Candidate Experience:" data-es="Mejorar la Experiencia del Candidato:">Improve Candidate Experience:</strong>
+                <span data-en="Offer candidates immediate interview opportunities without scheduling delays."
+                      data-es="Ofrecer a los candidatos oportunidades de entrevista inmediatas sin demoras por agendamiento.">
+                    Offer candidates immediate interview opportunities without scheduling delays.
+                </span>
+            </li>
+            <li><strong data-en="Web-Based Accessibility:" data-es="Accesibilidad Web:">Web-Based Accessibility:</strong>
+                <span data-en="Candidates take the AI-powered interview directly on the 6cias website without external tools or platforms."
+                      data-es="Los candidatos realizan la entrevista con IA directamente en el sitio web de 6cias sin herramientas ni plataformas externas.">
+                    Candidates take the AI-powered interview directly on the 6cias website without external tools or platforms.
+                </span>
+            </li>
+        </ul>
+
+        <!-- Technical Implementation -->
+        <h2 data-en="Technical Implementation" data-es="Implementación Técnica">Technical Implementation</h2>
+        <div class="info-card">
+            <ul style="margin:0;padding-left:18px;">
+                <li><strong data-en="Primary Language:" data-es="Lenguaje Principal:">Primary Language:</strong>
+                    <span data-en="HTML (frontend interface)" data-es="HTML (interfaz frontend)">HTML (frontend interface)</span>
+                </li>
+                <li><strong data-en="Integration:" data-es="Integración:">Integration:</strong>
+                    <span data-en="Embedded within the 6cias website ecosystem" data-es="Integrado dentro del ecosistema del sitio web de 6cias">Embedded within the 6cias website ecosystem</span>
+                </li>
+                <li><strong data-en="Repository Status:" data-es="Estado del Repositorio:">Repository Status:</strong>
+                    <span data-en="Active development (last updated March 2026)" data-es="En desarrollo activo (última actualización Marzo 2026)">Active development (last updated March 2026)</span>
+                </li>
+                <li><strong data-en="Accessibility:" data-es="Accesibilidad:">Accessibility:</strong>
+                    <span data-en="Public repository for collaboration and transparency" data-es="Repositorio público para colaboración y transparencia">Public repository for collaboration and transparency</span>
+                </li>
+                <li><strong data-en="Project Scope:" data-es="Alcance del Proyecto:">Project Scope:</strong>
+                    <span data-en="Purpose-built for 6cias's recruitment pipeline" data-es="Construido específicamente para el proceso de reclutamiento de 6cias">Purpose-built for 6cias's recruitment pipeline</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- How It Works -->
+        <h2 data-en="How It Works" data-es="Cómo Funciona">How It Works</h2>
+        <p data-en="The AI bot, integrated into the 6cias webpage, conducts automated interviews with candidates:"
+           data-es="El bot de IA, integrado en la página web de 6cias, realiza entrevistas automatizadas con los candidatos:">
+            The AI bot, integrated into the 6cias webpage, conducts automated interviews with candidates:
+        </p>
+        <ol>
+            <li data-en="Candidates access the interview directly from the 6cias website"
+                data-es="Los candidatos acceden a la entrevista directamente desde el sitio web de 6cias">
+                Candidates access the interview directly from the 6cias website
+            </li>
+            <li data-en="The bot asks standardized job-specific questions"
+                data-es="El bot hace preguntas estandarizadas específicas del puesto">
+                The bot asks standardized job-specific questions
+            </li>
+            <li data-en="Evaluates responses based on predefined criteria"
+                data-es="Evalúa las respuestas con base en criterios predefinidos">
+                Evaluates responses based on predefined criteria
+            </li>
+            <li data-en="Generates assessment reports for human recruiters"
+                data-es="Genera reportes de evaluación para los reclutadores humanos">
+                Generates assessment reports for human recruiters
+            </li>
+            <li data-en="Filters candidates for the next stage of the hiring process"
+                data-es="Filtra candidatos para la siguiente etapa del proceso de contratación">
+                Filters candidates for the next stage of the hiring process
+            </li>
+        </ol>
+
+        <!-- Business Value -->
+        <h2 data-en="Business Value" data-es="Valor para el Negocio">Business Value</h2>
+        <ul>
+            <li><strong data-en="Cost Reduction:" data-es="Reducción de Costos:">Cost Reduction:</strong>
+                <span data-en="Fewer hours spent on initial screening." data-es="Menos horas dedicadas a la selección inicial.">Fewer hours spent on initial screening.</span>
+            </li>
+            <li><strong data-en="Speed:" data-es="Velocidad:">Speed:</strong>
+                <span data-en="Faster time-to-hire for qualified candidates." data-es="Menor tiempo de contratación para candidatos calificados.">Faster time-to-hire for qualified candidates.</span>
+            </li>
+            <li><strong data-en="Consistency:" data-es="Consistencia:">Consistency:</strong>
+                <span data-en="Uniform evaluation standards across all candidates." data-es="Estándares de evaluación uniformes para todos los candidatos.">Uniform evaluation standards across all candidates.</span>
+            </li>
+            <li><strong data-en="Data-Driven Hiring:" data-es="Contratación Basada en Datos:">Data-Driven Hiring:</strong>
+                <span data-en="Objective metrics for initial candidate assessment." data-es="Métricas objetivas para la evaluación inicial de candidatos.">Objective metrics for initial candidate assessment.</span>
+            </li>
+            <li><strong data-en="Enhanced User Experience:" data-es="Experiencia de Usuario Mejorada:">Enhanced User Experience:</strong>
+                <span data-en="Candidates interact with a modern, AI-powered recruiting platform directly on the company website." data-es="Los candidatos interactúan con una plataforma de reclutamiento moderna con IA directamente en el sitio web de la empresa.">Candidates interact with a modern, AI-powered recruiting platform directly on the company website.</span>
+            </li>
+            <li><strong data-en="Competitive Advantage:" data-es="Ventaja Competitiva:">Competitive Advantage:</strong>
+                <span data-en="Demonstrates 6cias's commitment to technology-driven recruitment solutions." data-es="Demuestra el compromiso de 6cias con soluciones de reclutamiento impulsadas por tecnología.">Demonstrates 6cias's commitment to technology-driven recruitment solutions.</span>
+            </li>
+        </ul>
+
+        <hr>
+        <p class="footer-note">
+            <span data-en="Visit the project at" data-es="Visita el proyecto en">Visit the project at</span>
+            <a href="https://6cias.com/" target="_blank">6cias.com</a>
+        </p>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /* ── THEME ── */
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById('theme-btn').textContent = theme === 'dark' ? '🌙' : '☀️';
+            localStorage.setItem('theme', theme);
+            currentTheme = theme;
+        }
+
+        function toggleTheme() {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        /* ── LANGUAGE ── */
+        let currentLang = 'en';
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            const btn = document.getElementById('lang-btn');
+            btn.textContent = currentLang === 'en' ? '🌐 ES' : '🌐 EN';
+
+            // swap all [data-en] / [data-es] text nodes
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const text = el.getAttribute('data-' + currentLang);
+                if (!text) return;
+
+                // if element has children (like <a> tags inside), only swap if it's a simple text node
+                if (el.children.length === 0) {
+                    el.textContent = text;
+                } else {
+                    // for elements with mixed content, skip (handled by child spans/strongs)
+                }
+            });
+
+            // update document language
+            document.documentElement.lang = currentLang;
+        }
+
+        // init on load
+        applyTheme(currentTheme);
+    </script>
+</body>
+</html>

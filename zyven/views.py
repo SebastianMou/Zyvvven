@@ -6,8 +6,12 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 import json
+import uuid
+
+from django.views.decorators.csrf import csrf_exempt
+from google import genai
 from django.contrib.auth import authenticate, login, logout
-from .models import Lead, Client, Project, Task, Note
+from .models import Lead, Client, Project, Task, Note, ChatMessage
 from .serializers import LeadSerializer, ClientSerializer, ProjectSerializer, TaskSerializer
 
 
@@ -18,6 +22,20 @@ from .serializers import LeadSerializer, ClientSerializer, ProjectSerializer, Ta
 def home(request):
     return render(request, 'home.html', {})
 
+def six_cias(request):
+    return render(request, 'projects/six_cias.html', {})
+
+def ideaconv(request):
+    return render(request, 'projects/ideaconv.html', {})
+
+def riosa_sticker(request):
+    return render(request, 'projects/riosa_sticker.html', {})
+
+def bahia(request):
+    return render(request, 'projects/bahia.html', {})
+
+def whatsbizpro(request):
+    return render(request, 'projects/whatsbizpro.html', {})
 
 def crm_login(request):
     if request.user.is_authenticated:
@@ -477,6 +495,122 @@ def note_create(request):
     if lead_id:
         return redirect('zyven:lead_detail', pk=lead_id)
     return redirect('zyven:dashboard')
+
+
+# ─────────────────────────────────────────────
+#  PUBLIC CHAT API  (Gemini SDK + save)
+# ─────────────────────────────────────────────
+GEMINI_API_KEY = 'AIzaSyBY6L91zYWZZpPcQRfbYdn3CSrlqkmcVPQ'
+
+ZYVEN_SYSTEM_CONTEXT = """You are Zyven AI, the smart, confident sales assistant for Zyven — a B2B tech consulting company.
+
+ABOUT ZYVEN:
+- We build custom systems, automation, and AI for B2B companies in 14 days
+- Fixed price, zero surprises — day-one quote = final price
+- Free Blueprint Session: 30-min live call where we screen-share a visual map of the client's broken systems + a working prototype of the fix. If we can't find 3 real problems, it's 100% free
+- Beta live in 7 days, full production launch in 14 days — this is a guarantee, not a goal
+- 60-day "No Orphan Systems" guarantee: we come back and fix anything that breaks, at zero cost
+- Tech stack: Django, PostgreSQL, React, Python, Railway, OpenAI, Anthropic Claude
+- Services: System Audit & Optimization, Web & App Development, AI & Automation Builds, Managed Services
+
+YOUR PERSONALITY:
+- Direct, confident, no fluff
+- Speak the language of B2B operators: ROI, efficiency, revenue impact
+- Create urgency without being pushy
+- Always end by nudging toward booking the Free Blueprint Session
+- Keep responses under 120 words — this is a chat widget, not an essay
+- Use emojis sparingly but effectively
+- CRITICAL: Detect the language of the FIRST user message. If it is Spanish, respond in Spanish for the ENTIRE conversation without exception. If English, stay in English for the entire conversation. Never switch languages mid-conversation.
+
+NEVER:
+- Make up pricing numbers (pricing is proposal-based)
+- Promise timelines outside the 7/14 day framework
+- Discuss competitors by name"""
+
+
+@csrf_exempt
+@require_POST
+def chat_api(request):
+    try:
+        body       = json.loads(request.body)
+        user_msg   = body.get('message', '').strip()
+        source     = body.get('source', 'fab')
+        session_id = body.get('session_id', '')
+
+        if not user_msg:
+            return JsonResponse({'error': 'Empty message'}, status=400)
+
+        if not session_id:
+            session_id = str(uuid.uuid4())
+            request.session['chat_session_id'] = session_id
+        
+        # Load history from Django session
+        history_key = 'chat_inline' if source == 'inline' else 'chat_fab'
+        history = request.session.get(history_key, [])
+
+        # Save user message to DB
+        ChatMessage.objects.create(
+            session_id = session_id,
+            role       = 'user',
+            message    = user_msg,
+            source     = source,
+            ip_address = request.META.get('REMOTE_ADDR'),
+            user_agent = request.META.get('HTTP_USER_AGENT', '')[:400],
+        )
+
+        # Build contents for Gemini
+        contents = list(history)
+        contents.append({'role': 'user', 'parts': [{'text': user_msg}]})
+
+        # Call Gemini
+        client   = genai.Client(api_key=GEMINI_API_KEY)
+        response = client.models.generate_content(
+            model    = 'gemini-2.5-flash-lite',
+            contents = contents,
+            config   = {
+                'system_instruction': ZYVEN_SYSTEM_CONTEXT,
+                'temperature':        0.7,
+                'max_output_tokens':  300,
+            }
+        )
+
+        reply = response.text or "I'm having trouble responding right now. Please try again."
+
+        # Save model reply to DB
+        ChatMessage.objects.create(
+            session_id = session_id,
+            role       = 'model',
+            message    = reply,
+            source     = source,
+            ip_address = request.META.get('REMOTE_ADDR'),
+            user_agent = request.META.get('HTTP_USER_AGENT', '')[:400],
+        )
+
+        # Update Django session history
+        history.append({'role': 'user',  'parts': [{'text': user_msg}]})
+        history.append({'role': 'model', 'parts': [{'text': reply}]})
+        if len(history) > 20:
+            history = history[-20:]
+        request.session[history_key] = history
+        request.session.modified = True
+
+        return JsonResponse({'reply': reply, 'session_id': session_id})
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        error_msg = str(e)
+        if '429' in error_msg or 'RESOURCE_EXHAUSTED' in error_msg:
+            return JsonResponse({
+                'reply': "⚡ Our AI is taking a quick breather. <a href='#contact' style='color:var(--z-blue)'>Book a call directly</a> and we'll get back to you fast."
+            }, status=200)
+        return JsonResponse({'error': error_msg}, status=500)    
+
+@csrf_exempt
+def chat_history(request):
+    inline = request.session.get('chat_inline', [])
+    fab    = request.session.get('chat_fab', [])
+    return JsonResponse({'inline': inline, 'fab': fab})
 
 
 # ─────────────────────────────────────────────

@@ -176,3 +176,27 @@ class Note(models.Model):
 
     def __str__(self):
         return f"Note by {self.author} on {self.created_at.strftime('%Y-%m-%d')}"
+
+class ChatMessage(models.Model):
+    ROLE_CHOICES = [
+        ('user',  'User'),
+        ('model', 'Model'),
+    ]
+    SOURCE_CHOICES = [
+        ('inline', 'Inline Widget'),
+        ('fab',    'Floating Widget'),
+    ]
+
+    session_id   = models.CharField(max_length=100, db_index=True)
+    role         = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    message      = models.TextField()
+    source       = models.CharField(max_length=10, choices=SOURCE_CHOICES, default='fab')
+    ip_address   = models.GenericIPAddressField(null=True, blank=True)
+    user_agent   = models.CharField(max_length=400, blank=True)
+    created_at   = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"[{self.source}] {self.role} @ {self.created_at.strftime('%Y-%m-%d %H:%M')}"

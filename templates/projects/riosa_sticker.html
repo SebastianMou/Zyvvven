@@ -1,0 +1,736 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rio&Sa Telecomunicaciones — Modem Sticker Generator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── DARK MODE (default) ── */
+        :root {
+            --z-bg:         #020202;
+            --z-surface:    #0a0a0a;
+            --z-card:       #111111;
+            --z-card2:      #181818;
+            --z-border:     rgba(255,255,255,0.07);
+            --z-border-md:  rgba(255,255,255,0.13);
+            --z-blue:       #1f7bf8;
+            --z-purple:     #720af5;
+            --z-blue-dim:   rgba(31,123,248,0.10);
+            --z-purple-dim: rgba(114,10,245,0.10);
+            --z-glow-blue:  rgba(31,123,248,0.22);
+            --z-glow-purple:rgba(114,10,245,0.18);
+            --z-white:      #ffffff;
+            --z-off-white:  #e8eaf0;
+            --z-muted:      #7a7a8a;
+            --z-heading:    #f2f2f5;
+            --z-text:       #b0b0bf;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: dark;
+
+            --art-h1:       #f2f2f5;
+            --art-h2:       #e8eaf0;
+            --art-p:        #b0b0bf;
+            --art-li:       #b0b0bf;
+            --art-meta:     #7a7a8a;
+            --art-hr:       rgba(255,255,255,0.08);
+            --art-card-bg:  #111111;
+            --art-card-border: rgba(255,255,255,0.08);
+            --art-accent:   #1f7bf8;
+            --art-tag-bg:   rgba(31,123,248,0.12);
+            --art-tag-color:#7db8fc;
+        }
+
+        /* ── LIGHT MODE ── */
+        [data-theme="light"] {
+            --z-bg:         #ffffff;
+            --z-surface:    #f5f5f7;
+            --z-card:       #f0f0f4;
+            --z-card2:      #e8e8ee;
+            --z-border:     rgba(0,0,0,0.08);
+            --z-border-md:  rgba(0,0,0,0.15);
+            --z-blue:       #1f7bf8;
+            --z-purple:     #720af5;
+            --z-blue-dim:   rgba(31,123,248,0.08);
+            --z-purple-dim: rgba(114,10,245,0.08);
+            --z-glow-blue:  rgba(31,123,248,0.18);
+            --z-glow-purple:rgba(114,10,245,0.14);
+            --z-white:      #020202;
+            --z-off-white:  #1a1a1a;
+            --z-muted:      #6b6b7a;
+            --z-heading:    #0a0a0a;
+            --z-text:       #444452;
+            --grad: linear-gradient(135deg, var(--z-blue), var(--z-purple));
+            color-scheme: light;
+
+            --art-h1:       #0a0a1a;
+            --art-h2:       #1a1a2e;
+            --art-p:        #3a3a4a;
+            --art-li:       #3a3a4a;
+            --art-meta:     #6b6b7a;
+            --art-hr:       rgba(0,0,0,0.08);
+            --art-card-bg:  #f5f5f7;
+            --art-card-border: rgba(0,0,0,0.08);
+            --art-accent:   #1f7bf8;
+            --art-tag-bg:   rgba(31,123,248,0.10);
+            --art-tag-color:#1a5bbf;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            background-color: var(--z-bg);
+            color: var(--z-text);
+            font-family: 'Manrope', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background-color .3s ease, color .3s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px; left: -200px;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(31,123,248,0.06) 0%, transparent 65%);
+            pointer-events: none; z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -200px; right: -200px;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(114,10,245,0.07) 0%, transparent 65%);
+            pointer-events: none; z-index: 0;
+        }
+
+        nav, section, footer, main { position: relative; z-index: 1; }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: rgba(2,2,2,0.88) !important;
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--z-border);
+            padding: 0;
+            height: 68px;
+            transition: background .3s;
+        }
+        [data-theme="light"] .navbar { background: rgba(255,255,255,0.92) !important; }
+        .navbar .container { height: 100%; }
+
+        .navbar-brand { display:flex; align-items:center; gap:6px; padding:0; text-decoration:none; }
+
+        /* logo visibility */
+        .logo-light { display: none; }
+        .logo-dark  { display: block; }
+        [data-theme="light"] .logo-light { display: block; }
+        [data-theme="light"] .logo-dark  { display: none; }
+
+        .nav-link {
+            color: var(--z-muted) !important;
+            font-size: 13px; letter-spacing:.02em;
+            transition: color .2s;
+            padding: .4rem .9rem !important;
+        }
+        .nav-link:hover { color: var(--z-white) !important; }
+
+        .btn-nav-cta {
+            background: var(--grad);
+            color: #fff !important;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 13px;
+            padding: 8px 20px !important;
+            border-radius: 8px;
+            transition: all .2s !important;
+            box-shadow: 0 0 20px var(--z-glow-blue);
+        }
+        .btn-nav-cta:hover {
+            opacity: .88;
+            transform: translateY(-1px);
+            box-shadow: 0 0 30px var(--z-glow-purple);
+        }
+
+        .theme-toggle, .lang-btn {
+            background: transparent;
+            border: 1px solid var(--z-border-md);
+            border-radius: 8px;
+            padding: 7px 14px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all .2s;
+            color: var(--z-muted);
+            font-family: 'Manrope', sans-serif;
+            letter-spacing: .04em;
+        }
+        .theme-toggle { border-radius: 50%; width: 36px; height: 36px; padding: 0; font-size: 16px; }
+        .theme-toggle:hover, .lang-btn:hover {
+            border-color: var(--z-blue);
+            color: var(--z-blue);
+        }
+        .theme-toggle:hover { transform: rotate(20deg); }
+        .navbar-toggler { border-color: var(--z-border-md); }
+        .navbar-toggler-icon { filter: invert(1); }
+        [data-theme="light"] .navbar-toggler-icon { filter: invert(0); }
+
+        /* ── ARTICLE WRAPPER ── */
+        main {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 108px 28px 80px;
+        }
+
+        /* ── BACK LINK ── */
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; font-weight: 600;
+            color: var(--z-muted);
+            text-decoration: none;
+            letter-spacing: .06em; text-transform: uppercase;
+            margin-bottom: 32px;
+            transition: color .2s;
+        }
+        .back-link:hover { color: var(--z-blue); }
+
+        /* ── TAGS ── */
+        .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px; font-weight: 600;
+            letter-spacing: .5px; text-transform: uppercase;
+            background: var(--art-tag-bg);
+            color: var(--art-tag-color);
+            border: 1px solid rgba(31,123,248,.2);
+        }
+
+        /* ── H1 ── */
+        .article-h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(24px, 4vw, 38px);
+            font-weight: 800;
+            color: var(--art-h1);
+            line-height: 1.15;
+            letter-spacing: -.03em;
+            margin-bottom: 12px;
+        }
+
+        /* ── META ── */
+        .meta {
+            font-size: 13px;
+            color: var(--art-meta);
+            margin-bottom: 36px;
+            display: flex; flex-wrap: wrap; gap: 4px 16px;
+        }
+        .meta a { color: var(--art-accent); text-decoration: none; }
+        .meta a:hover { text-decoration: underline; }
+
+        /* ── DIVIDER ── */
+        hr {
+            border: none;
+            border-top: 1px solid var(--art-hr);
+            margin: 40px 0;
+        }
+
+        /* ── SECTION HEADINGS ── */
+        h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 16px; font-weight: 700;
+            color: var(--art-h2);
+            margin-top: 40px; margin-bottom: 12px;
+            padding-left: 14px;
+            border-left: 3px solid var(--z-blue);
+            transition: color .3s;
+        }
+
+        /* ── BODY TEXT ── */
+        p {
+            color: var(--art-p);
+            margin-bottom: 14px;
+            transition: color .3s;
+        }
+
+        ul, ol {
+            color: var(--art-li);
+            padding-left: 22px;
+            margin-bottom: 16px;
+            transition: color .3s;
+        }
+        li { margin-bottom: 8px; }
+
+        a { color: var(--art-accent); }
+        strong { color: var(--art-h2); font-weight: 700; }
+
+        /* ── INFO CARD ── */
+        .info-card {
+            background: var(--art-card-bg);
+            border: 1px solid var(--art-card-border);
+            border-radius: 12px;
+            padding: 22px 26px;
+            margin: 16px 0 24px;
+            transition: background .3s, border-color .3s;
+        }
+        .info-card li { margin-bottom: 10px; font-size: 13.5px; }
+
+        /* ── METRIC CARDS ── */
+        .metric-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 20px 0 28px;
+        }
+        .metric-card {
+            background: var(--art-card-bg);
+            border: 1px solid var(--art-card-border);
+            border-radius: 12px;
+            padding: 18px 20px;
+            text-align: center;
+            transition: background .3s, border-color .3s;
+        }
+        .metric-card .metric-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 26px; font-weight: 800;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        .metric-card .metric-label {
+            font-size: 11.5px;
+            color: var(--z-muted);
+            margin-top: 4px;
+            letter-spacing: .03em;
+        }
+
+        /* ── FOOTER NOTE ── */
+        .footer-note {
+            font-size: 13px;
+            color: var(--art-meta);
+            margin-top: 8px;
+        }
+        .footer-note a { color: var(--art-accent); }
+
+        /* ── CTA BLOCK ── */
+        .cta-block {
+            background: linear-gradient(135deg, rgba(31,123,248,0.08), rgba(114,10,245,0.08));
+            border: 1px solid rgba(31,123,248,0.2);
+            border-radius: 14px;
+            padding: 28px 30px;
+            margin: 40px 0 0;
+            text-align: center;
+        }
+        .cta-block h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px; font-weight: 800;
+            color: var(--art-h1);
+            margin-bottom: 8px;
+        }
+        .cta-block p {
+            font-size: 14px;
+            color: var(--z-muted);
+            margin-bottom: 20px;
+        }
+        .btn-cta {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--grad);
+            color: #fff;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: 14px;
+            padding: 12px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all .2s;
+            box-shadow: 0 0 24px var(--z-glow-blue);
+        }
+        .btn-cta:hover {
+            color: #fff;
+            opacity: .88;
+            transform: translateY(-2px);
+            box-shadow: 0 0 36px var(--z-glow-purple);
+        }
+
+        @media (max-width: 600px) {
+            .metric-row { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── NAVBAR ── -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'zyven-logo-text.png' %}" alt="Zyven" class="logo-dark"
+                    style="height:102px;width:auto;margin-top:12px;">
+                <img src="{% static 'zyven_black_letters.png' %}" alt="Zyven" class="logo-light"
+                    style="height:102px;width:auto;margin-top:12px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Services" data-es="Servicios">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Guarantees" data-es="Garantías">Guarantees</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-en="Process" data-es="Proceso">Process</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <button class="lang-btn" onclick="toggleLang()" id="lang-btn">🌐 ES</button>
+                    </li>
+                    <li class="nav-item ms-lg-1">
+                        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark mode">🌙</button>
+                    </li>
+                    <li class="nav-item ms-lg-1">
+                        <a class="nav-link btn-nav-cta" href="#contact" data-en="Book a Free Call" data-es="Agendar Llamada">Book a Free Call</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── ARTICLE ── -->
+    <main>
+
+        <a href="#" class="back-link">
+            <i class="fa fa-arrow-left" style="font-size:11px;"></i>
+            <span data-en="Back to Projects" data-es="Volver a Proyectos">Back to Projects</span>
+        </a>
+
+        <div class="tag-row">
+            <span class="tag" data-en="Telecom" data-es="Telecomunicaciones">Telecom</span>
+            <span class="tag" data-en="Field Operations" data-es="Operaciones en Campo">Field Operations</span>
+            <span class="tag">Python · ReportLab · QR Code</span>
+        </div>
+
+        <h1 class="article-h1">
+            <span data-en="Rio&amp;Sa Telecomunicaciones: Automating Modem Deployment at Scale with a Custom Sticker Generator"
+                  data-es="Rio&amp;Sa Telecomunicaciones: Automatizando el Despliegue de Módems a Escala con un Generador de Stickers Personalizado">
+                Rio&amp;Sa Telecomunicaciones: Automating Modem Deployment at Scale with a Custom Sticker Generator
+            </span>
+        </h1>
+
+        <div class="meta">
+            <span><span data-en="Client:" data-es="Cliente:">Client:</span> <a href="#">Rio&amp;Sa Telecomunicaciones</a></span>
+            <span>·</span>
+            <span data-en="Last updated: April 2026" data-es="Última actualización: Abril 2026">Last updated: April 2026</span>
+            <span>·</span>
+            <span data-en="Status: Active Production" data-es="Estado: En Producción Activa">Status: Active Production</span>
+        </div>
+
+        <hr>
+
+        <!-- Project Overview -->
+        <h2 data-en="Project Overview" data-es="Descripción del Proyecto">Project Overview</h2>
+        <p data-en="Rio&amp;Sa Telecomunicaciones is a regional ISP deploying modems and WiFi equipment to residential and business clients across their service area. Every modem they install needs to ship with a branded sticker — the customer's unique SSID, a randomly generated WiFi password, a scannable QR code for instant connection, and a legal notice tying the equipment to the company."
+           data-es="Rio&amp;Sa Telecomunicaciones es un proveedor de servicios de internet regional que despliega módems y equipos WiFi a clientes residenciales y empresariales en su área de servicio. Cada módem instalado necesita llevar un sticker de marca — el SSID único del cliente, una contraseña WiFi generada aleatoriamente, un código QR escaneable para conexión inmediata y un aviso legal vinculando el equipo a la empresa.">
+            Rio&amp;Sa Telecomunicaciones is a regional ISP deploying modems and WiFi equipment to residential and business clients across their service area. Every modem they install needs to ship with a branded sticker — the customer's unique SSID, a randomly generated WiFi password, a scannable QR code for instant connection, and a legal notice tying the equipment to the company.
+        </p>
+
+        <p data-en="We built them a fully custom desktop application — available on both Windows and Linux — that generates print-ready PDF sheets of branded modem stickers in seconds. The tool includes a GUI version for office staff and a CLI version for power users, auto-installs its own dependencies, and outputs a credential log alongside every PDF batch."
+           data-es="Construimos una aplicación de escritorio completamente personalizada — disponible en Windows y Linux — que genera hojas de stickers de módems con marca lista para imprimir en segundos. La herramienta incluye una versión GUI para el personal de oficina y una versión CLI para usuarios avanzados, instala automáticamente sus propias dependencias y genera un registro de credenciales junto a cada lote de PDF.">
+            We built them a fully custom desktop application — available on both Windows and Linux — that generates print-ready PDF sheets of branded modem stickers in seconds. The tool includes a GUI version for office staff and a CLI version for power users, auto-installs its own dependencies, and outputs a credential log alongside every PDF batch.
+        </p>
+
+        <!-- Key Numbers -->
+        <div class="metric-row">
+            <div class="metric-card">
+                <div class="metric-value">&lt;10s</div>
+                <div class="metric-label" data-en="To generate a full sheet of 5 stickers" data-es="Para generar una hoja completa de 5 stickers">To generate a full sheet of 5 stickers</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">100</div>
+                <div class="metric-label" data-en="Stickers per batch, max" data-es="Stickers por lote, máximo">Stickers per batch, max</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">0</div>
+                <div class="metric-label" data-en="Manual steps to print and deploy" data-es="Pasos manuales para imprimir y desplegar">Manual steps to print and deploy</div>
+            </div>
+        </div>
+
+        <!-- The Problem -->
+        <h2 data-en="The Problem We Solved" data-es="El Problema que Resolvimos">The Problem We Solved</h2>
+        <p data-en="Growing ISPs hit the same operational wall at a certain scale: the processes that worked for 20 installs per month break completely at 200. Rio&amp;Sa was there."
+           data-es="Los ISP en crecimiento chocan contra el mismo muro operativo a cierta escala: los procesos que funcionaban para 20 instalaciones por mes se rompen completamente con 200. Rio&amp;Sa estaba en esa situación.">
+            Growing ISPs hit the same operational wall at a certain scale: the processes that worked for 20 installs per month break completely at 200. Rio&amp;Sa was there.
+        </p>
+        <ul>
+            <li>
+                <strong data-en="Stickers created manually per installation:" data-es="Stickers creados manualmente por instalación:">Stickers created manually per installation:</strong>
+                <span data-en="Staff were typing SSIDs and passwords into a Word template, generating QR codes from a third-party website, and assembling the sticker layout by hand — every single time."
+                      data-es="El personal escribía SSIDs y contraseñas en una plantilla de Word, generaba códigos QR desde un sitio web externo y ensamblaba el diseño del sticker a mano — cada vez.">
+                    Staff were typing SSIDs and passwords into a Word template, generating QR codes from a third-party website, and assembling the sticker layout by hand — every single time.
+                </span>
+            </li>
+            <li>
+                <strong data-en="No credential tracking:" data-es="Sin seguimiento de credenciales:">No credential tracking:</strong>
+                <span data-en="Once a sticker was printed, those credentials lived nowhere except the physical sticker. No record, no recovery path if a sticker was lost or damaged before installation."
+                      data-es="Una vez impreso el sticker, esas credenciales no vivían en ningún lugar excepto el sticker físico. Sin registro, sin camino de recuperación si el sticker se perdía o dañaba antes de la instalación.">
+                    Once a sticker was printed, those credentials lived nowhere except the physical sticker. No record, no recovery path if a sticker was lost or damaged before installation.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Inconsistent branding:" data-es="Marca inconsistente:">Inconsistent branding:</strong>
+                <span data-en="Different staff members produced stickers that looked different from each other — fonts, layouts, and legal text varied with whoever was printing that day."
+                      data-es="Diferentes miembros del equipo producían stickers con aspecto distinto entre sí — fuentes, diseños y texto legal variaban según quién imprimía ese día.">
+                    Different staff members produced stickers that looked different from each other — fonts, layouts, and legal text varied with whoever was printing that day.
+                </span>
+            </li>
+            <li>
+                <strong data-en="No sequential SSID control:" data-es="Sin control secuencial de SSID:">No sequential SSID control:</strong>
+                <span data-en="SSID numbers were assigned ad hoc, leading to duplicates in the field. Technicians couldn't tell which modem belonged to which customer without physically checking the unit."
+                      data-es="Los números de SSID se asignaban de forma ad hoc, lo que generaba duplicados en el campo. Los técnicos no podían saber qué módem pertenecía a qué cliente sin revisar físicamente el equipo.">
+                    SSID numbers were assigned ad hoc, leading to duplicates in the field. Technicians couldn't tell which modem belonged to which customer without physically checking the unit.
+                </span>
+            </li>
+        </ul>
+
+        <!-- What We Built -->
+        <h2 data-en="What We Built" data-es="Lo que Construimos">What We Built</h2>
+        <p data-en="We delivered a cross-platform desktop application with a fully branded GUI and a production-ready CLI — zero cloud dependency, zero subscription, runs on any Windows 11 or Linux machine with a single double-click. Every sticker produced is pixel-perfect and identical, regardless of who runs it."
+           data-es="Entregamos una aplicación de escritorio multiplataforma con una GUI de marca completa y una CLI lista para producción — sin dependencia en la nube, sin suscripción, funciona en cualquier máquina con Windows 11 o Linux con un solo doble clic. Cada sticker producido es perfecto y es idéntico sin importar quién lo ejecute.">
+            We delivered a cross-platform desktop application with a fully branded GUI and a production-ready CLI — zero cloud dependency, zero subscription, runs on any Windows 11 or Linux machine with a single double-click. Every sticker produced is pixel-perfect and identical, regardless of who runs it.
+        </p>
+
+        <div class="info-card">
+            <ul style="margin:0;padding-left:18px;">
+                <li>
+                    <strong data-en="GUI Application (Windows &amp; Linux):" data-es="Aplicación GUI (Windows y Linux):">GUI Application (Windows &amp; Linux):</strong>
+                    <span data-en="A clean tkinter desktop interface lets any staff member set the sticker count, password length, starting SSID number, and character options — then click Generate. No training required."
+                          data-es="Una interfaz de escritorio tkinter limpia permite a cualquier miembro del equipo configurar la cantidad de stickers, la longitud de la contraseña, el número inicial de SSID y las opciones de caracteres — luego hacer clic en Generar. No se requiere capacitación.">
+                        A clean tkinter desktop interface lets any staff member set the sticker count, password length, starting SSID number, and character options — then click Generate. No training required.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="CLI Version for Power Users:" data-es="Versión CLI para Usuarios Avanzados:">CLI Version for Power Users:</strong>
+                    <span data-en="A fully flagged CLI (--num-stickers, --password-length, --start-number, --no-upper, etc.) allows batch generation to be scripted into existing deployment workflows."
+                          data-es="Una CLI con todos los flags (--num-stickers, --password-length, --start-number, --no-upper, etc.) permite que la generación por lote se integre como script en los flujos de trabajo de despliegue existentes.">
+                        A fully flagged CLI (<code>--num-stickers</code>, <code>--password-length</code>, <code>--start-number</code>, <code>--no-upper</code>, etc.) allows batch generation to be scripted into existing deployment workflows.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="WiFi QR Codes — Native Generation:" data-es="Códigos QR WiFi — Generación Nativa:">WiFi QR Codes — Native Generation:</strong>
+                    <span data-en="Each sticker's QR code encodes a full WPA WiFi string (WIFI:T:WPA;S:...;P:...;;) — customers scan it once and their phone connects automatically. No third-party website, no manual copy-paste."
+                          data-es="El código QR de cada sticker codifica una cadena WiFi WPA completa (WIFI:T:WPA;S:...;P:...;;) — los clientes lo escanean una vez y su teléfono se conecta automáticamente. Sin sitio web externo, sin copiar y pegar manualmente.">
+                        Each sticker's QR code encodes a full WPA WiFi string (<code>WIFI:T:WPA;S:...;P:...;;</code>) — customers scan it once and their phone connects automatically. No third-party website, no manual copy-paste.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Branded PDF Output — Letter Size:" data-es="Salida PDF con Marca — Tamaño Carta:">Branded PDF Output — Letter Size:</strong>
+                    <span data-en="5 stickers per letter-sized page (19cm × 5cm each), centered with margins, ready to print and cut. Each sticker carries the Rio&amp;Sa logo, company colors, credential boxes, QR code, and the legal equipment-ownership notice."
+                          data-es="5 stickers por página tamaño carta (19cm × 5cm cada uno), centrados con márgenes, listos para imprimir y cortar. Cada sticker lleva el logo de Rio&amp;Sa, los colores de la empresa, cajas de credenciales, código QR y el aviso legal de propiedad del equipo.">
+                        5 stickers per letter-sized page (19cm × 5cm each), centered with margins, ready to print and cut. Each sticker carries the Rio&amp;Sa logo, company colors, credential boxes, QR code, and the legal equipment-ownership notice.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Automatic Credential Log:" data-es="Registro Automático de Credenciales:">Automatic Credential Log:</strong>
+                    <span data-en="Every batch generates a paired .txt file with every SSID number, SSID name, and password — timestamped and saved alongside the PDF. The ops team always has a recovery record."
+                          data-es="Cada lote genera un archivo .txt emparejado con cada número de SSID, nombre de SSID y contraseña — con marca de tiempo y guardado junto al PDF. El equipo de operaciones siempre tiene un registro de recuperación.">
+                        Every batch generates a paired <code>.txt</code> file with every SSID number, SSID name, and password — timestamped and saved alongside the PDF. The ops team always has a recovery record.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Zero-Friction Launcher:" data-es="Lanzador Sin Fricción:">Zero-Friction Launcher:</strong>
+                    <span data-en="A Windows .bat menu and a Linux .sh launcher handle first-run dependency installation automatically (qrcode, ReportLab, Pillow). Staff with no Python knowledge double-click START_HERE.bat and are generating stickers within 60 seconds."
+                          data-es="Un menú .bat de Windows y un lanzador .sh de Linux manejan la instalación de dependencias en el primer inicio automáticamente (qrcode, ReportLab, Pillow). El personal sin conocimiento de Python hace doble clic en START_HERE.bat y está generando stickers en 60 segundos.">
+                        A Windows <code>.bat</code> menu and a Linux <code>.sh</code> launcher handle first-run dependency installation automatically (qrcode, ReportLab, Pillow). Staff with no Python knowledge double-click <code>START_HERE.bat</code> and are generating stickers within 60 seconds.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Technical Implementation -->
+        <h2 data-en="Technical Implementation" data-es="Implementación Técnica">Technical Implementation</h2>
+        <div class="info-card">
+            <ul style="margin:0;padding-left:18px;">
+                <li>
+                    <strong data-en="PDF Engine:" data-es="Motor de PDF:">PDF Engine:</strong>
+                    <span data-en="ReportLab Canvas — pixel-precise sticker layouts including round-rect cards, gradient fills, shadow effects, alpha compositing, and multi-column text wrapping, all rendered without any design tool."
+                          data-es="ReportLab Canvas — diseños de stickers con precisión de pixel incluyendo tarjetas round-rect, rellenos degradados, efectos de sombra, composición alfa y ajuste de texto multi-columna, todo renderizado sin ninguna herramienta de diseño.">
+                        ReportLab Canvas — pixel-precise sticker layouts including round-rect cards, gradient fills, shadow effects, alpha compositing, and multi-column text wrapping, all rendered without any design tool.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="QR Generation:" data-es="Generación de QR:">QR Generation:</strong>
+                    <span data-en="qrcode library with ERROR_CORRECT_H error correction — stickers survive scratches and partial damage and still scan correctly in the field."
+                          data-es="Librería qrcode con corrección de error ERROR_CORRECT_H — los stickers sobreviven rasguños y daño parcial y aún escanean correctamente en el campo.">
+                        <code>qrcode</code> library with <code>ERROR_CORRECT_H</code> error correction — stickers survive scratches and partial damage and still scan correctly in the field.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="GUI:" data-es="GUI:">GUI:</strong>
+                    <span data-en="Python tkinter with a custom modern design — dark card UI, live terminal output with color-coded log tags, progress bar, and threaded generation so the UI never freezes during large batches."
+                          data-es="Python tkinter con un diseño moderno personalizado — UI de tarjetas oscuras, salida de terminal en vivo con etiquetas de registro codificadas por color, barra de progreso y generación en hilos para que la UI nunca se congele durante lotes grandes.">
+                        Python tkinter with a custom modern design — dark card UI, live terminal output with color-coded log tags, progress bar, and threaded generation so the UI never freezes during large batches.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Image Processing:" data-es="Procesamiento de Imágenes:">Image Processing:</strong>
+                    <span data-en="Pillow handles the Rio&amp;Sa logo — auto-converts color modes and applies a circular mask so the logo renders as a clean circle on the sticker, consistent with the brand's visual identity."
+                          data-es="Pillow maneja el logo de Rio&amp;Sa — convierte automáticamente modos de color y aplica una máscara circular para que el logo se renderice como un círculo limpio en el sticker, consistente con la identidad visual de la marca.">
+                        Pillow handles the Rio&amp;Sa logo — auto-converts color modes and applies a circular mask so the logo renders as a clean circle on the sticker, consistent with the brand's visual identity.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Distribution:" data-es="Distribución:">Distribution:</strong>
+                    <span data-en="Single folder, zero install — the app ships as a directory containing the Python scripts, a .bat launcher (Windows), a .sh launcher (Linux), and an optional .desktop shortcut for Linux desktops. No packaging, no installer, no admin rights needed."
+                          data-es="Carpeta única, sin instalación — la app se entrega como un directorio con los scripts Python, un lanzador .bat (Windows), un lanzador .sh (Linux) y un acceso directo .desktop opcional para escritorios Linux. Sin empaquetado, sin instalador, sin permisos de administrador.">
+                        Single folder, zero install — the app ships as a directory containing the Python scripts, a <code>.bat</code> launcher (Windows), a <code>.sh</code> launcher (Linux), and an optional <code>.desktop</code> shortcut for Linux desktops. No packaging, no installer, no admin rights needed.
+                    </span>
+                </li>
+                <li>
+                    <strong data-en="Output:" data-es="Salida:">Output:</strong>
+                    <span data-en="PDF saved to the user's Desktop automatically, with a timestamp in the filename. Credential .txt file saved to the same location. No configuration needed."
+                          data-es="PDF guardado automáticamente en el Escritorio del usuario, con marca de tiempo en el nombre del archivo. Archivo .txt de credenciales guardado en la misma ubicación. No se necesita configuración.">
+                        PDF saved to the user's Desktop automatically, with a timestamp in the filename. Credential <code>.txt</code> file saved to the same location. No configuration needed.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- How It Works -->
+        <h2 data-en="How the Workflow Works" data-es="Cómo Funciona el Flujo de Trabajo">How the Workflow Works</h2>
+        <p data-en="What used to take a staff member 30–45 minutes of manual work per batch now takes under 10 seconds:"
+           data-es="Lo que antes le tomaba a un miembro del equipo 30-45 minutos de trabajo manual por lote ahora toma menos de 10 segundos:">
+            What used to take a staff member 30–45 minutes of manual work per batch now takes under 10 seconds:
+        </p>
+        <ol>
+            <li data-en="Double-click START_HERE.bat (Windows) or run ./run.sh (Linux). On first run, dependencies install automatically." 
+                data-es="Doble clic en START_HERE.bat (Windows) o ejecutar ./run.sh (Linux). En el primer inicio, las dependencias se instalan automáticamente.">
+                Double-click <code>START_HERE.bat</code> (Windows) or run <code>./run.sh</code> (Linux). On first run, dependencies install automatically.
+            </li>
+            <li data-en="Set the sticker count, password length, and starting SSID number. Enable or disable uppercase, lowercase, and numeric characters as needed."
+                data-es="Configurar la cantidad de stickers, la longitud de contraseña y el número inicial de SSID. Activar o desactivar mayúsculas, minúsculas y caracteres numéricos según sea necesario.">
+                Set the sticker count, password length, and starting SSID number. Enable or disable uppercase, lowercase, and numeric characters as needed.
+            </li>
+            <li data-en="Click 'Generate Stickers' — the engine loops through every sticker, generates unique credentials, builds the QR code, renders the full branded layout, and compiles everything into a single PDF."
+                data-es="Hacer clic en 'Generar Stickers' — el motor recorre cada sticker, genera credenciales únicas, construye el código QR, renderiza el diseño de marca completo y compila todo en un solo PDF.">
+                Click "Generate Stickers" — the engine loops through every sticker, generates unique credentials, builds the QR code, renders the full branded layout, and compiles everything into a single PDF.
+            </li>
+            <li data-en="Find the PDF and the credentials .txt on the Desktop. Print the PDF on letter-size paper and cut. Hand stickers to the installation team."
+                data-es="Encontrar el PDF y el .txt de credenciales en el Escritorio. Imprimir el PDF en papel tamaño carta y cortar. Entregar los stickers al equipo de instalación.">
+                Find the PDF and the credentials <code>.txt</code> on the Desktop. Print the PDF on letter-size paper and cut. Hand stickers to the installation team.
+            </li>
+        </ol>
+
+        <!-- Business Value -->
+        <h2 data-en="Business Value" data-es="Valor para el Negocio">Business Value</h2>
+        <ul>
+            <li>
+                <strong data-en="Operational Time Savings:" data-es="Ahorro de Tiempo Operativo:">Operational Time Savings:</strong>
+                <span data-en="A batch of 20 stickers that used to take 40+ minutes of manual work now completes in under 15 seconds. At 200 installs per month, that's 6+ hours returned to the team every month."
+                      data-es="Un lote de 20 stickers que antes tomaba 40+ minutos de trabajo manual ahora se completa en menos de 15 segundos. Con 200 instalaciones por mes, eso devuelve más de 6 horas al equipo cada mes.">
+                    A batch of 20 stickers that used to take 40+ minutes of manual work now completes in under 15 seconds. At 200 installs per month, that's 6+ hours returned to the team every month.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Zero Human Error on Credentials:" data-es="Cero Error Humano en Credenciales:">Zero Human Error on Credentials:</strong>
+                <span data-en="Passwords are cryptographically random, QR codes are generated from the exact same string that appears in plaintext on the sticker — no transcription errors, no mismatches, no callbacks from customers who can't connect."
+                      data-es="Las contraseñas son criptográficamente aleatorias, los códigos QR se generan a partir de la misma cadena exacta que aparece en texto plano en el sticker — sin errores de transcripción, sin desajustes, sin devoluciones de llamada de clientes que no pueden conectarse.">
+                    Passwords are cryptographically random, QR codes are generated from the exact same string that appears in plaintext on the sticker — no transcription errors, no mismatches, no callbacks from customers who can't connect.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Consistent Brand in the Field:" data-es="Marca Consistente en el Campo:">Consistent Brand in the Field:</strong>
+                <span data-en="Every modem Rio&amp;Sa installs carries the same professional, branded sticker. The legal equipment-ownership notice is always present, always legible. The company looks as organized as its largest competitors."
+                      data-es="Cada módem que instala Rio&amp;Sa lleva el mismo sticker profesional y de marca. El aviso legal de propiedad del equipo siempre está presente, siempre legible. La empresa se ve tan organizada como sus competidores más grandes.">
+                    Every modem Rio&amp;Sa installs carries the same professional, branded sticker. The legal equipment-ownership notice is always present, always legible. The company looks as organized as its largest competitors.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Full Credential Audit Trail:" data-es="Rastro de Auditoría Completo de Credenciales:">Full Credential Audit Trail:</strong>
+                <span data-en="Every batch produces a timestamped credential log. If a sticker is lost, damaged, or disputed, the ops team can look up exactly what was printed, when, and for which SSID range."
+                      data-es="Cada lote produce un registro de credenciales con marca de tiempo. Si un sticker se pierde, daña o disputa, el equipo de operaciones puede buscar exactamente qué se imprimió, cuándo y para qué rango de SSID.">
+                    Every batch produces a timestamped credential log. If a sticker is lost, damaged, or disputed, the ops team can look up exactly what was printed, when, and for which SSID range.
+                </span>
+            </li>
+            <li>
+                <strong data-en="No Ongoing Costs:" data-es="Sin Costos Continuos:">No Ongoing Costs:</strong>
+                <span data-en="No SaaS subscription, no API costs, no cloud dependency. The tool runs fully offline on any machine in the office. Once built, it's theirs permanently."
+                      data-es="Sin suscripción SaaS, sin costos de API, sin dependencia en la nube. La herramienta funciona completamente sin conexión en cualquier máquina de la oficina. Una vez construida, es de ellos permanentemente.">
+                    No SaaS subscription, no API costs, no cloud dependency. The tool runs fully offline on any machine in the office. Once built, it's theirs permanently.
+                </span>
+            </li>
+            <li>
+                <strong data-en="Growth-Ready:" data-es="Lista para Crecer:">Growth-Ready:</strong>
+                <span data-en="The batch engine handles up to 100 stickers per run with no degradation. As Rio&amp;Sa scales, the tool scales with them — and the CLI version makes it straightforward to integrate into any future automated provisioning pipeline."
+                      data-es="El motor de lotes maneja hasta 100 stickers por ejecución sin degradación. Conforme Rio&amp;Sa crece, la herramienta crece con ellos — y la versión CLI facilita la integración en cualquier pipeline de aprovisionamiento automatizado futuro.">
+                    The batch engine handles up to 100 stickers per run with no degradation. As Rio&amp;Sa scales, the tool scales with them — and the CLI version makes it straightforward to integrate into any future automated provisioning pipeline.
+                </span>
+            </li>
+        </ul>
+
+        <hr>
+
+        <!-- CTA Block -->
+        <div class="cta-block" id="contact">
+            <h3 data-en="Still printing modem stickers by hand?" data-es="¿Todavía imprimiendo stickers de módems a mano?">Still printing modem stickers by hand?</h3>
+            <p data-en="If your team manually creates WiFi stickers, tracks credentials in a notebook, or pastes QR codes from a website — there's a better way. We've built this before. We can build it for you in days, not months, at a fraction of the cost of custom enterprise software."
+               data-es="Si tu equipo crea stickers WiFi manualmente, lleva credenciales en un cuaderno o pega códigos QR desde un sitio web — hay una mejor manera. Ya hemos construido esto antes. Podemos construirlo para ti en días, no meses, a una fracción del costo del software empresarial personalizado.">
+                If your team manually creates WiFi stickers, tracks credentials in a notebook, or pastes QR codes from a website — there's a better way. We've built this before. We can build it for you in days, not months, at a fraction of the cost of custom enterprise software.
+            </p>
+            <a href="#" class="btn-cta">
+                <i class="fa fa-calendar" style="font-size:13px;"></i>
+                <span data-en="Book a Free Strategy Call" data-es="Agendar una Llamada de Estrategia Gratis">Book a Free Strategy Call</span>
+            </a>
+        </div>
+
+        <hr>
+        <p class="footer-note">
+            <span data-en="Built by" data-es="Construido por">Built by</span>
+            <a href="#">Zyven</a>
+            &nbsp;·&nbsp;
+            <span data-en="Questions? Let's talk." data-es="¿Preguntas? Hablemos.">Questions? Let's talk.</span>
+        </p>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /* ── THEME ── */
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById('theme-btn').textContent = theme === 'dark' ? '🌙' : '☀️';
+            localStorage.setItem('theme', theme);
+            currentTheme = theme;
+        }
+
+        function toggleTheme() {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        /* ── LANGUAGE ── */
+        let currentLang = 'en';
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'es' : 'en';
+            const btn = document.getElementById('lang-btn');
+            btn.textContent = currentLang === 'en' ? '🌐 ES' : '🌐 EN';
+
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const text = el.getAttribute('data-' + currentLang);
+                if (!text) return;
+                if (el.children.length === 0) {
+                    el.textContent = text;
+                }
+            });
+
+            document.documentElement.lang = currentLang;
+        }
+
+        applyTheme(currentTheme);
+    </script>
+</body>
+</html>
