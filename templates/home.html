@@ -10,7 +10,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         /* ── DARK MODE (default) ── */
         :root {
@@ -64,6 +66,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            overflow-x: hidden;
+        }
+
         body {
             background-color: var(--z-bg);
             color: var(--z-text);
@@ -71,7 +77,9 @@
             font-size: 15px;
             line-height: 1.7;
             overflow-x: hidden;
+            max-width: 100vw;
             transition: background-color .3s ease, color .3s ease;
+            padding-top: 68px;
         }
 
         .logo-light {
@@ -138,11 +146,20 @@
             z-index: 0;
         }
 
+        /* AFTER */
         nav,
         section,
         footer {
             position: relative;
             z-index: 1;
+        }
+
+        /* ADD THIS BELOW IT */
+        nav.navbar {
+            z-index: 10000 !important;
+            position: fixed !important;
+            top: 0;
+            width: 100%;
         }
 
         /* TYPOGRAPHY */
@@ -176,6 +193,28 @@
             padding: 0;
             height: 68px;
             transition: background .3s;
+            z-index: 10000;
+            overflow: visible;
+        }
+
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                background: #0a0a0a;
+                padding: 12px 16px;
+                border-top: 1px solid var(--z-border);
+                margin-top: 0;
+                position: absolute;
+                top: 68px;
+                left: 0;
+                right: 0;
+                z-index: 9999;
+                overflow: hidden;   /* ← ADD THIS */
+            }
+
+            [data-theme="light"] .navbar-collapse {
+                background: #ffffff;
+                border-top: 1px solid rgba(0, 0, 0, 0.08);
+            }
         }
 
         [data-theme="light"] .navbar {
@@ -687,6 +726,7 @@
         .clients-track-wrapper {
             position: relative;
             overflow: hidden;
+            max-width: 100%;
         }
 
         .clients-fade-left,
@@ -1494,6 +1534,11 @@
                 padding: 100px 0 70px;
             }
 
+            .container {
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
             .hero-title {
                 font-size: clamp(32px, 8vw, 52px);
             }
@@ -1588,9 +1633,9 @@
         }
 
         .browser-card:hover {
-            border-color: rgba(31,123,248,.35);
+            border-color: rgba(31, 123, 248, .35);
             transform: translateY(-4px);
-            box-shadow: 0 16px 48px rgba(0,0,0,.3), 0 0 0 1px rgba(31,123,248,.1);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, .3), 0 0 0 1px rgba(31, 123, 248, .1);
         }
 
         .browser-chrome {
@@ -1601,6 +1646,10 @@
             flex-wrap: wrap;
             align-items: center;
             gap: 6px 10px;
+        }
+
+        [data-theme="light"] .browser-chrome {
+            background: #e8e8ee;
         }
 
         .browser-dots {
@@ -1615,13 +1664,21 @@
             border-radius: 50%;
         }
 
-        .browser-dot.red   { background: #ff5f57; }
-        .browser-dot.yellow{ background: #febc2e; }
-        .browser-dot.green { background: #28c840; }
+        .browser-dot.red {
+            background: #ff5f57;
+        }
+
+        .browser-dot.yellow {
+            background: #febc2e;
+        }
+
+        .browser-dot.green {
+            background: #28c840;
+        }
 
         .browser-url-bar {
             flex: 1;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--z-border);
             border-radius: 6px;
             padding: 4px 10px;
@@ -1634,7 +1691,8 @@
         }
 
         [data-theme="light"] .browser-url-bar {
-            background: rgba(0,0,0,0.04);
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.12);
         }
 
         .browser-body {
@@ -1660,7 +1718,7 @@
             border-radius: 4px;
             background: var(--z-blue-dim);
             color: var(--z-blue);
-            border: 1px solid rgba(31,123,248,.2);
+            border: 1px solid rgba(31, 123, 248, .2);
             letter-spacing: .04em;
             text-transform: uppercase;
             font-weight: 600;
@@ -1715,7 +1773,7 @@
             height: 28px;
             border-radius: 50%;
             background: var(--z-blue-dim);
-            border: 1px solid rgba(31,123,248,.2);
+            border: 1px solid rgba(31, 123, 248, .2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1732,7 +1790,9 @@
         }
 
         @media(max-width: 767px) {
-            .work-grid { grid-template-columns: 1fr; }
+            .work-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* ── BROWSER CARD IMAGES ── */
@@ -1742,7 +1802,7 @@
             display: block;
             margin-bottom: 12px;
             object-fit: cover;
-            max-height: 140px;
+            max-height: 250px;
             border: 1px solid var(--z-border);
         }
 
@@ -1764,7 +1824,7 @@
             width: 100%;
             flex-shrink: 0;
             object-fit: cover;
-            max-height: 140px;
+            max-height: 250px;
             display: block;
         }
 
@@ -1772,7 +1832,7 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0,0,0,.55);
+            background: rgba(0, 0, 0, .55);
             border: none;
             color: #fff;
             width: 28px;
@@ -1787,9 +1847,17 @@
             z-index: 2;
         }
 
-        .browser-slider-btn:hover { background: rgba(31,123,248,.8); }
-        .browser-slider-btn.prev  { left: 8px; }
-        .browser-slider-btn.next  { right: 8px; }
+        .browser-slider-btn:hover {
+            background: rgba(31, 123, 248, .8);
+        }
+
+        .browser-slider-btn.prev {
+            left: 8px;
+        }
+
+        .browser-slider-btn.next {
+            right: 8px;
+        }
 
         .browser-slider-dots {
             position: absolute;
@@ -1804,12 +1872,126 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: rgba(255,255,255,.4);
+            background: rgba(255, 255, 255, .4);
             cursor: pointer;
             transition: background .2s;
         }
 
-        .slider-dot.active { background: #fff; }
+        .slider-dot.active {
+            background: #fff;
+        }
+
+        /* ── BROWSER CARD FLIP ── */
+        .browser-card {
+            perspective: 1000px;
+            height: 460px;
+            display: block;
+            text-decoration: none;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .browser-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s ease;
+            transform-style: preserve-3d;
+        }
+
+        .browser-card:hover .browser-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .browser-card-front,
+        .browser-card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--z-border);
+            background: var(--z-card);
+        }
+
+        .browser-card-back {
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 32px 28px;
+            gap: 20px;
+            background: linear-gradient(135deg, rgba(31, 123, 248, 0.07), rgba(114, 10, 245, 0.07));
+            border-color: rgba(31, 123, 248, .2);
+            text-align: center;
+        }
+
+        .flip-back-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--z-heading);
+            letter-spacing: -.02em;
+        }
+
+        .flip-back-desc {
+            font-size: 12.5px;
+            color: var(--z-muted);
+            line-height: 1.65;
+        }
+
+        .flip-tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .flip-tech-pill {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: var(--z-blue-dim);
+            color: var(--z-blue);
+            border: 1px solid rgba(31, 123, 248, .25);
+            letter-spacing: .03em;
+        }
+
+        .flip-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Syne', sans-serif;
+            color: var(--z-blue);
+            margin-top: 4px;
+            transition: gap .2s;
+        }
+
+        .browser-card:hover .flip-read-more {
+            gap: 10px;
+        }
+
+        .logo-dark, .logo-light {
+            height: 102px;   /* desktop */
+            width: auto;
+            margin-top:12px;
+        }
+
+        @media (max-width: 767px) {
+            .logo-dark, .logo-light {
+                height: 75px;   /* mobile — smaller to fit 68px navbar */
+                width: auto;
+            }
+        }
     </style>
 </head>
 
@@ -1819,10 +2001,8 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="{% static 'zyven-logo-text.png' %}" alt="Zyven" class="logo-dark"
-                    style="height:102px;width:auto;margin-top:12px;">
-                <img src="{% static 'zyven_black_letters.png' %}" alt="Zyven" class="logo-light"
-                    style="height:102px;width:auto;margin-top:12px;">
+                <img src="{% static 'zyven-logo-text.png' %}" alt="Zyven" class="logo-dark">
+                <img src="{% static 'zyven_black_letters.png' %}" alt="Zyven" class="logo-light">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                 <span class="navbar-toggler-icon"></span>
@@ -1851,7 +2031,7 @@
     </nav>
 
     <!-- HERO -->
-    <section class="hero-section" style="position:relative;overflow:hidden;">
+    <section class="hero-section" style="position:relative;overflow:hidden;z-index:1;">
         <div id="particles-js" style="position:absolute;inset:0;z-index:0;"></div>
         <div class="container" style="position:relative;z-index:1;">
             <div class="row align-items-center g-5">
@@ -1981,6 +2161,214 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- WORK -->
+    <section id="work" class="z-section z-section-border">
+        <div class="container">
+            <div class="reveal rv-up">
+                <span class="section-label" id="t-work-label">Real work, shipped</span>
+                <h2 class="section-title mb-3" id="t-work-title">Systems we've built<br>already in production.</h2>
+                <p style="color:var(--z-muted);max-width:480px;font-size:14px;" id="t-work-sub">Every card below is a
+                    live project. Hover to see the tech stack - click to read the full case study.</p>
+            </div>
+            <div class="work-grid">
+
+                <!-- Ideaconv -->
+                <a href="{% url 'zyven:ideaconv' %}" class="browser-card reveal rv-up">
+                    <div class="browser-card-inner">
+                        <div class="browser-card-front">
+                            <div class="browser-chrome">
+                                <div class="browser-dots">
+                                    <div class="browser-dot red"></div>
+                                    <div class="browser-dot yellow"></div>
+                                    <div class="browser-dot green"></div>
+                                </div>
+                                <div class="browser-url-bar">zyven.dev/work/ideaconv</div>
+                                <div class="browser-tags" style="margin:0;gap:4px;">
+                                    <span class="browser-tag">FinTech</span>
+                                    <span class="browser-tag">Investment Mgmt</span>
+                                </div>
+                            </div>
+                            <div class="browser-body">
+                                <div class="browser-slider" onclick="event.preventDefault()">
+                                    <div class="browser-slider-track" id="slider-ideaconv">
+                                        <img src="https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1776208875/Screenshot_20260414_172019_c3ksjl.png"
+                                            alt="Ideaconv screenshot 1">
+                                        <img src="https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1776209511/Screenshot_20260414_173140_ujwzta.png"
+                                            alt="Ideaconv screenshot 2">
+                                    </div>
+                                    <button class="browser-slider-btn prev" onclick="slide('ideaconv',-1)"><i
+                                            class="fas fa-chevron-left"></i></button>
+                                    <button class="browser-slider-btn next" onclick="slide('ideaconv', 1)"><i
+                                            class="fas fa-chevron-right"></i></button>
+                                    <div class="browser-slider-dots" id="dots-ideaconv">
+                                        <div class="slider-dot active" onclick="goSlide('ideaconv',0)"></div>
+                                        <div class="slider-dot" onclick="goSlide('ideaconv',1)"></div>
+                                    </div>
+                                </div>
+                                <div class="browser-card-title" id="t-work-ideaconv-title">Ideaconv - Investment
+                                    Management Platform</div>
+                                <p class="browser-card-desc" id="t-work-ideaconv-desc">Monthly close cycle cut from 2–3
+                                    days to under 5 minutes. Automated PDF statements, interest engine, and investor
+                                    CRM.</p>
+                            </div>
+                        </div>
+                        <div class="browser-card-back">
+                            <div class="flip-back-title">Ideaconv - Investment Platform</div>
+                            <div class="flip-tech-grid">
+                                <span class="flip-tech-pill">Python 3</span>
+                                <span class="flip-tech-pill">Django</span>
+                                <span class="flip-tech-pill">Django REST Framework</span>
+                                <span class="flip-tech-pill">PostgreSQL</span>
+                                <span class="flip-tech-pill">ReportLab</span>
+                                <span class="flip-tech-pill">Simple JWT</span>
+                                <span class="flip-tech-pill">Railway</span>
+                                <span class="flip-tech-pill">WhiteNoise</span>
+                            </div>
+                            <div class="flip-read-more">Read case study <i class="fas fa-arrow-right"
+                                    style="font-size:10px"></i></div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- WhatsBizPro -->
+                <a href="{% url 'zyven:whatsbizpro' %}" class="browser-card reveal rv-up">
+                    <div class="browser-card-inner">
+                        <div class="browser-card-front">
+                            <div class="browser-chrome">
+                                <div class="browser-dots">
+                                    <div class="browser-dot red"></div>
+                                    <div class="browser-dot yellow"></div>
+                                    <div class="browser-dot green"></div>
+                                </div>
+                                <div class="browser-url-bar">zyven.dev/work/whatsbizpro</div>
+                                <div class="browser-tags" style="margin:0;gap:4px;">
+                                    <span class="browser-tag">SaaS</span>
+                                    <span class="browser-tag">Chrome Extension</span>
+                                </div>
+                            </div>
+                            <div class="browser-body">
+                                <img class="browser-img"
+                                    src="https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1776209211/Screenshot_20260414_172611_ojtkcz.png"
+                                    alt="WhatsBizPro screenshot">
+                                <div class="browser-card-title" id="t-work-whatsbizpro-title">WhatsBizPro - AI WhatsApp
+                                    Platform</div>
+                                <p class="browser-card-desc" id="t-work-whatsbizpro-desc">Full SaaS from scratch - AI
+                                    responses, CRM, broadcast, scheduling, Stripe billing, fraud detection. Live with
+                                    real paying subscribers.</p>
+                            </div>
+                        </div>
+                        <div class="browser-card-back">
+                            <div class="flip-back-title">WhatsBizPro - SaaS Platform</div>
+                            <div class="flip-tech-grid">
+                                <span class="flip-tech-pill">Python 3</span>
+                                <span class="flip-tech-pill">Django</span>
+                                <span class="flip-tech-pill">Chrome Extension API</span>
+                                <span class="flip-tech-pill">Google Gemini AI</span>
+                                <span class="flip-tech-pill">Stripe</span>
+                                <span class="flip-tech-pill">Simple JWT</span>
+                                <span class="flip-tech-pill">Resend API</span>
+                                <span class="flip-tech-pill">PostgreSQL</span>
+                                <span class="flip-tech-pill">Railway</span>
+                            </div>
+                            <div class="flip-read-more">Read case study <i class="fas fa-arrow-right"
+                                    style="font-size:10px"></i></div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Bahía 50's -->
+                <a href="{% url 'zyven:bahia' %}" class="browser-card reveal rv-up">
+                    <div class="browser-card-inner">
+                        <div class="browser-card-front">
+                            <div class="browser-chrome">
+                                <div class="browser-dots">
+                                    <div class="browser-dot red"></div>
+                                    <div class="browser-dot yellow"></div>
+                                    <div class="browser-dot green"></div>
+                                </div>
+                                <div class="browser-url-bar">zyven.dev/work/bahia</div>
+                                <div class="browser-tags" style="margin:0;gap:4px;">
+                                    <span class="browser-tag">Hospitality</span>
+                                    <span class="browser-tag">AI Tool</span>
+                                </div>
+                            </div>
+                            <div class="browser-body">
+                                <img class="browser-img"
+                                    src="https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1776209385/Screenshot_20260414_172929_t1ei9i.png"
+                                    alt="Bahía 50's screenshot">
+                                <div class="browser-card-title" id="t-work-bahia-title">Bahía 50's - AI Review Generator
+                                </div>
+                                <p class="browser-card-desc" id="t-work-bahia-desc">Guests leave Google reviews in under
+                                    30 seconds. AI-generated in 3 languages, one-tap copy, direct redirect to Google.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="browser-card-back">
+                            <div class="flip-back-title">Bahía 50's - Review Generator</div>
+                            <div class="flip-tech-grid">
+                                <span class="flip-tech-pill">Python 3</span>
+                                <span class="flip-tech-pill">Flask</span>
+                                <span class="flip-tech-pill">Claude API</span>
+                                <span class="flip-tech-pill">Bootstrap 5</span>
+                                <span class="flip-tech-pill">Clipboard API</span>
+                                <span class="flip-tech-pill">Django Templates</span>
+                            </div>
+                            <div class="flip-read-more">Read case study <i class="fas fa-arrow-right"
+                                    style="font-size:10px"></i></div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Rio&Sa -->
+                <a href="{% url 'zyven:riosa_sticker' %}" class="browser-card reveal rv-up">
+                    <div class="browser-card-inner">
+                        <div class="browser-card-front">
+                            <div class="browser-chrome">
+                                <div class="browser-dots">
+                                    <div class="browser-dot red"></div>
+                                    <div class="browser-dot yellow"></div>
+                                    <div class="browser-dot green"></div>
+                                </div>
+                                <div class="browser-url-bar">zyven.dev/work/riosa-sticker</div>
+                                <div class="browser-tags" style="margin:0;gap:4px;">
+                                    <span class="browser-tag">Telecom</span>
+                                    <span class="browser-tag">Field Ops</span>
+                                </div>
+                            </div>
+                            <div class="browser-body">
+                                <img class="browser-img"
+                                    src="https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1776224013/Screenshot_20260414_213048_npvpht.png"
+                                    alt="">
+
+                                <div class="browser-card-title" id="t-work-riosa-title">Rio&amp;Sa - Modem Sticker
+                                    Generator</div>
+                                <p class="browser-card-desc" id="t-work-riosa-desc">40+ minutes of manual work per batch
+                                    replaced by a 10-second desktop app. Branded PDFs, QR codes, auto credential logs,
+                                    Windows &amp; Linux launcher.</p>
+                            </div>
+                        </div>
+                        <div class="browser-card-back">
+                            <div class="flip-back-title">Rio&amp;Sa - Sticker Generator</div>
+                            <div class="flip-tech-grid">
+                                <span class="flip-tech-pill">Python 3</span>
+                                <span class="flip-tech-pill">tkinter</span>
+                                <span class="flip-tech-pill">ReportLab</span>
+                                <span class="flip-tech-pill">qrcode</span>
+                                <span class="flip-tech-pill">Pillow</span>
+                                <span class="flip-tech-pill">Windows .bat</span>
+                                <span class="flip-tech-pill">Linux .sh</span>
+                            </div>
+                            <div class="flip-read-more">Read case study <i class="fas fa-arrow-right"
+                                    style="font-size:10px"></i></div>
+                        </div>
+                    </div>
+                </a>
+
             </div>
         </div>
     </section>
@@ -2383,149 +2771,6 @@
         </div>
     </section>
 
-<!-- WORK -->
-    <section id="work" class="z-section z-section-border">
-        <div class="container">
-            <div class="reveal rv-up">
-                <span class="section-label">Real work, shipped</span>
-                <h2 class="section-title mb-3">Systems we've built<br>already in production.</h2>
-                <p style="color:var(--z-muted);max-width:480px;font-size:14px;">Every card below is a live project. Click to read the full case study — the problem, what we built, and the business impact.</p>
-            </div>
-            <div class="work-grid">
-
-                <!-- Ideaconv -->
-                <a href="{% url 'zyven:ideaconv' %}" class="browser-card reveal rv-up">
-                    <div class="browser-chrome">
-                        <div class="browser-dots">
-                            <div class="browser-dot red"></div>
-                            <div class="browser-dot yellow"></div>
-                            <div class="browser-dot green"></div>
-                        </div>
-                        <div class="browser-url-bar">zyven.dev/work/ideaconv</div>
-                        <div class="browser-tags" style="margin:0;gap:4px;">
-                            <span class="browser-tag">FinTech</span>
-                            <span class="browser-tag">Investment Mgmt</span>
-                        </div>
-                    </div>
-                    <div class="browser-body">
-                        <div class="browser-slider" onclick="event.preventDefault()">
-                            <div class="browser-slider-track" id="slider-ideaconv">
-                                <img src="https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1776208875/Screenshot_20260414_172019_c3ksjl.png" alt="Ideaconv screenshot 1">
-                                <img src="https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1776209511/Screenshot_20260414_173140_ujwzta.png" alt="Ideaconv screenshot 2">
-                            </div>
-                            <button class="browser-slider-btn prev" onclick="slide('ideaconv',-1)"><i class="fas fa-chevron-left"></i></button>
-                            <button class="browser-slider-btn next" onclick="slide('ideaconv', 1)"><i class="fas fa-chevron-right"></i></button>
-                            <div class="browser-slider-dots" id="dots-ideaconv">
-                                <div class="slider-dot active" onclick="goSlide('ideaconv',0)"></div>
-                                <div class="slider-dot"        onclick="goSlide('ideaconv',1)"></div>
-                            </div>
-                        </div>
-                        <div class="browser-card-title">Ideaconv — Full-Stack Investment Management Platform</div>
-                        <p class="browser-card-desc">Monthly close cycle for a private investment firm went from 2–3 days of manual spreadsheet work to under 5 minutes. Custom Django app with automated PDF statements, interest calculation engine, and investor CRM.</p>
-                        <div class="browser-card-footer">
-                            <div class="browser-stack">
-                                <span>Django</span>
-                                <span>Python</span>
-                                <span>REST API</span>
-                                <span>ReportLab</span>
-                            </div>
-                            <div class="browser-arrow"><i class="fas fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- WhatsBizPro -->
-                <a href="{% url 'zyven:whatsbizpro' %}" class="browser-card reveal rv-up">
-                    <div class="browser-chrome">
-                        <div class="browser-dots">
-                            <div class="browser-dot red"></div>
-                            <div class="browser-dot yellow"></div>
-                            <div class="browser-dot green"></div>
-                        </div>
-                        <div class="browser-url-bar">zyven.dev/work/whatsbizpro</div>
-                        <div class="browser-tags" style="margin:0;gap:4px;">
-                            <span class="browser-tag">SaaS</span>
-                            <span class="browser-tag">Chrome Extension</span>
-                        </div>
-                    </div>
-                    <div class="browser-body">
-                        <img class="browser-img" src="https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1776209211/Screenshot_20260414_172611_ojtkcz.png" alt="WhatsBizPro screenshot">
-                        <div class="browser-card-title">WhatsBizPro — AI-Powered WhatsApp Business Platform</div>
-                        <p class="browser-card-desc">Full SaaS product from scratch — Chrome extension with AI responses, CRM, broadcast, scheduling, Stripe billing, fraud detection, and JWT auth. Live with real paying subscribers.</p>
-                        <div class="browser-card-footer">
-                            <div class="browser-stack">
-                                <span>Django</span>
-                                <span>Gemini AI</span>
-                                <span>Stripe</span>
-                                <span>Chrome API</span>
-                            </div>
-                            <div class="browser-arrow"><i class="fas fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Bahía 50's -->
-                <a href="{% url 'zyven:bahia' %}" class="browser-card reveal rv-up">
-                    <div class="browser-chrome">
-                        <div class="browser-dots">
-                            <div class="browser-dot red"></div>
-                            <div class="browser-dot yellow"></div>
-                            <div class="browser-dot green"></div>
-                        </div>
-                        <div class="browser-url-bar">zyven.dev/work/bahia</div>
-                        <div class="browser-tags" style="margin:0;gap:4px;">
-                            <span class="browser-tag">Hospitality</span>
-                            <span class="browser-tag">AI Tool</span>
-                        </div>
-                    </div>
-                    <div class="browser-body">
-                        <img class="browser-img" src="https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1776209385/Screenshot_20260414_172929_t1ei9i.png" alt="Bahía 50's screenshot">
-                        <div class="browser-card-title">Bahía 50's — AI Google Review Generator</div>
-                        <p class="browser-card-desc">Happy guests who never wrote reviews now leave them in under 30 seconds. Flask app with AI-generated reviews in 3 languages, one-tap clipboard copy, and direct redirect to Google.</p>
-                        <div class="browser-card-footer">
-                            <div class="browser-stack">
-                                <span>Flask</span>
-                                <span>Python</span>
-                                <span>Claude API</span>
-                            </div>
-                            <div class="browser-arrow"><i class="fas fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Rio&Sa -->
-                <a href="{% url 'zyven:riosa_sticker' %}" class="browser-card reveal rv-up">
-                    <div class="browser-chrome">
-                        <div class="browser-dots">
-                            <div class="browser-dot red"></div>
-                            <div class="browser-dot yellow"></div>
-                            <div class="browser-dot green"></div>
-                        </div>
-                        <div class="browser-url-bar">zyven.dev/work/riosa-sticker</div>
-                        <div class="browser-tags" style="margin:0;gap:4px;">
-                            <span class="browser-tag">Telecom</span>
-                            <span class="browser-tag">Field Ops</span>
-                        </div>
-                    </div>
-                    <div class="browser-body">
-                        <div class="browser-card-title">Rio&amp;Sa — Modem Sticker Generator</div>
-                        <p class="browser-card-desc">40+ minutes of manual sticker creation per batch replaced by a 10-second desktop app. Branded PDFs with QR codes, auto credential logs, and zero-click launcher for Windows &amp; Linux.</p>
-                        <div class="browser-card-footer">
-                            <div class="browser-stack">
-                                <span>Python</span>
-                                <span>ReportLab</span>
-                                <span>QR Code</span>
-                                <span>tkinter</span>
-                            </div>
-                            <div class="browser-arrow"><i class="fas fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                </a>
-
-            </div>
-        </div>
-    </section>
-
     <!-- FOOTER -->
     <footer class="z-footer">
         <div class="container">
@@ -2543,7 +2788,7 @@
                     <span class="footer-divider">·</span>
                     <a href="#work">Work</a>
                     <span class="footer-divider">·</span>
-                    <a href="#contact" id="t-footer-contact">Contact</a>                
+                    <a href="#contact" id="t-footer-contact">Contact</a>
                 </div>
             </div>
         </div>
@@ -2600,491 +2845,503 @@
     </button>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-<script>
-// ════════════════════════════════════════════
-//  SCROLL REVEAL - varied animation per element
-// ════════════════════════════════════════════
-const io = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-            const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
-            const idx = siblings.indexOf(e.target);
-            e.target.style.transitionDelay = (idx * 0.08) + 's';
-            e.target.classList.add('visible');
-            io.unobserve(e.target);
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // ════════════════════════════════════════════
+        //  SCROLL REVEAL - varied animation per element
+        // ════════════════════════════════════════════
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((e, i) => {
+                if (e.isIntersecting) {
+                    const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
+                    const idx = siblings.indexOf(e.target);
+                    e.target.style.transitionDelay = (idx * 0.08) + 's';
+                    e.target.classList.add('visible');
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        const revealEls = document.querySelectorAll('.reveal');
+        revealEls.forEach(el => {
+            const dirs = ['rv-up', 'rv-down', 'rv-left', 'rv-right', 'rv-zoom', 'rv-flip'];
+            if (!dirs.some(d => el.classList.contains(d))) {
+                el.classList.add(dirs[Math.floor(Math.random() * dirs.length)]);
+            }
+            io.observe(el);
+        });
+
+        // ── Active nav link on scroll ──
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link[href^="#"]');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
+            navLinks.forEach(a => {
+                a.style.color = a.getAttribute('href') === '#' + current ? 'var(--z-blue)' : '';
+            });
+        }, { passive: true });
+
+        // ════════════════════════════════════════════
+        //  THEME TOGGLE
+        // ════════════════════════════════════════════
+        let currentTheme = 'dark';
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme === 'light' ? 'light' : '');
+            document.getElementById('theme-btn').textContent = currentTheme === 'dark' ? '🌙' : '☀️';
         }
-    });
-}, { threshold: 0.1 });
 
-const revealEls = document.querySelectorAll('.reveal');
-revealEls.forEach(el => {
-    const dirs = ['rv-up','rv-down','rv-left','rv-right','rv-zoom','rv-flip'];
-    if (!dirs.some(d => el.classList.contains(d))) {
-        el.classList.add(dirs[Math.floor(Math.random() * dirs.length)]);
-    }
-    io.observe(el);
-});
+        // ════════════════════════════════════════════
+        //  LANGUAGE TOGGLE - EN / ES
+        // ════════════════════════════════════════════
+        let lang = 'en';
 
-// ── Active nav link on scroll ──
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.navbar-nav .nav-link[href^="#"]');
-window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
-    navLinks.forEach(a => {
-        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--z-blue)' : '';
-    });
-}, { passive: true });
+        const translations = {
+            'nav-services': { en: 'Services', es: 'Servicios' },
+            'nav-guarantees': { en: 'Guarantees', es: 'Garantías' },
+            'nav-process': { en: 'Process', es: 'Proceso' },
+            'nav-cta': { en: 'Book a Free Call', es: 'Agenda una Llamada Gratis' },
+            'hero-badge': { en: 'B2B Tech Consulting · Systems · Automation · AI', es: 'Consultoría Tech B2B · Sistemas · Automatización · IA' },
+            'hero-title': { en: 'Stop patching.<br>Start <span class="ital">owning the systems</span><br>that scale you.', es: 'Deja de parchear.<br>Empieza a <span class="ital">dominar los sistemas</span><br>que te escalan.' },
+            'hero-sub': { en: "Your competitors aren't working harder - they have better infrastructure. We build yours in 14 days, fixed price, no surprises. If we can't find 3 real problems, the session is on us.", es: 'Tus competidores no trabajan más duro - tienen mejor infraestructura. Construimos la tuya en 14 días, precio fijo, sin sorpresas. Si no encontramos 3 problemas reales, la sesión corre por nuestra cuenta.' },
+            'hero-btn-primary': { en: 'Claim My Free Blueprint Session', es: 'Obtener Mi Sesión Blueprint Gratis' },
+            'hero-btn-ghost': { en: 'See What We Build', es: 'Ver Qué Construimos' },
+            'stat-label-1': { en: 'Beta live', es: 'Beta en vivo' },
+            'stat-label-2': { en: 'Full launch', es: 'Lanzamiento completo' },
+            'stat-label-3': { en: 'If we find nothing', es: 'Si no encontramos nada' },
+            'stat-label-4': { en: 'Fixed-price guarantee', es: 'Garantía precio fijo' },
+            'clients-label': { en: 'Trusted by forward-thinking companies', es: 'Confiado por empresas innovadoras' },
+            'chat-label': { en: 'AI Assistant', es: 'Asistente IA' },
+            'chat-title': { en: 'Got questions?<br>Ask <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Zyven AI</span>.', es: '¿Tienes preguntas?<br>Pregúntale a <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Zyven AI</span>.' },
+            'chat-sub': { en: 'Stop waiting for a callback. Ask anything about our services, pricing, or process - and get a real, direct answer in seconds.', es: 'Deja de esperar una llamada. Pregunta cualquier cosa sobre nuestros servicios, precios o proceso - y obtén una respuesta directa en segundos.' },
+            'chat-status': { en: 'Online · Powered by Gemini', es: 'En línea · Impulsado por Gemini' },
+            'chat-f1': { en: 'Instant answers, 24/7', es: 'Respuestas instantáneas, 24/7' },
+            'chat-f2': { en: 'No signup required', es: 'Sin registro requerido' },
+            'chat-f3': { en: 'Escalate to a human anytime', es: 'Escalar a un humano en cualquier momento' },
+            'inline-greeting': { en: '👋 Hi! I\'m Zyven AI - ask me anything about our services, pricing, timeline, or process. I\'ll give you a straight answer.', es: '👋 ¡Hola! Soy Zyven AI - pregúntame cualquier cosa sobre nuestros servicios, precios, tiempos o proceso. Te doy una respuesta directa.' },
+            'qb1': { en: '💰 Pricing', es: '💰 Precios' },
+            'qb2': { en: '⚡ Timeline', es: '⚡ Tiempos' },
+            'qb3': { en: '🛠 Services', es: '🛠 Servicios' },
+            'qb4': { en: '🎁 Free Audit', es: '🎁 Auditoría Gratis' },
+            'qb5': { en: '🔧 Managed', es: '🔧 Administrado' },
+            'qb6': { en: '💻 Tech Stack', es: '💻 Tecnologías' },
+            'pain-label': { en: 'Sound familiar?', es: '¿Te suena familiar?' },
+            'pain-title': { en: 'Every day you wait,<br>money walks out the door.', es: 'Cada día que esperas,<br>el dinero se va por la puerta.' },
+            'pain1-title': { en: 'Disconnected tools, manual reconciliation', es: 'Herramientas desconectadas, reconciliación manual' },
+            'pain1-text': { en: "Your team burns 20–30% of their week copy-pasting between systems that were never built to talk to each other.", es: 'Tu equipo quema el 20–30% de la semana copiando y pegando entre sistemas que nunca fueron diseñados para comunicarse.' },
+            'pain1-cost': { en: '→ Missed deals. Delayed decisions.', es: '→ Negocios perdidos. Decisiones tardías.' },
+            'pain2-title': { en: 'Paying for software nobody uses', es: 'Pagando por software que nadie usa' },
+            'pain2-text': { en: '3–5 overlapping SaaS subscriptions, half of them gathering dust while renewals compound every quarter.', es: '3–5 suscripciones SaaS superpuestas, la mitad acumulando polvo mientras las renovaciones se acumulan cada trimestre.' },
+            'pain2-cost': { en: "→ Their growth. Not yours.", es: '→ Su crecimiento. No el tuyo.' },
+            'pain3-title': { en: 'Slow quotes. Slow onboarding. Lost deals.', es: 'Cotizaciones lentas. Onboarding lento. Tratos perdidos.' },
+            'pain3-text': { en: 'When it takes 72 hours to quote and weeks to onboard, the buyer is already talking to your competitor.', es: 'Cuando cotizar tarda 72 horas y el onboarding semanas, el comprador ya está hablando con tu competidor.' },
+            'pain3-cost': { en: '→ A direct, invisible revenue leak.', es: '→ Una fuga de ingresos directa e invisible.' },
+            'pain4-title': { en: 'Hiring to cover broken processes', es: 'Contratando para cubrir procesos rotos' },
+            'pain4-text': { en: 'More headcount on a broken workflow just scales the waste. One custom system replaces 1–2 full-time hires.', es: 'Más personal en un flujo roto solo escala el desperdicio. Un sistema personalizado reemplaza 1–2 contrataciones.' },
+            'pain4-cost': { en: '→ One system = 1–2 hires saved.', es: '→ Un sistema = 1–2 contrataciones ahorradas.' },
+            'pain5-title': { en: 'Flying blind on margins', es: 'Operando a ciegas en márgenes' },
+            'pain5-text': { en: "By the time quarterly numbers show the leak, you've already made the same mistake twice.", es: 'Para cuando los números trimestrales muestran la fuga, ya cometiste el mismo error dos veces.' },
+            'pain5-cost': { en: '→ Real-time data changes everything.', es: '→ Los datos en tiempo real lo cambian todo.' },
+            'pain6-title': { en: 'We fix all of this. In 14 days.', es: 'Lo solucionamos todo. En 14 días.' },
+            'pain6-text': { en: 'One free session. We map every leak live on screen and show you a working prototype of the fix. No commitment required.', es: 'Una sesión gratis. Mapeamos cada fuga en pantalla y te mostramos un prototipo funcional. Sin compromiso.' },
+            'pain6-btn': { en: 'Claim Free Session', es: 'Obtener Sesión Gratis' },
+            'svc-label': { en: 'What we build', es: 'Qué construimos' },
+            'svc-title': { en: 'One partner.<br>Everything your operation needs.', es: 'Un socio.<br>Todo lo que tu operación necesita.' },
+            'svc-sub': { en: 'From a landing page to a full AI-powered operating system - built in 14 days at a fraction of what agencies charge.', es: 'Desde una landing page hasta un sistema operativo con IA - construido en 14 días a una fracción del costo de agencias.' },
+            'svc1-title': { en: 'System Audit & Optimization', es: 'Auditoría y Optimización de Sistemas' },
+            'svc1-text': { en: "We map every tool, workflow, and manual process - then show you exactly where money is leaking. Free if we can't find at least 3 real problems worth fixing.", es: 'Mapeamos cada herramienta, flujo y proceso manual - luego te mostramos exactamente dónde se pierde dinero. Gratis si no encontramos 3 problemas reales que valga la pena resolver.' },
+            'svc2-title': { en: 'Web & App Development', es: 'Desarrollo Web y de Apps' },
+            'svc2-text': { en: 'Landing pages, full web apps, dashboards, client portals - custom-built on Django + PostgreSQL. Fast, mobile-ready, built to scale without re-platforming in 12 months.', es: 'Landing pages, apps completas, dashboards, portales de clientes - construidos a medida con Django + PostgreSQL. Rápidos, responsivos y escalables sin necesidad de migrar en 12 meses.' },
+            'svc3-title': { en: 'AI & Automation Builds', es: 'Automatización e IA' },
+            'svc3-text': { en: "Replace the manual work that's eating your team's day. Chatbots, auto-reporting, intelligent workflows - embedded directly into your operations so they run while you sleep.", es: 'Reemplaza el trabajo manual que consume el día de tu equipo. Chatbots, reportes automáticos, flujos inteligentes - integrados directamente en tu operación para que funcionen mientras duermes.' },
+            'svc4-title': { en: 'Managed Services', es: 'Servicios Administrados' },
+            'svc4-text': { en: 'Server, database, security, backups - handled on a flat monthly plan. Your team stays locked in on growth. We keep the infrastructure that powers it from breaking.', es: 'Servidor, base de datos, seguridad, respaldos - gestionados en un plan mensual fijo. Tu equipo se enfoca en crecer. Nosotros mantenemos la infraestructura funcionando.' },
+            'testi-label': { en: 'Client results', es: 'Resultados de clientes' },
+            'testi-title': { en: 'What happens after<br>the first 14 days.', es: 'Qué pasa después<br>de los primeros 14 días.' },
+            'testi1-quote': { en: '"They showed up to the first call with a working prototype of our new quoting system. Before we\'d signed anything. That level of preparation was all we needed to say yes."', es: '"Llegaron a la primera llamada con un prototipo funcional de nuestro nuevo sistema de cotizaciones. Antes de firmar nada. Ese nivel de preparación fue todo lo que necesitábamos para decir que sí."' },
+            'testi1-role': { en: 'COO · B2B Logistics Company', es: 'COO · Empresa Logística B2B' },
+            'testi2-quote': { en: '"We replaced 4 SaaS tools with one custom system. Monthly tech costs dropped 60%. The system paid for itself in under 90 days. Genuinely wish we\'d done this two years ago."', es: '"Reemplazamos 4 herramientas SaaS con un sistema personalizado. Los costos tecnológicos bajaron un 60%. El sistema se pagó solo en menos de 90 días. Ojalá lo hubiéramos hecho hace dos años."' },
+            'testi2-role': { en: 'CEO · Tech Services Firm', es: 'CEO · Firma de Servicios Tech' },
+            'testi3-quote': { en: '"Onboarding went from 3 weeks to 4 days. We closed two deals last month simply because we responded faster than the competition. The ROI isn\'t abstract - it\'s in our P&L."', es: '"El onboarding pasó de 3 semanas a 4 días. Cerramos dos tratos el mes pasado simplemente porque respondimos más rápido que la competencia. El ROI no es abstracto - está en nuestro P&L."' },
+            'testi3-role': { en: 'Founder · B2B SaaS Company', es: 'Fundador · Empresa B2B SaaS' },
+            'guar-label': { en: 'Zero risk', es: 'Cero riesgo' },
+            'guar-title': { en: 'We back everything<br>we build.', es: 'Respaldamos todo<br>lo que construimos.' },
+            'guar1-title': { en: 'The "See It Before You Sign It" Guarantee™', es: 'La Garantía™ "Véalo Antes de Firmarlo"' },
+            'guar1-text': { en: 'Before you commit a single dollar, we get on a live call and show you: a visual map of exactly where your systems are broken and bleeding money - plus a working prototype of the solution, built specifically for your business. Not a PDF. A live, clickable demo.', es: 'Antes de comprometer un solo peso, hacemos una llamada en vivo y te mostramos: un mapa visual exacto de dónde tus sistemas están rotos y perdiendo dinero - más un prototipo funcional de la solución, construido específicamente para tu negocio. No un PDF. Un demo real e interactivo.' },
+            'guar1-text2': { en: "If we don't expose at least 3 real, costly problems - the call is free and you owe us nothing.", es: 'Si no exponemos al menos 3 problemas reales y costosos - la llamada es gratis y no nos debes nada.' },
+            'guar1-tag': { en: '"See the problem. See the solution. Then decide."', es: '"Ve el problema. Ve la solución. Luego decide."' },
+            'guar2-title': { en: 'The "No Orphan Systems" Guarantee™', es: 'La Garantía™ "Sin Sistemas Huérfanos"' },
+            'guar2-text': { en: "Everything we build, you own completely. Full docs, full handover, full team training. If within 60 days anything stops working or your team can't operate it independently - we come back and fix it at zero cost.", es: 'Todo lo que construimos es completamente tuyo. Documentación completa, transferencia total, capacitación del equipo. Si en 60 días algo deja de funcionar o tu equipo no puede operarlo independientemente - regresamos y lo arreglamos sin costo.' },
+            'guar2-text2': { en: 'Or hand it off entirely. Our Managed Services plan covers server, database, security, and maintenance - your team never has to think about infrastructure again.', es: 'O entréganoslo por completo. Nuestro plan de Servicios Administrados cubre servidor, base de datos, seguridad y mantenimiento - tu equipo nunca tiene que pensar en infraestructura de nuevo.' },
+            'guar2-tag': { en: '"We build it so you own it. Or we run it for you. Either way - you\'re never left stranded."', es: '"Lo construimos para que lo poseas. O lo operamos por ti. De cualquier forma - nunca te dejamos varado."' },
+            'proc-label': { en: 'How we work', es: 'Cómo trabajamos' },
+            'proc-title': { en: 'Beta in 7 days.<br>Fully live in 14.', es: 'Beta en 7 días.<br>Completamente activo en 14.' },
+            'step1-title': { en: 'Free Live Blueprint Session', es: 'Sesión Blueprint en Vivo Gratis' },
+            'step1-text': { en: "We screen-share a visual map of your broken systems and a working prototype of the fix - built for your operation. Free if we don't find at least 3 real problems. No pitch decks. No fluff.", es: 'Compartimos pantalla con un mapa visual de tus sistemas rotos y un prototipo funcional - construido para tu operación. Gratis si no encontramos al menos 3 problemas reales. Sin presentaciones comerciales.' },
+            'step2-title': { en: 'Fixed-Price Proposal', es: 'Propuesta de Precio Fijo' },
+            'step2-text': { en: 'Scope locked. Timeline locked. Price locked - on day one. What you see is what you pay. No surprises, no scope creep, no excuses.', es: 'Alcance confirmado. Cronograma confirmado. Precio confirmado desde el día uno. Lo que ves es lo que pagas. Sin sorpresas.' },
+            'step3-title': { en: 'Build & Beta (Days 1–7)', es: 'Construcción y Beta (Días 1–7)' },
+            'step3-text': { en: 'Core system deployed to staging. You walk through a live beta, give real feedback, and we tune it to exactly what your operation needs.', es: 'Sistema base desplegado en staging. Recorres un beta en vivo, das retroalimentación real y lo ajustamos exactamente a lo que necesita tu operación.' },
+            'step4-title': { en: 'Full Launch (Days 8–14)', es: 'Lanzamiento Completo (Días 8–14)' },
+            'step4-text': { en: 'Production launch with hardened security, live backups, and full documentation. Your team owns it - or we manage it on a monthly plan starting day one.', es: 'Lanzamiento a producción con seguridad reforzada, respaldos activos y documentación completa. Tu equipo lo opera - o nosotros lo gestionamos en un plan mensual desde el primer día.' },
+            'proc-btn': { en: 'Start with a Free Session', es: 'Empieza con una Sesión Gratis' },
+            'phase1-label': { en: 'Phase 1', es: 'Fase 1' },
+            'phase1-days': { en: 'Days 1–2', es: 'Días 1–2' },
+            'phase2-label': { en: 'Phase 2', es: 'Fase 2' },
+            'phase2-days': { en: 'Days 3–5', es: 'Días 3–5' },
+            'phase3-label': { en: 'Phase 3', es: 'Fase 3' },
+            'phase3-days': { en: 'Days 6–7', es: 'Días 6–7' },
+            'phase4-label': { en: 'Phase 4', es: 'Fase 4' },
+            'phase4-days': { en: 'Days 8–14', es: 'Días 8–14' },
+            'tl1-1': { en: 'Discovery call + intake form', es: 'Llamada de descubrimiento + formulario' },
+            'tl1-2': { en: 'System audit & gap map delivered', es: 'Auditoría del sistema y mapa de brechas' },
+            'tl1-3': { en: 'Architecture & tech decisions locked', es: 'Arquitectura y decisiones técnicas confirmadas' },
+            'tl2-1': { en: 'Core build - DB, backend, integrations', es: 'Construcción principal - BD, backend, integraciones' },
+            'tl2-2': { en: 'Frontend & UI development', es: 'Desarrollo de frontend e interfaz' },
+            'tl2-3': { en: 'Automations and workflows configured', es: 'Automatizaciones y flujos configurados' },
+            'tl3-1': { en: 'Beta deployed to staging', es: 'Beta desplegada en staging' },
+            'tl3-2': { en: 'Client walkthrough & feedback', es: 'Recorrido con cliente y retroalimentación' },
+            'tl3-3': { en: 'Security checks applied', es: 'Verificaciones de seguridad aplicadas' },
+            'tl4-1': { en: 'Revisions from beta feedback', es: 'Revisiones de la retroalimentación del beta' },
+            'tl4-2': { en: 'Security hardening + backups live', es: 'Seguridad reforzada + respaldos activos' },
+            'tl4-3': { en: 'Production launch - fully live', es: 'Lanzamiento a producción - completamente activo' },
+            'tl4-4': { en: 'Docs, handover, or managed onboarding', es: 'Documentación, transferencia u onboarding administrado' },
+            'cta-label': { en: 'Ready to stop the bleed?', es: '¿Listo para detener la fuga?' },
+            'cta-title': { en: 'See <span class="ital">your</span> broken systems<br>fixed - live on screen.', es: 'Ve <span class="ital">tus</span> sistemas rotos<br>solucionados - en vivo.' },
+            'cta-text': { en: "Book a free 30-minute Live Blueprint Session. We'll map every operational leak and show you a working prototype of the fix. If we don't find 3 real problems, you pay nothing. Zero.", es: 'Agenda una Sesión Blueprint en Vivo de 30 min gratis. Mapearemos cada fuga operacional y te mostraremos un prototipo funcional. Si no encontramos 3 problemas reales, no pagas nada. Cero.' },
+            'cta-check1': { en: 'Free 30-min session', es: 'Sesión gratis de 30 min' },
+            'cta-check2': { en: 'No commitment', es: 'Sin compromiso' },
+            'cta-check3': { en: 'Live working demo', es: 'Demo en vivo y funcional' },
+            'cta-check4': { en: 'Fixed-price guarantee', es: 'Garantía de precio fijo' },
+            'cta-btn': { en: 'Claim My Free Blueprint Session', es: 'Obtener Mi Sesión Blueprint Gratis' },
+            'cta-note': { en: 'Free · 30 min · No commitment · $0 if we find nothing', es: 'Gratis · 30 min · Sin compromiso · $0 si no encontramos nada' },
+            'footer-services': { en: 'Services', es: 'Servicios' },
+            'footer-guarantees': { en: 'Guarantees', es: 'Garantías' },
+            'footer-contact': { en: 'Contact', es: 'Contacto' },
+            'footer-work': { en: 'Work', es: 'Trabajo' },
+            'work-label': { en: 'Real work, shipped', es: 'Trabajo real, entregado' },
+            'work-title': { en: "Systems we've built<br>already in production.", es: 'Sistemas que hemos construido<br>ya en producción.' },
+            'work-sub': { en: 'Every card below is a live project. Click to read the full case study - the problem, what we built, and the business impact.', es: 'Cada tarjeta es un proyecto real. Haz clic para leer el caso completo - el problema, lo que construimos y el impacto al negocio.' },
+            'work-ideaconv-title': { en: 'Ideaconv - Full-Stack Investment Management Platform', es: 'Ideaconv - Plataforma Full-Stack de Gestión de Inversiones' },
+            'work-ideaconv-desc': { en: 'Monthly close cycle for a private investment firm went from 2–3 days of manual spreadsheet work to under 5 minutes. Custom Django app with automated PDF statements, interest calculation engine, and investor CRM.', es: 'El cierre mensual de una firma de inversión privada pasó de 2–3 días de trabajo manual en hojas de cálculo a menos de 5 minutos. App Django con estados de cuenta en PDF automatizados, motor de cálculo de intereses y CRM de inversionistas.' },
+            'work-whatsbizpro-title': { en: 'WhatsBizPro - AI-Powered WhatsApp Business Platform', es: 'WhatsBizPro - Plataforma de Negocios para WhatsApp con IA' },
+            'work-whatsbizpro-desc': { en: 'Full SaaS product from scratch - Chrome extension with AI responses, CRM, broadcast, scheduling, Stripe billing, fraud detection, and JWT auth. Live with real paying subscribers.', es: 'Producto SaaS completo desde cero - extensión Chrome con respuestas de IA, CRM, broadcast, programación, facturación con Stripe, detección de fraude y autenticación JWT. En producción con suscriptores reales.' },
+            'work-bahia-title': { en: "Bahía 50's - AI Google Review Generator", es: "Bahía 50's - Generador de Reseñas de Google con IA" },
+            'work-bahia-desc': { en: 'Happy guests who never wrote reviews now leave them in under 30 seconds. Flask app with AI-generated reviews in 3 languages, one-tap clipboard copy, and direct redirect to Google.', es: 'Huéspedes satisfechos que nunca escribían reseñas ahora las dejan en menos de 30 segundos. App Flask con reseñas generadas por IA en 3 idiomas, copia al portapapeles y redirección directa a Google.' },
+            'work-riosa-title': { en: 'Rio&amp;Sa - Modem Sticker Generator', es: 'Rio&amp;Sa - Generador de Stickers para Módems' },
+            'work-riosa-desc': { en: '40+ minutes of manual sticker creation per batch replaced by a 10-second desktop app. Branded PDFs with QR codes, auto credential logs, and zero-click launcher for Windows &amp; Linux.', es: 'Más de 40 minutos de creación manual de stickers por lote reemplazados por una app de escritorio de 10 segundos. PDFs con marca y códigos QR, registros automáticos de credenciales y lanzador para Windows y Linux.' },
+        };
 
-// ════════════════════════════════════════════
-//  THEME TOGGLE
-// ════════════════════════════════════════════
-let currentTheme = 'dark';
-function toggleTheme() {
-    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', currentTheme === 'light' ? 'light' : '');
-    document.getElementById('theme-btn').textContent = currentTheme === 'dark' ? '🌙' : '☀️';
-}
+        function toggleLang() {
+            lang = lang === 'en' ? 'es' : 'en';
+            const btn = document.getElementById('lang-btn');
+            btn.textContent = lang === 'en' ? '🌐 ES' : '🌐 EN';
+            btn.style.color = lang === 'es' ? 'var(--z-blue)' : 'var(--z-muted)';
+            applyLang();
+        }
 
-// ════════════════════════════════════════════
-//  LANGUAGE TOGGLE - EN / ES
-// ════════════════════════════════════════════
-let lang = 'en';
+        function applyLang() {
+            Object.entries(translations).forEach(([id, vals]) => {
+                const el = document.getElementById('t-' + id);
+                if (el) el.innerHTML = vals[lang];
+            });
+            const quickPrompts = {
+                en: ['How much does a project cost?', 'How fast can you build my system?', 'What services do you offer?', 'How does the free audit work?', 'Do you offer managed services?', 'What technologies do you use?'],
+                es: ['¿Cuánto cuesta un proyecto?', '¿Qué tan rápido construyen mi sistema?', '¿Qué servicios ofrecen?', '¿Cómo funciona la auditoría gratis?', '¿Ofrecen servicios administrados?', '¿Qué tecnologías usan?']
+            };
+            document.querySelectorAll('#inlineQuickActions .quick-btn').forEach((btn, i) => {
+                btn.setAttribute('onclick', `inlineQuickAsk('${quickPrompts[lang][i]}')`);
+            });
+            document.querySelectorAll('#chatWidget .quick-btn').forEach((btn, i) => {
+                btn.setAttribute('onclick', `quickAsk('${quickPrompts[lang][i]}')`);
+            });
+        }
 
-const translations = {
-    'nav-services':   { en: 'Services',            es: 'Servicios' },
-    'nav-guarantees': { en: 'Guarantees',           es: 'Garantías' },
-    'nav-process':    { en: 'Process',              es: 'Proceso' },
-    'nav-cta':        { en: 'Book a Free Call',     es: 'Agenda una Llamada Gratis' },
-    'hero-badge':     { en: 'B2B Tech Consulting · Systems · Automation · AI', es: 'Consultoría Tech B2B · Sistemas · Automatización · IA' },
-    'hero-title':     { en: 'Stop patching.<br>Start <span class="ital">owning the systems</span><br>that scale you.', es: 'Deja de parchear.<br>Empieza a <span class="ital">dominar los sistemas</span><br>que te escalan.' },
-    'hero-sub':       { en: "Your competitors aren't working harder - they have better infrastructure. We build yours in 14 days, fixed price, no surprises. If we can't find 3 real problems, the session is on us.", es: 'Tus competidores no trabajan más duro - tienen mejor infraestructura. Construimos la tuya en 14 días, precio fijo, sin sorpresas. Si no encontramos 3 problemas reales, la sesión corre por nuestra cuenta.' },
-    'hero-btn-primary': { en: 'Claim My Free Blueprint Session', es: 'Obtener Mi Sesión Blueprint Gratis' },
-    'hero-btn-ghost':   { en: 'See What We Build',               es: 'Ver Qué Construimos' },
-    'stat-label-1':     { en: 'Beta live',                       es: 'Beta en vivo' },
-    'stat-label-2':     { en: 'Full launch',                     es: 'Lanzamiento completo' },
-    'stat-label-3':     { en: 'If we find nothing',              es: 'Si no encontramos nada' },
-    'stat-label-4':     { en: 'Fixed-price guarantee',           es: 'Garantía precio fijo' },
-    'clients-label':    { en: 'Trusted by forward-thinking companies', es: 'Confiado por empresas innovadoras' },
-    'chat-label':  { en: 'AI Assistant',  es: 'Asistente IA' },
-    'chat-title':  { en: 'Got questions?<br>Ask <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Zyven AI</span>.', es: '¿Tienes preguntas?<br>Pregúntale a <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Zyven AI</span>.' },
-    'chat-sub':    { en: 'Stop waiting for a callback. Ask anything about our services, pricing, or process - and get a real, direct answer in seconds.', es: 'Deja de esperar una llamada. Pregunta cualquier cosa sobre nuestros servicios, precios o proceso - y obtén una respuesta directa en segundos.' },
-    'chat-status': { en: 'Online · Powered by Gemini', es: 'En línea · Impulsado por Gemini' },
-    'chat-f1':     { en: 'Instant answers, 24/7',       es: 'Respuestas instantáneas, 24/7' },
-    'chat-f2':     { en: 'No signup required',          es: 'Sin registro requerido' },
-    'chat-f3':     { en: 'Escalate to a human anytime', es: 'Escalar a un humano en cualquier momento' },
-    'inline-greeting': { en: '👋 Hi! I\'m Zyven AI - ask me anything about our services, pricing, timeline, or process. I\'ll give you a straight answer.', es: '👋 ¡Hola! Soy Zyven AI - pregúntame cualquier cosa sobre nuestros servicios, precios, tiempos o proceso. Te doy una respuesta directa.' },
-    'qb1': { en: '💰 Pricing',   es: '💰 Precios' },
-    'qb2': { en: '⚡ Timeline',  es: '⚡ Tiempos' },
-    'qb3': { en: '🛠 Services',  es: '🛠 Servicios' },
-    'qb4': { en: '🎁 Free Audit',es: '🎁 Auditoría Gratis' },
-    'qb5': { en: '🔧 Managed',   es: '🔧 Administrado' },
-    'qb6': { en: '💻 Tech Stack',es: '💻 Tecnologías' },
-    'pain-label':  { en: 'Sound familiar?',                                          es: '¿Te suena familiar?' },
-    'pain-title':  { en: 'Every day you wait,<br>money walks out the door.',         es: 'Cada día que esperas,<br>el dinero se va por la puerta.' },
-    'pain1-title': { en: 'Disconnected tools, manual reconciliation',                 es: 'Herramientas desconectadas, reconciliación manual' },
-    'pain1-text':  { en: "Your team burns 20–30% of their week copy-pasting between systems that were never built to talk to each other.", es: 'Tu equipo quema el 20–30% de la semana copiando y pegando entre sistemas que nunca fueron diseñados para comunicarse.' },
-    'pain1-cost':  { en: '→ Missed deals. Delayed decisions.',                        es: '→ Negocios perdidos. Decisiones tardías.' },
-    'pain2-title': { en: 'Paying for software nobody uses',                           es: 'Pagando por software que nadie usa' },
-    'pain2-text':  { en: '3–5 overlapping SaaS subscriptions, half of them gathering dust while renewals compound every quarter.', es: '3–5 suscripciones SaaS superpuestas, la mitad acumulando polvo mientras las renovaciones se acumulan cada trimestre.' },
-    'pain2-cost':  { en: "→ Their growth. Not yours.",                                es: '→ Su crecimiento. No el tuyo.' },
-    'pain3-title': { en: 'Slow quotes. Slow onboarding. Lost deals.',                es: 'Cotizaciones lentas. Onboarding lento. Tratos perdidos.' },
-    'pain3-text':  { en: 'When it takes 72 hours to quote and weeks to onboard, the buyer is already talking to your competitor.', es: 'Cuando cotizar tarda 72 horas y el onboarding semanas, el comprador ya está hablando con tu competidor.' },
-    'pain3-cost':  { en: '→ A direct, invisible revenue leak.',                       es: '→ Una fuga de ingresos directa e invisible.' },
-    'pain4-title': { en: 'Hiring to cover broken processes',                          es: 'Contratando para cubrir procesos rotos' },
-    'pain4-text':  { en: 'More headcount on a broken workflow just scales the waste. One custom system replaces 1–2 full-time hires.', es: 'Más personal en un flujo roto solo escala el desperdicio. Un sistema personalizado reemplaza 1–2 contrataciones.' },
-    'pain4-cost':  { en: '→ One system = 1–2 hires saved.',                          es: '→ Un sistema = 1–2 contrataciones ahorradas.' },
-    'pain5-title': { en: 'Flying blind on margins',                                   es: 'Operando a ciegas en márgenes' },
-    'pain5-text':  { en: "By the time quarterly numbers show the leak, you've already made the same mistake twice.", es: 'Para cuando los números trimestrales muestran la fuga, ya cometiste el mismo error dos veces.' },
-    'pain5-cost':  { en: '→ Real-time data changes everything.',                      es: '→ Los datos en tiempo real lo cambian todo.' },
-    'pain6-title': { en: 'We fix all of this. In 14 days.',                          es: 'Lo solucionamos todo. En 14 días.' },
-    'pain6-text':  { en: 'One free session. We map every leak live on screen and show you a working prototype of the fix. No commitment required.', es: 'Una sesión gratis. Mapeamos cada fuga en pantalla y te mostramos un prototipo funcional. Sin compromiso.' },
-    'pain6-btn':   { en: 'Claim Free Session',                                        es: 'Obtener Sesión Gratis' },
-    'svc-label':  { en: 'What we build',  es: 'Qué construimos' },
-    'svc-title':  { en: 'One partner.<br>Everything your operation needs.', es: 'Un socio.<br>Todo lo que tu operación necesita.' },
-    'svc-sub':    { en: 'From a landing page to a full AI-powered operating system - built in 14 days at a fraction of what agencies charge.', es: 'Desde una landing page hasta un sistema operativo con IA - construido en 14 días a una fracción del costo de agencias.' },
-    'svc1-title': { en: 'System Audit & Optimization', es: 'Auditoría y Optimización de Sistemas' },
-    'svc1-text':  { en: "We map every tool, workflow, and manual process - then show you exactly where money is leaking. Free if we can't find at least 3 real problems worth fixing.", es: 'Mapeamos cada herramienta, flujo y proceso manual - luego te mostramos exactamente dónde se pierde dinero. Gratis si no encontramos 3 problemas reales que valga la pena resolver.' },
-    'svc2-title': { en: 'Web & App Development', es: 'Desarrollo Web y de Apps' },
-    'svc2-text':  { en: 'Landing pages, full web apps, dashboards, client portals - custom-built on Django + PostgreSQL. Fast, mobile-ready, built to scale without re-platforming in 12 months.', es: 'Landing pages, apps completas, dashboards, portales de clientes - construidos a medida con Django + PostgreSQL. Rápidos, responsivos y escalables sin necesidad de migrar en 12 meses.' },
-    'svc3-title': { en: 'AI & Automation Builds', es: 'Automatización e IA' },
-    'svc3-text':  { en: "Replace the manual work that's eating your team's day. Chatbots, auto-reporting, intelligent workflows - embedded directly into your operations so they run while you sleep.", es: 'Reemplaza el trabajo manual que consume el día de tu equipo. Chatbots, reportes automáticos, flujos inteligentes - integrados directamente en tu operación para que funcionen mientras duermes.' },
-    'svc4-title': { en: 'Managed Services', es: 'Servicios Administrados' },
-    'svc4-text':  { en: 'Server, database, security, backups - handled on a flat monthly plan. Your team stays locked in on growth. We keep the infrastructure that powers it from breaking.', es: 'Servidor, base de datos, seguridad, respaldos - gestionados en un plan mensual fijo. Tu equipo se enfoca en crecer. Nosotros mantenemos la infraestructura funcionando.' },
-    'testi-label':  { en: 'Client results',                           es: 'Resultados de clientes' },
-    'testi-title':  { en: 'What happens after<br>the first 14 days.', es: 'Qué pasa después<br>de los primeros 14 días.' },
-    'testi1-quote': { en: '"They showed up to the first call with a working prototype of our new quoting system. Before we\'d signed anything. That level of preparation was all we needed to say yes."', es: '"Llegaron a la primera llamada con un prototipo funcional de nuestro nuevo sistema de cotizaciones. Antes de firmar nada. Ese nivel de preparación fue todo lo que necesitábamos para decir que sí."' },
-    'testi1-role':  { en: 'COO · B2B Logistics Company', es: 'COO · Empresa Logística B2B' },
-    'testi2-quote': { en: '"We replaced 4 SaaS tools with one custom system. Monthly tech costs dropped 60%. The system paid for itself in under 90 days. Genuinely wish we\'d done this two years ago."', es: '"Reemplazamos 4 herramientas SaaS con un sistema personalizado. Los costos tecnológicos bajaron un 60%. El sistema se pagó solo en menos de 90 días. Ojalá lo hubiéramos hecho hace dos años."' },
-    'testi2-role':  { en: 'CEO · Tech Services Firm', es: 'CEO · Firma de Servicios Tech' },
-    'testi3-quote': { en: '"Onboarding went from 3 weeks to 4 days. We closed two deals last month simply because we responded faster than the competition. The ROI isn\'t abstract - it\'s in our P&L."', es: '"El onboarding pasó de 3 semanas a 4 días. Cerramos dos tratos el mes pasado simplemente porque respondimos más rápido que la competencia. El ROI no es abstracto - está en nuestro P&L."' },
-    'testi3-role':  { en: 'Founder · B2B SaaS Company', es: 'Fundador · Empresa B2B SaaS' },
-    'guar-label':   { en: 'Zero risk',                     es: 'Cero riesgo' },
-    'guar-title':   { en: 'We back everything<br>we build.', es: 'Respaldamos todo<br>lo que construimos.' },
-    'guar1-title':  { en: 'The "See It Before You Sign It" Guarantee™', es: 'La Garantía™ "Véalo Antes de Firmarlo"' },
-    'guar1-text':   { en: 'Before you commit a single dollar, we get on a live call and show you: a visual map of exactly where your systems are broken and bleeding money - plus a working prototype of the solution, built specifically for your business. Not a PDF. A live, clickable demo.', es: 'Antes de comprometer un solo peso, hacemos una llamada en vivo y te mostramos: un mapa visual exacto de dónde tus sistemas están rotos y perdiendo dinero - más un prototipo funcional de la solución, construido específicamente para tu negocio. No un PDF. Un demo real e interactivo.' },
-    'guar1-text2':  { en: "If we don't expose at least 3 real, costly problems - the call is free and you owe us nothing.", es: 'Si no exponemos al menos 3 problemas reales y costosos - la llamada es gratis y no nos debes nada.' },
-    'guar1-tag':    { en: '"See the problem. See the solution. Then decide."', es: '"Ve el problema. Ve la solución. Luego decide."' },
-    'guar2-title':  { en: 'The "No Orphan Systems" Guarantee™', es: 'La Garantía™ "Sin Sistemas Huérfanos"' },
-    'guar2-text':   { en: "Everything we build, you own completely. Full docs, full handover, full team training. If within 60 days anything stops working or your team can't operate it independently - we come back and fix it at zero cost.", es: 'Todo lo que construimos es completamente tuyo. Documentación completa, transferencia total, capacitación del equipo. Si en 60 días algo deja de funcionar o tu equipo no puede operarlo independientemente - regresamos y lo arreglamos sin costo.' },
-    'guar2-text2':  { en: 'Or hand it off entirely. Our Managed Services plan covers server, database, security, and maintenance - your team never has to think about infrastructure again.', es: 'O entréganoslo por completo. Nuestro plan de Servicios Administrados cubre servidor, base de datos, seguridad y mantenimiento - tu equipo nunca tiene que pensar en infraestructura de nuevo.' },
-    'guar2-tag':    { en: '"We build it so you own it. Or we run it for you. Either way - you\'re never left stranded."', es: '"Lo construimos para que lo poseas. O lo operamos por ti. De cualquier forma - nunca te dejamos varado."' },
-    'proc-label':  { en: 'How we work',                          es: 'Cómo trabajamos' },
-    'proc-title':  { en: 'Beta in 7 days.<br>Fully live in 14.', es: 'Beta en 7 días.<br>Completamente activo en 14.' },
-    'step1-title': { en: 'Free Live Blueprint Session',           es: 'Sesión Blueprint en Vivo Gratis' },
-    'step1-text':  { en: "We screen-share a visual map of your broken systems and a working prototype of the fix - built for your operation. Free if we don't find at least 3 real problems. No pitch decks. No fluff.", es: 'Compartimos pantalla con un mapa visual de tus sistemas rotos y un prototipo funcional - construido para tu operación. Gratis si no encontramos al menos 3 problemas reales. Sin presentaciones comerciales.' },
-    'step2-title': { en: 'Fixed-Price Proposal',                  es: 'Propuesta de Precio Fijo' },
-    'step2-text':  { en: 'Scope locked. Timeline locked. Price locked - on day one. What you see is what you pay. No surprises, no scope creep, no excuses.', es: 'Alcance confirmado. Cronograma confirmado. Precio confirmado desde el día uno. Lo que ves es lo que pagas. Sin sorpresas.' },
-    'step3-title': { en: 'Build & Beta (Days 1–7)',               es: 'Construcción y Beta (Días 1–7)' },
-    'step3-text':  { en: 'Core system deployed to staging. You walk through a live beta, give real feedback, and we tune it to exactly what your operation needs.', es: 'Sistema base desplegado en staging. Recorres un beta en vivo, das retroalimentación real y lo ajustamos exactamente a lo que necesita tu operación.' },
-    'step4-title': { en: 'Full Launch (Days 8–14)',               es: 'Lanzamiento Completo (Días 8–14)' },
-    'step4-text':  { en: 'Production launch with hardened security, live backups, and full documentation. Your team owns it - or we manage it on a monthly plan starting day one.', es: 'Lanzamiento a producción con seguridad reforzada, respaldos activos y documentación completa. Tu equipo lo opera - o nosotros lo gestionamos en un plan mensual desde el primer día.' },
-    'proc-btn':    { en: 'Start with a Free Session',             es: 'Empieza con una Sesión Gratis' },
-    'phase1-label': { en: 'Phase 1',   es: 'Fase 1' },
-    'phase1-days':  { en: 'Days 1–2',  es: 'Días 1–2' },
-    'phase2-label': { en: 'Phase 2',   es: 'Fase 2' },
-    'phase2-days':  { en: 'Days 3–5',  es: 'Días 3–5' },
-    'phase3-label': { en: 'Phase 3',   es: 'Fase 3' },
-    'phase3-days':  { en: 'Days 6–7',  es: 'Días 6–7' },
-    'phase4-label': { en: 'Phase 4',   es: 'Fase 4' },
-    'phase4-days':  { en: 'Days 8–14', es: 'Días 8–14' },
-    'tl1-1': { en: 'Discovery call + intake form',           es: 'Llamada de descubrimiento + formulario' },
-    'tl1-2': { en: 'System audit & gap map delivered',       es: 'Auditoría del sistema y mapa de brechas' },
-    'tl1-3': { en: 'Architecture & tech decisions locked',   es: 'Arquitectura y decisiones técnicas confirmadas' },
-    'tl2-1': { en: 'Core build - DB, backend, integrations', es: 'Construcción principal - BD, backend, integraciones' },
-    'tl2-2': { en: 'Frontend & UI development',              es: 'Desarrollo de frontend e interfaz' },
-    'tl2-3': { en: 'Automations and workflows configured',   es: 'Automatizaciones y flujos configurados' },
-    'tl3-1': { en: 'Beta deployed to staging',               es: 'Beta desplegada en staging' },
-    'tl3-2': { en: 'Client walkthrough & feedback',          es: 'Recorrido con cliente y retroalimentación' },
-    'tl3-3': { en: 'Security checks applied',                es: 'Verificaciones de seguridad aplicadas' },
-    'tl4-1': { en: 'Revisions from beta feedback',           es: 'Revisiones de la retroalimentación del beta' },
-    'tl4-2': { en: 'Security hardening + backups live',      es: 'Seguridad reforzada + respaldos activos' },
-    'tl4-3': { en: 'Production launch - fully live',         es: 'Lanzamiento a producción - completamente activo' },
-    'tl4-4': { en: 'Docs, handover, or managed onboarding',  es: 'Documentación, transferencia u onboarding administrado' },
-    'cta-label':   { en: 'Ready to stop the bleed?',    es: '¿Listo para detener la fuga?' },
-    'cta-title':   { en: 'See <span class="ital">your</span> broken systems<br>fixed - live on screen.', es: 'Ve <span class="ital">tus</span> sistemas rotos<br>solucionados - en vivo.' },
-    'cta-text':    { en: "Book a free 30-minute Live Blueprint Session. We'll map every operational leak and show you a working prototype of the fix. If we don't find 3 real problems, you pay nothing. Zero.", es: 'Agenda una Sesión Blueprint en Vivo de 30 min gratis. Mapearemos cada fuga operacional y te mostraremos un prototipo funcional. Si no encontramos 3 problemas reales, no pagas nada. Cero.' },
-    'cta-check1':  { en: 'Free 30-min session',         es: 'Sesión gratis de 30 min' },
-    'cta-check2':  { en: 'No commitment',               es: 'Sin compromiso' },
-    'cta-check3':  { en: 'Live working demo',           es: 'Demo en vivo y funcional' },
-    'cta-check4':  { en: 'Fixed-price guarantee',       es: 'Garantía de precio fijo' },
-    'cta-btn':     { en: 'Claim My Free Blueprint Session', es: 'Obtener Mi Sesión Blueprint Gratis' },
-    'cta-note':    { en: 'Free · 30 min · No commitment · $0 if we find nothing', es: 'Gratis · 30 min · Sin compromiso · $0 si no encontramos nada' },
-    'footer-services':   { en: 'Services',   es: 'Servicios' },
-    'footer-guarantees': { en: 'Guarantees', es: 'Garantías' },
-    'footer-contact':    { en: 'Contact',    es: 'Contacto' },
-};
+        // ════════════════════════════════════════════
+        //  CLIENTS CAROUSEL
+        // ════════════════════════════════════════════
+        (function () {
+            const logos = [
+                { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1757828536/whatsbizproLogoSquare_rithsi.png', alt: 'WhatsBizPro' },
+                { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1775856062/logo_ideacon_1000x431_nretqf.png', alt: 'Ideacon' },
+                { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1775871056/C.I.A.-II-Logo-R-1024x536_cbivyq.png', alt: 'CIA II' },
+                { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1775871160/rio_sa_transparent_kbzwpq.png', alt: 'Rio SA' },
+            ];
+            const all = [...logos, ...logos, ...logos, ...logos];
+            const track = document.getElementById('clientsTrack');
+            all.forEach(({ url, alt }) => {
+                const div = document.createElement('div');
+                div.className = 'client-logo';
+                const img = document.createElement('img');
+                img.src = url; img.alt = alt; img.loading = 'lazy';
+                div.appendChild(img);
+                track.appendChild(div);
+            });
+        })();
 
-function toggleLang() {
-    lang = lang === 'en' ? 'es' : 'en';
-    const btn = document.getElementById('lang-btn');
-    btn.textContent = lang === 'en' ? '🌐 ES' : '🌐 EN';
-    btn.style.color = lang === 'es' ? 'var(--z-blue)' : 'var(--z-muted)';
-    applyLang();
-}
+        // ════════════════════════════════════════════
+        //  PARTICLES
+        // ════════════════════════════════════════════
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 900 } },
+                color: { value: ['#1f7bf8', '#720af5'] },
+                shape: { type: 'circle' },
+                opacity: { value: 0.35, random: true, anim: { enable: true, speed: 0.6, opacity_min: 0.05, sync: false } },
+                size: { value: 2.5, random: true, anim: { enable: false } },
+                line_linked: { enable: true, distance: 220, color: '#1f7bf8', opacity: 0.08, width: 1 },
+                move: { enable: true, speed: 0.7, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false }
+            },
+            interactivity: {
+                detect_on: 'window',
+                events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: false }, resize: true },
+                modes: { grab: { distance: 300, line_linked: { opacity: 0.2 } } }
+            },
+            retina_detect: true
+        });
 
-function applyLang() {
-    Object.entries(translations).forEach(([id, vals]) => {
-        const el = document.getElementById('t-' + id);
-        if (el) el.innerHTML = vals[lang];
-    });
-    const quickPrompts = {
-        en: ['How much does a project cost?','How fast can you build my system?','What services do you offer?','How does the free audit work?','Do you offer managed services?','What technologies do you use?'],
-        es: ['¿Cuánto cuesta un proyecto?','¿Qué tan rápido construyen mi sistema?','¿Qué servicios ofrecen?','¿Cómo funciona la auditoría gratis?','¿Ofrecen servicios administrados?','¿Qué tecnologías usan?']
-    };
-    document.querySelectorAll('#inlineQuickActions .quick-btn').forEach((btn, i) => {
-        btn.setAttribute('onclick', `inlineQuickAsk('${quickPrompts[lang][i]}')`);
-    });
-    document.querySelectorAll('#chatWidget .quick-btn').forEach((btn, i) => {
-        btn.setAttribute('onclick', `quickAsk('${quickPrompts[lang][i]}')`);
-    });
-}
+        // ════════════════════════════════════════════
+        //  CHAT ENGINE - proxied through Django backend
+        // ════════════════════════════════════════════
+        // ── Session + history persistence via cookies ──
+        function setCookie(name, value, days) {
+            const expires = new Date(Date.now() + days * 864e5).toUTCString();
+            document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
+        }
 
-// ════════════════════════════════════════════
-//  CLIENTS CAROUSEL
-// ════════════════════════════════════════════
-(function() {
-    const logos = [
-        { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1757828536/whatsbizproLogoSquare_rithsi.png', alt: 'WhatsBizPro' },
-        { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1775856062/logo_ideacon_1000x431_nretqf.png', alt: 'Ideacon' },
-        { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1775871056/C.I.A.-II-Logo-R-1024x536_cbivyq.png', alt: 'CIA II' },
-        { url: 'https://res.cloudinary.com/dgzhlipft/image/upload/q_auto/f_auto/v1775871160/rio_sa_transparent_kbzwpq.png', alt: 'Rio SA' },
-    ];
-    const all = [...logos, ...logos, ...logos, ...logos];
-    const track = document.getElementById('clientsTrack');
-    all.forEach(({ url, alt }) => {
-        const div = document.createElement('div');
-        div.className = 'client-logo';
-        const img = document.createElement('img');
-        img.src = url; img.alt = alt; img.loading = 'lazy';
-        div.appendChild(img);
-        track.appendChild(div);
-    });
-})();
+        function getCookieVal(name) {
+            const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+            return v ? decodeURIComponent(v[2]) : null;
+        }
 
-// ════════════════════════════════════════════
-//  PARTICLES
-// ════════════════════════════════════════════
-particlesJS('particles-js', {
-    particles: {
-        number: { value: 80, density: { enable: true, value_area: 900 } },
-        color: { value: ['#1f7bf8', '#720af5'] },
-        shape: { type: 'circle' },
-        opacity: { value: 0.35, random: true, anim: { enable: true, speed: 0.6, opacity_min: 0.05, sync: false } },
-        size: { value: 2.5, random: true, anim: { enable: false } },
-        line_linked: { enable: true, distance: 220, color: '#1f7bf8', opacity: 0.08, width: 1 },
-        move: { enable: true, speed: 0.7, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false }
-    },
-    interactivity: {
-        detect_on: 'window',
-        events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: false }, resize: true },
-        modes: { grab: { distance: 300, line_linked: { opacity: 0.2 } } }
-    },
-    retina_detect: true
-});
+        function saveHistory(key, history) {
+            try { setCookie(key, JSON.stringify(history), 7); } catch (e) { }
+        }
 
-// ════════════════════════════════════════════
-//  CHAT ENGINE - proxied through Django backend
-// ════════════════════════════════════════════
-// ── Session + history persistence via cookies ──
-function setCookie(name, value, days) {
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
-}
+        function loadHistory(key) {
+            try {
+                const raw = getCookieVal(key);
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) { return []; }
+        }
 
-function getCookieVal(name) {
-    const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-    return v ? decodeURIComponent(v[2]) : null;
-}
+        // Load or create session ID (persists 7 days)
+        let sessionId = getCookieVal('zyven_session') || '';
+        if (!sessionId) {
+            sessionId = 'sess_' + Math.random().toString(36).slice(2) + Date.now();
+            setCookie('zyven_session', sessionId, 7);
+        }
 
-function saveHistory(key, history) {
-    try { setCookie(key, JSON.stringify(history), 7); } catch(e) {}
-}
+        // Load conversation histories from cookies
+        let inlineHistory = loadHistory('zyven_inline_history');
+        let fabHistory = loadHistory('zyven_fab_history');
 
-function loadHistory(key) {
-    try {
-        const raw = getCookieVal(key);
-        return raw ? JSON.parse(raw) : [];
-    } catch(e) { return []; }
-}
+        // ── Replay saved messages into the UI on page load ──
+        function replayHistory(history, containerId) {
+            if (!history || history.length === 0) return;
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            // Clear the default greeting bubble before replaying
+            container.innerHTML = '';
+            history.forEach(item => {
+                const role = item.role === 'model' ? 'bot' : 'user';
+                const text = item.parts?.[0]?.text || '';
+                if (text) appendMsg(container, text, role);
+            });
+        }
 
-// Load or create session ID (persists 7 days)
-let sessionId = getCookieVal('zyven_session') || '';
-if (!sessionId) {
-    sessionId = 'sess_' + Math.random().toString(36).slice(2) + Date.now();
-    setCookie('zyven_session', sessionId, 7);
-}
+        // Replay on load
+        document.addEventListener('DOMContentLoaded', () => {
+            replayHistory(inlineHistory, 'inlineChatMessages');
+            replayHistory(fabHistory, 'chatMessages');
+        });
 
-// Load conversation histories from cookies
-let inlineHistory = loadHistory('zyven_inline_history');
-let fabHistory    = loadHistory('zyven_fab_history');
+        // ════════════════════════════════════════════
+        //  CHAT ENGINE - Django session backed
+        // ════════════════════════════════════════════
 
-// ── Replay saved messages into the UI on page load ──
-function replayHistory(history, containerId) {
-    if (!history || history.length === 0) return;
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    // Clear the default greeting bubble before replaying
-    container.innerHTML = '';
-    history.forEach(item => {
-        const role = item.role === 'model' ? 'bot' : 'user';
-        const text = item.parts?.[0]?.text || '';
-        if (text) appendMsg(container, text, role);
-    });
-}
-
-// Replay on load
-document.addEventListener('DOMContentLoaded', () => {
-    replayHistory(inlineHistory, 'inlineChatMessages');
-    replayHistory(fabHistory, 'chatMessages');
-});
-
-// ════════════════════════════════════════════
-//  CHAT ENGINE — Django session backed
-// ════════════════════════════════════════════
-
-function makeTypingBubble() {
-    const div = document.createElement('div');
-    div.className = 'chat-msg bot';
-    div.innerHTML = `<div class="chat-bubble" style="padding:12px 16px;">
+        function makeTypingBubble() {
+            const div = document.createElement('div');
+            div.className = 'chat-msg bot';
+            div.innerHTML = `<div class="chat-bubble" style="padding:12px 16px;">
         <span style="display:inline-flex;gap:4px;align-items:center;">
             <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:0s"></span>
             <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:.2s"></span>
             <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:.4s"></span>
         </span>
     </div>`;
-    return div;
-}
-
-const dotStyle = document.createElement('style');
-dotStyle.textContent = `@keyframes dotBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}`;
-document.head.appendChild(dotStyle);
-
-function appendMsg(container, text, role) {
-    const div = document.createElement('div');
-    div.className = `chat-msg ${role}`;
-    div.innerHTML = `<div class="chat-bubble">${text}</div>`;
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
-    return div;
-}
-
-function getCookie(name) {
-    const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-    return v ? decodeURIComponent(v[2]) : '';
-}
-
-async function sendToBackend(userMessage, source) {
-    const res = await fetch('/api/chat/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'),
-        },
-        body: JSON.stringify({
-            message:    userMessage,
-            source:     source,
-            session_id: getCookie('zyven_session') || '',
-        })
-    });
-    if (!res.ok) throw new Error('Backend error ' + res.status);
-    return await res.json();
-}
-
-// ── Load history from Django session on page load ──
-async function loadAndRenderHistory() {
-    try {
-        const res  = await fetch('/api/chat/history/');
-        const data = await res.json();
-
-        if (data.inline && data.inline.length > 0) {
-            const container = document.getElementById('inlineChatMessages');
-            container.innerHTML = '';
-            data.inline.forEach(item => {
-                const role = item.role === 'model' ? 'bot' : 'user';
-                appendMsg(container, item.parts[0].text, role);
-            });
+            return div;
         }
 
-        if (data.fab && data.fab.length > 0) {
-            const container = document.getElementById('chatMessages');
-            container.innerHTML = '';
-            data.fab.forEach(item => {
-                const role = item.role === 'model' ? 'bot' : 'user';
-                appendMsg(container, item.parts[0].text, role);
-            });
+        const dotStyle = document.createElement('style');
+        dotStyle.textContent = `@keyframes dotBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}`;
+        document.head.appendChild(dotStyle);
+
+        function appendMsg(container, text, role) {
+            const div = document.createElement('div');
+            div.className = `chat-msg ${role}`;
+            div.innerHTML = `<div class="chat-bubble">${text}</div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return div;
         }
-    } catch(e) {}
-}
 
-document.addEventListener('DOMContentLoaded', loadAndRenderHistory);
+        function getCookie(name) {
+            const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+            return v ? decodeURIComponent(v[2]) : '';
+        }
 
-// ── INLINE CHAT ──
-async function inlineSendMsg() {
-    const input = document.getElementById('inlineChatInput');
-    const msgs  = document.getElementById('inlineChatMessages');
-    const btn   = document.getElementById('inlineSendBtn');
-    const text  = input.value.trim();
-    if (!text) return;
+        async function sendToBackend(userMessage, source) {
+            const res = await fetch('/api/chat/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify({
+                    message: userMessage,
+                    source: source,
+                    session_id: getCookie('zyven_session') || '',
+                })
+            });
+            if (!res.ok) throw new Error('Backend error ' + res.status);
+            return await res.json();
+        }
 
-    appendMsg(msgs, text, 'user');
-    input.value = '';
-    btn.disabled = true;
+        // ── Load history from Django session on page load ──
+        async function loadAndRenderHistory() {
+            try {
+                const res = await fetch('/api/chat/history/');
+                const data = await res.json();
 
-    const typing = makeTypingBubble();
-    msgs.appendChild(typing);
-    msgs.scrollTop = msgs.scrollHeight;
+                if (data.inline && data.inline.length > 0) {
+                    const container = document.getElementById('inlineChatMessages');
+                    container.innerHTML = '';
+                    data.inline.forEach(item => {
+                        const role = item.role === 'model' ? 'bot' : 'user';
+                        appendMsg(container, item.parts[0].text, role);
+                    });
+                }
 
-    try {
-        const data = await sendToBackend(text, 'inline');
-        typing.remove();
-        appendMsg(msgs, data.reply, 'bot');
-    } catch (err) {
-        typing.remove();
-        appendMsg(msgs, "⚡ Couldn't reach our AI right now. Try again or <a href='#contact' style='color:var(--z-blue)'>book a call</a>.", 'bot');
-    } finally {
-        btn.disabled = false;
-        input.focus();
-    }
-}
+                if (data.fab && data.fab.length > 0) {
+                    const container = document.getElementById('chatMessages');
+                    container.innerHTML = '';
+                    data.fab.forEach(item => {
+                        const role = item.role === 'model' ? 'bot' : 'user';
+                        appendMsg(container, item.parts[0].text, role);
+                    });
+                }
+            } catch (e) { }
+        }
 
-function inlineQuickAsk(text) {
-    document.getElementById('inlineChatInput').value = text;
-    inlineSendMsg();
-}
+        document.addEventListener('DOMContentLoaded', loadAndRenderHistory);
 
-// ── FLOATING WIDGET CHAT ──
-let chatOpen = false;
+        // ── INLINE CHAT ──
+        async function inlineSendMsg() {
+            const input = document.getElementById('inlineChatInput');
+            const msgs = document.getElementById('inlineChatMessages');
+            const btn = document.getElementById('inlineSendBtn');
+            const text = input.value.trim();
+            if (!text) return;
 
-function toggleChat() {
-    chatOpen = !chatOpen;
-    document.getElementById('chatWidget').classList.toggle('open', chatOpen);
-    document.getElementById('chatFabBadge').classList.toggle('hide', chatOpen);
-    if (chatOpen) setTimeout(() => document.getElementById('chatInput').focus(), 300);
-}
+            appendMsg(msgs, text, 'user');
+            input.value = '';
+            btn.disabled = true;
 
-async function sendMsg() {
-    const input = document.getElementById('chatInput');
-    const msgs  = document.getElementById('chatMessages');
-    const btn   = document.getElementById('fabSendBtn');
-    const text  = input.value.trim();
-    if (!text) return;
+            const typing = makeTypingBubble();
+            msgs.appendChild(typing);
+            msgs.scrollTop = msgs.scrollHeight;
 
-    appendMsg(msgs, text, 'user');
-    input.value = '';
-    btn.disabled = true;
+            try {
+                const data = await sendToBackend(text, 'inline');
+                typing.remove();
+                appendMsg(msgs, data.reply, 'bot');
+            } catch (err) {
+                typing.remove();
+                appendMsg(msgs, "⚡ Couldn't reach our AI right now. Try again or <a href='#contact' style='color:var(--z-blue)'>book a call</a>.", 'bot');
+            } finally {
+                btn.disabled = false;
+                input.focus();
+            }
+        }
 
-    const typing = makeTypingBubble();
-    msgs.appendChild(typing);
-    msgs.scrollTop = msgs.scrollHeight;
+        function inlineQuickAsk(text) {
+            document.getElementById('inlineChatInput').value = text;
+            inlineSendMsg();
+        }
 
-    try {
-        const data = await sendToBackend(text, 'fab');
-        typing.remove();
-        appendMsg(msgs, data.reply, 'bot');
-    } catch (err) {
-        typing.remove();
-        appendMsg(msgs, "⚡ AI unavailable. <a href='#contact' style='color:var(--z-blue)'>Book a call instead</a>!", 'bot');
-    } finally {
-        btn.disabled = false;
-    }
-}
+        // ── FLOATING WIDGET CHAT ──
+        let chatOpen = false;
 
-function quickAsk(text) {
-    document.getElementById('chatInput').value = text;
-    sendMsg();
-}
+        function toggleChat() {
+            chatOpen = !chatOpen;
+            document.getElementById('chatWidget').classList.toggle('open', chatOpen);
+            document.getElementById('chatFabBadge').classList.toggle('hide', chatOpen);
+            if (chatOpen) setTimeout(() => document.getElementById('chatInput').focus(), 300);
+        }
 
-// ── BROWSER CARD SLIDERS ──
-const sliderState = {};
+        async function sendMsg() {
+            const input = document.getElementById('chatInput');
+            const msgs = document.getElementById('chatMessages');
+            const btn = document.getElementById('fabSendBtn');
+            const text = input.value.trim();
+            if (!text) return;
 
-function slide(id, dir) {
-    const track = document.getElementById('slider-' + id);
-    if (!track) return;
-    const count = track.children.length;
-    if (!sliderState[id]) sliderState[id] = 0;
-    sliderState[id] = (sliderState[id] + dir + count) % count;
-    track.style.transform = `translateX(-${sliderState[id] * 100}%)`;
-    updateDots(id, count);
-}
+            appendMsg(msgs, text, 'user');
+            input.value = '';
+            btn.disabled = true;
 
-function goSlide(id, idx) {
-    const track = document.getElementById('slider-' + id);
-    if (!track) return;
-    const count = track.children.length;
-    sliderState[id] = idx;
-    track.style.transform = `translateX(-${idx * 100}%)`;
-    updateDots(id, count);
-}
+            const typing = makeTypingBubble();
+            msgs.appendChild(typing);
+            msgs.scrollTop = msgs.scrollHeight;
 
-function updateDots(id, count) {
-    const dotsEl = document.getElementById('dots-' + id);
-    if (!dotsEl) return;
-    [...dotsEl.children].forEach((d, i) => d.classList.toggle('active', i === sliderState[id]));
-}
-</script>
+            try {
+                const data = await sendToBackend(text, 'fab');
+                typing.remove();
+                appendMsg(msgs, data.reply, 'bot');
+            } catch (err) {
+                typing.remove();
+                appendMsg(msgs, "⚡ AI unavailable. <a href='#contact' style='color:var(--z-blue)'>Book a call instead</a>!", 'bot');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function quickAsk(text) {
+            document.getElementById('chatInput').value = text;
+            sendMsg();
+        }
+
+        // ── BROWSER CARD SLIDERS ──
+        const sliderState = {};
+
+        function slide(id, dir) {
+            const track = document.getElementById('slider-' + id);
+            if (!track) return;
+            const count = track.children.length;
+            if (!sliderState[id]) sliderState[id] = 0;
+            sliderState[id] = (sliderState[id] + dir + count) % count;
+            track.style.transform = `translateX(-${sliderState[id] * 100}%)`;
+            updateDots(id, count);
+        }
+
+        function goSlide(id, idx) {
+            const track = document.getElementById('slider-' + id);
+            if (!track) return;
+            const count = track.children.length;
+            sliderState[id] = idx;
+            track.style.transform = `translateX(-${idx * 100}%)`;
+            updateDots(id, count);
+        }
+
+        function updateDots(id, count) {
+            const dotsEl = document.getElementById('dots-' + id);
+            if (!dotsEl) return;
+            [...dotsEl.children].forEach((d, i) => d.classList.toggle('active', i === sliderState[id]));
+        }
+    </script>
 
 </body>
 
