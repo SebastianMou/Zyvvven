@@ -123,9 +123,18 @@
             padding: 0;
             height: 68px;
             transition: background .3s;
+            z-index: 10000;
+            overflow: visible;
         }
         [data-theme="light"] .navbar { background: rgba(255,255,255,0.92) !important; }
         .navbar .container { height: 100%; }
+
+        nav.navbar {
+            z-index: 10000 !important;
+            position: fixed !important;
+            top: 0;
+            width: 100%;
+        }
 
         .navbar-brand { display:flex; align-items:center; gap:6px; padding:0; text-decoration:none; }
 
@@ -363,19 +372,49 @@
         @media (max-width: 600px) {
             .metric-row { grid-template-columns: 1fr 1fr; }
         }
+
+        .logo-dark, .logo-light {
+            height: 55px;
+            width: auto;
+            margin-top:2px;
+        }
+
+        @media (max-width: 767px) {
+            .logo-dark, .logo-light {
+                height: 55px;
+                width: auto;
+            }
+        }
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                background: #0a0a0a;
+                padding: 12px 16px;
+                border-top: 1px solid var(--z-border);
+                margin-top: 0;
+                position: absolute;
+                top: 68px;
+                left: 0;
+                right: 0;
+                z-index: 9999;
+                overflow: hidden;
+            }
+
+            [data-theme="light"] .navbar-collapse {
+                background: #ffffff;
+                border-top: 1px solid rgba(0, 0, 0, 0.08);
+            }
+        }
     </style>
 </head>
 
-<body>
+<body style="padding-top: 68px;">
 
     <!-- ── NAVBAR ── -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="https://zyven.org/">
-                <img src="{% static 'zyven-logo-text.png' %}" alt="Zyven" class="logo-dark"
-                    style="height:102px;width:auto;margin-top:12px;">
-                <img src="{% static 'zyven_black_letters.png' %}" alt="Zyven" class="logo-light"
-                    style="height:102px;width:auto;margin-top:12px;">
+                <img src="{% static 'zyven-logo-textu.png' %}" alt="Zyven" class="logo-dark">
+                <img src="{% static 'zyven_black_letters.png' %}" alt="Zyven" class="logo-light">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                 <span class="navbar-toggler-icon"></span>
