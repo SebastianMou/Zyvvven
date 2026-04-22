@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 import json
 import uuid
+from google.genai import types
 
 from django.views.decorators.csrf import csrf_exempt
 from google import genai
@@ -14,7 +15,11 @@ from django.contrib.auth import authenticate, login, logout
 from .models import Lead, Client, Project, Task, Note, ChatMessage
 from .serializers import LeadSerializer, ClientSerializer, ProjectSerializer, TaskSerializer
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 # ─────────────────────────────────────────────
 #  DASHBOARD
 # ─────────────────────────────────────────────
@@ -500,7 +505,6 @@ def note_create(request):
 # ─────────────────────────────────────────────
 #  PUBLIC CHAT API  (Gemini SDK + save)
 # ─────────────────────────────────────────────
-GEMINI_API_KEY = 'AIzaSyBY6L91zYWZZpPcQRfbYdn3CSrlqkmcVPQ'
 
 ZYVEN_SYSTEM_CONTEXT = """You are Zyven AI, the smart, confident sales assistant for Zyven — a B2B tech consulting company.
 
@@ -567,11 +571,11 @@ def chat_api(request):
         response = client.models.generate_content(
             model    = 'gemini-2.5-flash-lite',
             contents = contents,
-            config   = {
-                'system_instruction': ZYVEN_SYSTEM_CONTEXT,
-                'temperature':        0.7,
-                'max_output_tokens':  300,
-            }
+            config   = types.GenerateContentConfig(
+                system_instruction = ZYVEN_SYSTEM_CONTEXT,
+                temperature        = 0.7,
+                max_output_tokens  = 300,
+            )
         )
 
         reply = response.text or "I'm having trouble responding right now. Please try again."
