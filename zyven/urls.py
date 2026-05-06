@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('crm/login/',  views.crm_login, name='crm_login'),
     path('crm/logout/', views.crm_logout, name='crm_logout'),
+    path('book-blueprint/', views.book_blueprint, name='book_blueprint'),
 
     # Dashboard
     path('crm/',views.dashboard,name='dashboard'),

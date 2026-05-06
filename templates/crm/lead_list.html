@@ -134,6 +134,10 @@
                             <a href="{% url 'zyven:lead_edit' lead.pk %}" class="btn btn-ghost btn-sm">
                                 <i class="fas fa-pen"></i>
                             </a>
+                            <button type="button" class="btn btn-danger btn-sm"
+                                onclick="openDeleteModal('{{ lead.pk }}', '{{ lead.company_name|escapejs }}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -152,4 +156,36 @@
         </table>
     </div>
 </div>
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteLeadModal">
+    <div class="modal">
+        <div class="modal-title">¿Eliminar este lead?</div>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">
+            Estás a punto de eliminar <strong id="deleteLeadName" style="color:var(--heading);"></strong>. Esta acción es permanente y no se puede deshacer.
+        </p>
+        <div style="display:flex;gap:10px;">
+            <form method="post" id="deleteLeadForm">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Sí, eliminar
+                </button>
+            </form>
+            <button type="button" class="btn btn-ghost"
+                onclick="closeModal('deleteLeadModal')">
+                Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function openDeleteModal(pk, name) {
+    document.getElementById('deleteLeadName').textContent = name;
+    document.getElementById('deleteLeadForm').action = `/crm/leads/${pk}/delete/`;
+    openModal('deleteLeadModal');
+}
+</script>
 {% endblock %}

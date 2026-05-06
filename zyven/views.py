@@ -42,6 +42,56 @@ def bahia(request):
 def whatsbizpro(request):
     return render(request, 'projects/whatsbizpro.html', {})
 
+@csrf_exempt
+@require_POST
+def book_blueprint(request):
+    try:
+        body = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    contact_name   = (body.get('contact_name') or '').strip()
+    email          = (body.get('email') or '').strip()
+    notes          = (body.get('notes') or '').strip()
+    blueprint_date = body.get('blueprint_date', '').strip()
+
+    if not contact_name:
+        return JsonResponse({'error': 'Name is required.'}, status=400)
+    if not email or '@' not in email:
+        return JsonResponse({'error': 'A valid email is required.'}, status=400)
+    if not blueprint_date:
+        return JsonResponse({'error': 'Please select a date and time.'}, status=400)
+
+    from datetime import datetime
+    try:
+        dt_naive = datetime.fromisoformat(blueprint_date)
+        dt_aware = timezone.make_aware(dt_naive, timezone.get_current_timezone())
+    except (ValueError, TypeError):
+        return JsonResponse({'error': 'Invalid date format.'}, status=400)
+
+    # Prevent duplicate booking same email + same slot
+    if Lead.objects.filter(email=email, blueprint_date=dt_aware).exists():
+        return JsonResponse({'ok': True, 'already_booked': True,
+            'message': 'You already have a session at that time. Check your inbox!'})
+
+    lead = Lead.objects.create(
+        contact_name     = contact_name,
+        company_name     = contact_name,
+        email            = email,
+        status           = 'blueprint',
+        source           = 'website',
+        service_interest = 'audit',
+        blueprint_date   = dt_aware,
+        notes            = notes,
+        pain_points      = notes,
+    )
+
+    return JsonResponse({
+        'ok': True,
+        'lead_id': lead.pk,
+        'message': f'Session booked for {dt_aware.strftime("%B %d at %I:%M %p")}.',
+    }, status=201)
+
 def crm_login(request):
     if request.user.is_authenticated:
         return redirect('zyven:dashboard')
@@ -98,7 +148,9 @@ def dashboard(request):
     upcoming_blueprints = Lead.objects.filter(
         blueprint_date__gte=timezone.now(),
         status='blueprint'
-    ).order_by('blueprint_date')[:4]
+    ).order_by('blueprint_date')
+
+    upcoming_blueprints_count = upcoming_blueprints.count()
 
     context = {
         'total_leads':          total_leads,
@@ -112,6 +164,7 @@ def dashboard(request):
         'my_tasks':             my_tasks,
         'pipeline_data':        json.dumps(pipeline_data),
         'upcoming_blueprints':  upcoming_blueprints,
+        'upcoming_blueprints_count': upcoming_blueprints_count,
     }
     return render(request, 'crm/dashboard.html', context)
 

@@ -19,7 +19,7 @@
 </div>
 
 <!-- STATS -->
-<div class="stats-grid">
+<div class="stats-grid" style="grid-template-columns:repeat(5,1fr);">
     <div class="stat-card">
         <i class="fas fa-funnel-dollar stat-icon"></i>
         <div class="stat-label">Total de Leads</div>
@@ -44,6 +44,59 @@
         <div class="stat-value"><span class="accent">${{ total_revenue|floatformat:0 }}</span></div>
         <div class="stat-sub">Pipeline: ${{ pipeline_value|floatformat:0 }}</div>
     </div>
+</div>
+
+<div class="stat-card" style="border-color:rgba(245,197,66,.25);cursor:pointer;"
+     onclick="document.getElementById('blueprintSection').scrollIntoView({behavior:'smooth'})">
+    <i class="fas fa-calendar-check stat-icon" style="color:var(--yellow);"></i>
+    <div class="stat-label">Blueprint Sessions</div>
+    <div class="stat-value" style="color:var(--yellow);">{{ upcoming_blueprints_count }}</div>
+    <div class="stat-sub">Próximas sesiones</div>
+</div>
+
+<!-- BLUEPRINT BOOKINGS -->
+<div class="card" id="blueprintSection" style="margin-bottom:20px;border-color:rgba(245,197,66,.2);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div class="card-title" style="margin:0;">
+            <i class="fas fa-calendar-check" style="color:var(--yellow);margin-right:8px;"></i>
+            Blueprint Sessions
+            <span class="badge badge-yellow" style="margin-left:8px;">From website</span>
+        </div>
+        <a href="{% url 'zyven:lead_list' %}?status=blueprint" class="btn btn-ghost btn-sm">Ver todas</a>
+    </div>
+    {% if upcoming_blueprints %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Contacto</th><th>Fecha & Hora</th><th>Notas</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for lead in upcoming_blueprints %}
+                <tr>
+                    <td>
+                        <a href="{% url 'zyven:lead_detail' lead.pk %}" style="color:var(--heading);text-decoration:none;font-weight:500;">{{ lead.contact_name }}</a>
+                        <div style="font-size:11px;color:var(--muted);">{{ lead.email }}</div>
+                    </td>
+                    <td>
+                        <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--yellow);">{{ lead.blueprint_date|date:"M d, Y" }}</div>
+                        <div style="font-size:11px;color:var(--muted);">{{ lead.blueprint_date|date:"g:i A" }}</div>
+                    </td>
+                    <td style="color:var(--muted);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ lead.notes|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'zyven:lead_detail' lead.pk %}" class="btn btn-ghost btn-sm">Ver</a>
+                        <a href="{% url 'zyven:lead_edit' lead.pk %}" class="btn btn-ghost btn-sm"><i class="fas fa-pen"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:32px;color:var(--muted);">
+        <i class="fas fa-calendar-plus" style="font-size:22px;opacity:.3;display:block;margin-bottom:10px;"></i>
+        No hay sesiones próximas. Las reservas del sitio web aparecerán aquí.
+    </div>
+    {% endif %}
 </div>
 
 <!-- PIPELINE -->
