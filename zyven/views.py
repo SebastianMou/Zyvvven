@@ -561,7 +561,7 @@ def note_create(request):
 
 ZYVEN_SYSTEM_CONTEXT = """Actúa como un arquitecto experto en prompts, IA conversacional y automatización comercial.
 
-Tu tarea es ayudarme a crear el PROMPT DEFINITIVO para entrenar una IA vendedora profesional de mi empresa Zyven.org.
+Tu tarea es ayudarme a crear el PROMPT DEFINITIVO para entrenar una IA vendedora profesional de mi empresa Nyvor.org.
 
 Quiero que me ayudes a construir un documento EXTREMADAMENTE detallado, profesional y optimizado para producción real, el cual después será integrado directamente al código fuente de una IA conversacional.
 
@@ -578,7 +578,7 @@ Necesito que me ayudes a estructurar TODO lo necesario para entrenar correctamen
 Debes ayudarme a desarrollar las siguientes secciones de forma PROFUNDA, ESTRATÉGICA y MUY DETALLADA:
 
 1. Identidad de la empresa.
-2. Información completa de Zyven.org.
+2. Información completa de Nyvor.org.
 3. Servicios y productos.
 4. Beneficios de cada servicio.
 5. Público objetivo.

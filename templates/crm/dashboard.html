@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard — Zyven CRM{% endblock %}
+{% block title %}Dashboard — Nyvor CRM{% endblock %}
 {% block topbar_title %}Dashboard{% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
             {{ request.user.first_name|default:request.user.username }} 👋
         </h1>
         <div style="color:var(--muted);font-size:12px;margin-top:4px;">
-            Esto es lo que está pasando con Zyven hoy.
+            Esto es lo que está pasando con Nyvor hoy.
         </div>
     </div>
     <a href="{% url 'zyven:lead_create' %}" class="btn btn-primary">
