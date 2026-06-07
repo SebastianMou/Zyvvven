@@ -2354,8 +2354,7 @@
                                 <span class="flip-tech-pill">Windows .bat</span>
                                 <span class="flip-tech-pill">Linux .sh</span>
                             </div>
-                            <div class="flip-read-more">Read case study <i class="fas fa-arrow-right"
-                                    style="font-size:10px"></i></div>
+                            <div class="flip-read-more">Read case study <i class="fas fa-arrow-right" style="font-size:10px"></i></div>
                         </div>
                     </div>
                 </a>
@@ -3634,12 +3633,12 @@
             const div = document.createElement('div');
             div.className = 'chat-msg bot';
             div.innerHTML = `<div class="chat-bubble" style="padding:12px 16px;">
-        <span style="display:inline-flex;gap:4px;align-items:center;">
-            <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:0s"></span>
-            <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:.2s"></span>
-            <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:.4s"></span>
-        </span>
-    </div>`;
+                <span style="display:inline-flex;gap:4px;align-items:center;">
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:0s"></span>
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:.2s"></span>
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--z-muted);animation:dotBounce .9s ease-in-out infinite;animation-delay:.4s"></span>
+                </span>
+            </div>`;
             return div;
         }
 
@@ -3650,10 +3649,28 @@
         function appendMsg(container, text, role) {
             const div = document.createElement('div');
             div.className = `chat-msg ${role}`;
-            div.innerHTML = `<div class="chat-bubble">${text}</div>`;
+            div.innerHTML = `<div class="chat-bubble">${role === 'bot' ? mdToHtml(text) : text}</div>`;
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
             return div;
+        }
+
+        function mdToHtml(text) {
+            return text
+                // Bold
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                // Italic
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                // Inline code
+                .replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.1);padding:1px 5px;border-radius:4px;font-size:0.85em;">$1</code>')
+                // Unordered list items (lines starting with - or •)
+                .replace(/(?:^|\n)[•\-] (.+)/g, '<li>$1</li>')
+                // Wrap consecutive <li> in <ul>
+                .replace(/(<li>.*?<\/li>)+/gs, '<ul style="margin:6px 0 6px 16px;padding:0;">$&</ul>')
+                // Numbered list items
+                .replace(/(?:^|\n)\d+\. (.+)/g, '<li>$1</li>')
+                // Line breaks
+                .replace(/\n/g, '<br>');
         }
 
         function getCookie(name) {
